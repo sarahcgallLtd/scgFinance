@@ -44,6 +44,9 @@ jobs:
         run: |
           cd docs
           poetry run sphinx-build -b html source ../build/html
+
+      - name: Add .nojekyll to disable Jekyll
+        run: touch build/html/.nojekyll
           
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'

@@ -2,18 +2,18 @@ scgFinance <a href="https://sarahcgallLtd.github.io/scgFinance/"><img src="man/f
 
 [//]: # (======================================= UNCOMMENT BELOW ======================================================)
 
-[//]: # (================)
+================
 
-[//]: # (<!-- badges: start -->)
+<!-- badges: start -->
 
-[//]: # (<!-- [![Release]&#40;https://img.shields.io/badge/Release-development%20version%200.0.1-blue&#41;]&#40;https://github.com/sarahcgallLtd/python-package-template/blob/main/CHANGELOG.md&#41; -->)
+<!-- [![Release](https://img.shields.io/badge/Release-development%20version%200.0.1-blue)](https://github.com/sarahcgallLtd/scgFinance/blob/main/CHANGELOG.md) -->
 
-[//]: # (<!-- [![CI]&#40;https://github.com/sarahcgallLtd/python-package-template/actions/workflows/ci.yml/badge.svg&#41;]&#40;https://github.com/sarahcgallLtd/python-package-template/actions/workflows/ci.yml&#41; -->)
+<!-- [![CI](https://github.com/sarahcgallLtd/scgFinance/actions/workflows/ci.yml/badge.svg)](https://github.com/sarahcgallLtd/scgFinance/actions/workflows/ci.yml) -->
 
-[//]: # (<!-- [![codecov]&#40;https://codecov.io/gh/sarahcgallLtd/python-package-template/graph/badge.svg?token=YOUR_TOKEN&#41;]&#40;https://codecov.io/gh/sarahcgallLtd/python-package-template&#41; -->)
+<!-- [![codecov](https://codecov.io/gh/sarahcgallLtd/scgFinance/graph/badge.svg?token=YOUR_TOKEN)](https://codecov.io/gh/sarahcgallLtd/scgFinance) -->
 
-[//]: # ()
-[//]: # (<!-- badges: end -->)
+
+<!-- badges: end -->
 
 [//]: # (## Overview)
 
