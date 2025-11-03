@@ -14,7 +14,7 @@ status:
 
 ignore:  # Files/folders to exclude from coverage
   - "tests/**/*"  # Ignore all test files
-  - "src/package_name/__init__.py"  # Optional: Ignore init if no code
+  - "src/scgFinance/__init__.py"  # Optional: Ignore init if no code
 
 comment:  # PR comments from Codecov
   layout: "reach, diff, flags, files"
