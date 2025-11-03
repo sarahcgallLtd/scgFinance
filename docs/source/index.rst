@@ -1,14 +1,14 @@
 .. scgFinance documentation master file
 
 .. image:: _static/logo.png
-   :align: center
-   :width: 200px
+   :align: left
+   :width: 120px
    :alt: scgFinance Hex Logo
 
 scgFinance
 ==========
 
-This package provides tools for financial analysis.
+This package provides tools for managing personal finances, including the ability to: import bank statements, categorise expenses automatically or manually, track and visualise spending, forecast trends, and compare against budgets.
 
 .. toctree::
    :maxdepth: 2
