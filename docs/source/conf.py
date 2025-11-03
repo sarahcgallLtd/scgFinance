@@ -33,24 +33,24 @@ language = 'en'
 html_theme = 'pydata_sphinx_theme'
 
 # Logo setup (hex sticker)
-html_logo = '_static/logo.png'  # Path to your hexagonal PNG (create/add below)
+html_logo = '_static/logo.png'
 
-# Optional theme customisations for pkgdown-like feel
+# Theme customisations
 html_theme_options = {
     'logo': {
-        'text': 'scgFinance',  # Package name next to logo; omit if unwanted
-        'image_light': '_static/logo.png',  # For light mode
-        'image_dark': '_static/logo-dark.png',  # Optional dark variant
+        'text': 'scgFinance',
+        'image_light': '_static/logo.png',
     },
-    'icon_links': [  # Add GitHub badge/link in navbar
+    # Add GitHub badge/link in navbar
+    'icon_links': [
         {
             'name': 'GitHub',
-            'url': 'https://github.com/sarahcgallLtd/your-package',
+            'url': 'https://github.com/sarahcgallLtd/scgFinance',
             'icon': 'fa-brands fa-github',
             'type': 'fontawesome',
         },
     ],
-    'show_nav_level': 2,  # Sidebar depth like pkgdown
+    'show_nav_level': 2,  # Sidebar depth
     'navigation_depth': 4,  # Expandable sidebar
     'search_bar_text': 'Search...',  # Custom search placeholder
     'use_edit_page_button': True,  # "Edit on GitHub" buttons
@@ -60,12 +60,12 @@ html_theme_options = {
 # For edit buttons (links to GitHub source)
 html_context = {
     'github_user': 'sarahcgallLtd',
-    'github_repo': 'your-package',
-    'github_version': 'main',  # Your branch
-    'doc_path': 'docs/source',  # Path to .rst files in repo
+    'github_repo': 'scgFinance',
+    'github_version': 'main',
+    'doc_path': 'docs/source',
 }
 
-# Favicon (optional, if your hex has a favicon version)
+# Favicon
 html_favicon = '_static/favicon.ico'
 
 # For autodoc to find your package (important!)
