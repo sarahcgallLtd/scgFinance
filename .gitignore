@@ -1,3 +1,4 @@
+# Python
 __pycache__/
 *.py[cod]
 *.pyo
@@ -20,7 +21,11 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Poetry
 poetry.lock
+
+# Environments
 .env
 .venv
 env/
@@ -28,8 +33,14 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# IDEs
 .vscode/
 /.idea
+.idea/
+.idea
+
+# Misc
 *.swp
 *.bak
 *.tmp
