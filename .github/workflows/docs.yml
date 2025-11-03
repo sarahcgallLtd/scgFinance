@@ -1,37 +1,54 @@
-name: Build and Deploy Docs
-
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples (adapted for Python/Sphinx)
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
-    branches: [ main ]
+    branches: [main, master]
+
   pull_request:
-    branches: [ main ]
+    branches: [main, master]
+
+  release:
+    types: [published]
+    
+  workflow_dispatch:
+
+name: docs
 
 jobs:
-  build:
+  docs:
     runs-on: ubuntu-latest
 
+    concurrency:
+      group: docs-${{ github.event_name != 'pull_request' || github.run_id }}
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    permissions:
+      contents: write
+    
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          
+      - name: Install Poetry
+        run: pip install poetry
+        
+      - name: Install dependencies
+        run: poetry install --with dev
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-
-    - name: Install Poetry
-      run: pip install poetry
-
-    - name: Install dependencies
-      run: poetry install --with dev
-
-    - name: Build Sphinx docs
-      run: |
-        cd docs
-        poetry run sphinx-build -b html source ../build/html
-
-    - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main'
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./build/html
+      - name: Build site
+        run: |
+          cd docs
+          poetry run sphinx-build -b html source ../build/html
+          
+      - name: Deploy to GitHub pages 🚀
+        if: github.event_name != 'pull_request'
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
+        with:
+          clean: false
+          branch: gh-pages
+          folder: build/html
