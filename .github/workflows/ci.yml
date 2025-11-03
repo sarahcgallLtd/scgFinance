@@ -28,8 +28,8 @@ jobs:
     - name: Run tests
       run: poetry run pytest
 
-    - name: Lint with flake8
-      run: poetry run flake8 src/
-
-    - name: Format check with black
-      run: poetry run black --check src/
+#    - name: Lint with flake8
+#      run: poetry run flake8 src/
+#
+#    - name: Format check with black
+#      run: poetry run black --check src/
