@@ -1,0 +1,22 @@
+coverage:
+  precision: 2  # Display coverage with 2 decimal places (e.g., 80.00%)
+  round: down
+  range: "70...100"  # Green for >=90%, yellow for 70-90%, red for <70%
+
+status:
+  project:  # Overall project coverage
+    default:
+      target: auto  # Compare to parent commit
+      threshold: 5%  # Allow 1% drop before failing
+  patch:  # Coverage on new code in PR
+    default:
+      target: 80%  # Require 80% on changes
+
+ignore:  # Files/folders to exclude from coverage
+  - "tests/**/*"  # Ignore all test files
+  - "src/package_name/__init__.py"  # Optional: Ignore init if no code
+
+comment:  # PR comments from Codecov
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
