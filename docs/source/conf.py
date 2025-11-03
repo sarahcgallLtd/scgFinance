@@ -30,29 +30,43 @@ language = 'en'
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinx_rtd_theme'
-html_theme_options = {
-    #'analytics_id': 'G-XXXXXXXXXX',  #  Provided by Google in your dashboard
-    'analytics_anonymize_ip': False,
-    'logo_only': False,
-    'prev_next_buttons_location': 'bottom',
-    'style_external_links': False,
-    'vcs_pageview_mode': '',
-    'style_nav_header_background': 'white',
-    'flyout_display': 'hidden',
-    'version_selector': True,
-    'language_selector': True,
-    # Toc options
-    'collapse_navigation': True,
-    'sticky_navigation': True,
-    'navigation_depth': 4,
-    'includehidden': True,
-    'titles_only': False
-}
-html_static_path = ['_static']
+html_theme = 'pydata_sphinx_theme'
 
-# If you have a logo, add:
-# html_logo = '_static/logo.png'
+# Logo setup (hex sticker)
+html_logo = '_static/logo.png'  # Path to your hexagonal PNG (create/add below)
+
+# Optional theme customisations for pkgdown-like feel
+html_theme_options = {
+    'logo': {
+        'text': 'scgFinance',  # Package name next to logo; omit if unwanted
+        'image_light': '_static/logo.png',  # For light mode
+        'image_dark': '_static/logo-dark.png',  # Optional dark variant
+    },
+    'icon_links': [  # Add GitHub badge/link in navbar
+        {
+            'name': 'GitHub',
+            'url': 'https://github.com/sarahcgallLtd/your-package',
+            'icon': 'fa-brands fa-github',
+            'type': 'fontawesome',
+        },
+    ],
+    'show_nav_level': 2,  # Sidebar depth like pkgdown
+    'navigation_depth': 4,  # Expandable sidebar
+    'search_bar_text': 'Search...',  # Custom search placeholder
+    'use_edit_page_button': True,  # "Edit on GitHub" buttons
+    'show_toc_level': 2,  # TOC in sidebar
+}
+
+# For edit buttons (links to GitHub source)
+html_context = {
+    'github_user': 'sarahcgallLtd',
+    'github_repo': 'your-package',
+    'github_version': 'main',  # Your branch
+    'doc_path': 'docs/source',  # Path to .rst files in repo
+}
+
+# Favicon (optional, if your hex has a favicon version)
+html_favicon = '_static/favicon.ico'
 
 # For autodoc to find your package (important!)
 import os

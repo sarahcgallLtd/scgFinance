@@ -1,4 +1,4 @@
-scgFinance <a href="https://sarahcgallLtd.github.io/scgFinance/"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
+scgFinance <a href="https://sarahcgallLtd.github.io/scgFinance/"><img src="docs/source/_static/logo.png" align="right" height="138" alt="" /></a>
 
 [//]: # (======================================= UNCOMMENT BELOW ======================================================)
 
