@@ -249,10 +249,26 @@ def test_process_statements_missing_path():
         process_statements(sources) # triggered in import_statement
 
 
-def test_process_statements_missing_kwargs(sample_bank_dir):
+def test_process_statements_missing_date(sample_bank_dir):
     sources = [
         {'path': sample_bank_dir, 'source': 'bank', 'date_col': 'IncorrectName', 'date_format': '%d/%m/%Y',
          'desc_col': 'Description', 'amt_col': 'Amount'}
     ]
     with pytest.raises(ValueError, match="Date column 'IncorrectName' not found in"):
+        process_statements(sources) # triggered in process_single_file
+
+def test_process_statements_missing_desc(sample_bank_dir):
+    sources = [
+        {'path': sample_bank_dir, 'source': 'bank', 'date_col': 'Date', 'date_format': '%d/%m/%Y',
+         'desc_col': 'IncorrectName', 'amt_col': 'Amount'}
+    ]
+    with pytest.raises(ValueError, match="Description column"):
+        process_statements(sources) # triggered in process_single_file
+
+def test_process_statements_missing_amount(sample_bank_dir):
+    sources = [
+        {'path': sample_bank_dir, 'source': 'bank', 'date_col': 'Date', 'date_format': '%d/%m/%Y',
+         'desc_col': 'Description', 'amt_col': 'IncorrectName'}
+    ]
+    with pytest.raises(ValueError, match="Amount column 'IncorrectName' not found in"):
         process_statements(sources) # triggered in process_single_file
