@@ -7,8 +7,15 @@ license = "MIT"
 readme = "README.md"
 packages = [{include = "scgFinance", from = "src"}]
 
+include = [
+    "scgfinance/data/**/*",
+]
+
 [tool.poetry.dependencies]
 python = "^3.12"
+pandas = "^2.3.3"
+scikit-learn = "^1.7.2"
+numpy = "^2.3.4"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0"

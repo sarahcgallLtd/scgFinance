@@ -15,10 +15,10 @@ release = '0.1.0'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'sphinx.ext.autodoc',    # For auto-generating docs from docstrings
-    'sphinx.ext.napoleon',   # Support for Google/NumPy-style docstrings
-    'sphinx.ext.viewcode',   # Add links to source code
-    'sphinx.ext.todo',       # Support for TODO notes
+    'sphinx.ext.autodoc',  # For auto-generating docs from docstrings
+    'sphinx.ext.napoleon',  # Support for Google/NumPy-style docstrings
+    'sphinx.ext.viewcode',  # Add links to source code
+    'sphinx.ext.todo',  # Support for TODO notes
     # Add more as needed, e.g., 'sphinx.ext.mathjax' for math
 ]
 
@@ -40,6 +40,7 @@ html_theme_options = {
     'logo': {
         'text': 'scgFinance',
         'image_light': '_static/logo.png',
+        'image_dark': '_static/logo-dark.png',
     },
     # Add GitHub badge/link in navbar
     'icon_links': [
@@ -71,4 +72,5 @@ html_favicon = '_static/favicon.ico'
 # For autodoc to find your package (important!)
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('../..'))

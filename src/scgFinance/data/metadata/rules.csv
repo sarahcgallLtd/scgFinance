@@ -1,0 +1,295 @@
+﻿category,subcategory,pattern
+Income,Salary,SALARY
+Income,Salary,PAYROLL
+Income,Salary,EMPLOYER NAME
+Income,Salary,rBACS CREDIT
+Income,Salary,DIRECT CREDIT
+Income,Freelance,FREELANCE
+Income,Freelance,UPWORK
+Income,Freelance,FIVERR
+Income,Freelance,PAYMENT FROM CLIENT
+Income,Government Benefits,CHILD BENEFIT
+Income,Government Benefits,UNIVERSAL CREDIT
+Income,Government Benefits,PENSION CREDIT
+Income,Government Benefits,JOBSEEKERS ALLOWANCE
+Income,Government Benefits,BENEFIT PAYMENT
+Income,Government Benefits,DWP PAYMENT
+Income,Government Benefits,rESA
+Income,Government Benefits,rPIP
+Income,Government Benefits,CARERS ALLOWANCE
+Income,Investments,DIVIDEND
+Income,Investments,INTEREST
+Income,Other,OTHER INCOME
+Income,Other,REFUND
+Income,Other,BONUS
+Income,Other,PENSION PAYMENT
+Taxes,Income Tax,HM REVENUE
+Taxes,Income Tax,TAX PAYMENT
+Taxes,Income Tax,SELF ASSESSMENT
+Taxes,Income Tax,NATIONAL INSURANCE
+Taxes,Income Tax,HMRC
+Taxes,Council Tax,LOCAL AUTHORITY
+Taxes,Council Tax,COUNCIL PAYMENT
+Taxes,Council Tax,COUNCIL TAX
+Taxes,Council Tax,LONDON BOROUGH
+Taxes,Council Tax,CITY COUNCIL
+Taxes,TV License,TV LICENCE
+Taxes,TV License,BBC PAYMENT
+Taxes,TV License,TV LICENSING
+Taxes,TV License,rBBC
+Taxes,Vehicle,ROAD TAX
+Taxes,Vehicle,VEHICLE EXCISE DUTY
+Taxes,Vehicle,rCAR TAX
+Taxes,Vehicle,rVED PAYMENT
+Taxes,Vehicle,VEHICLE TAX
+Taxes,Vehicle,rDVLA
+Home,Rent/Mortgage,LANDLORD
+Home,Rent/Mortgage,rRENT
+Home,Rent/Mortgage,MORTGAGE PAYMENT
+Home,Rent/Mortgage,rMORTGAGE
+Home,Rent/Mortgage,rHALIFAX
+Home,Rent/Mortgage,NATWEST MORTGAGE
+Home,Energy,UTILITY BILL
+Home,Energy,rENERGY
+Home,Energy,rPOWER
+Home,Energy,rEDF ENERGY
+Home,Energy,rE.ON
+Home,Energy,OCTOPUS ENERGY
+Home,Energy,rGAS
+Home,Energy,NATURAL GAS
+Home,Energy,BRITISH GAS
+Home,Energy,rSSE
+Home,Water,WATER BILL
+Home,Water,SOUTHERN WATER
+Home,Water,THAMES WATER
+Home,Internet/Phone,rINTERNET
+Home,Internet/Phone,rBT
+Home,Internet/Phone,VIRGIN MEDIA
+Home,Internet/Phone,rSKY
+Home,Internet/Phone,TALKTALK
+Home,Internet/Phone,VODAFONE
+Home,Insurance,HOME INSURANCE
+Home,Insurance,BUILDINGS INSURANCE
+Home,Insurance,CONTENTS INSURANCE
+Home,Insurance,MORE THAN
+Home,Maintenance,REPAIRS
+Home,Maintenance,B&Q
+Home,Maintenance,WICKES
+Home,Maintenance,PLUMBER
+Home,Maintenance,SCREWFIX
+Domestic Services,House Cleaning,CLEANING SERVICE
+Domestic Services,House Cleaning,HOUSEKEEP
+Domestic Services,House Cleaning,MOLLY MAID
+Domestic Services,House Cleaning,HOUSEKEEPING
+Domestic Services,House Cleaning,CLEANER
+Domestic Services,Dry Cleaning,DRY CLEAN
+Domestic Services,Dry Cleaning,I HATE IRONING
+Domestic Services,Dry Cleaning,rTIMPSON
+Domestic Services,Dry Cleaning,JOHNSONS CLEANERS
+Domestic Services,Childcare,CHILDCARE
+Domestic Services,Childcare,BABYSITTER
+Domestic Services,Childcare,OFSTED
+Domestic Services,Dog Walker,DOG WALK
+Domestic Services,Dog Walker,PET CARE
+Domestic Services,Dog Walker,BARKING MAD
+Food/Dining,Groceries,SUPERMARKET
+Food/Dining,Groceries,TESCO
+Food/Dining,Groceries,SAINSBURYS
+Food/Dining,Groceries,ASDA
+Food/Dining,Groceries,MORRISONS
+Food/Dining,Groceries,WAITROSE
+Food/Dining,Groceries,ALDI
+Food/Dining,Groceries,LIDL
+Food/Dining,Groceries,LONDIS
+Food/Dining,Groceries,CO-OP
+Food/Dining,Groceries,M&S
+Food/Dining,Groceries,NESPRESSO
+Food/Dining,Restaurants/Bars,RESTAURANT
+Food/Dining,Restaurants/Bars,MCDONALDS
+Food/Dining,Restaurants/Bars,NANDOS
+Food/Dining,Restaurants/Bars,DINING OUT
+Food/Dining,Restaurants/Bars,DINNER
+Food/Dining,Restaurants/Bars,LUNCH
+Food/Dining,Restaurants/Bars,DRINKS
+Food/Dining,Cafes,CAFÉ
+Food/Dining,Cafes,COFFEE
+Food/Dining,Cafes,STARBUCKS
+Food/Dining,Cafes,PRET A MANGER
+Food/Dining,Cafes,COSTA
+Food/Dining,Cafes,BRUNCH
+Food/Dining,Cafes,BREAKFAST
+Food/Dining,Takeaway/Delivery,FOOD DELIVERY
+Food/Dining,Takeaway/Delivery,JUST EAT
+Food/Dining,Takeaway/Delivery,DELIVEROO
+Food/Dining,Takeaway/Delivery,UBER EATS
+Transportation,Fuel,PETROL STATION
+Transportation,Fuel,rSHELL
+Transportation,Fuel,rBP
+Transportation,Fuel,rESSO
+Transportation,Fuel,TESCO FUEL
+Transportation,Car Lease,CAR LEASE
+Transportation,Car Lease,LEASEPLAN
+Transportation,Car Lease,ARNOLD CLARK
+Transportation,Car Lease,CAR FINANCE
+Transportation,Insurance,CAR INSURANCE
+Transportation,Insurance,VEHICLE INSURANCE
+Transportation,Insurance,ADMIRAL
+Transportation,Insurance,DIRECT LINE
+Transportation,Insurance,AVIVA
+Transportation,Public Transport,OYSTER CARD
+Transportation,Public Transport,TRAVELCARD
+Transportation,Public Transport,rTFL
+Transportation,Public Transport,TRANSPORT FOR LONDON
+Transportation,Public Transport,NATIONAL RAIL
+Transportation,Public Transport,SOUTHERN RAIL
+Transportation,Public Transport,GREAT WESTERN
+Transportation,Public Transport,TRAINLINE
+Transportation,Public Transport,SEATFROG
+Transportation,Public Transport,AVANTI WEST
+Transportation,Rideshare,RIDESHARE
+Transportation,Rideshare,rUBER
+Transportation,Rideshare,BOLT
+Transportation,Rideshare,FREE NOW
+Transportation,Rideshare,LIME BIKE
+Transportation,Rideshare,ZIPCAR
+Transportation,Vehicle Maintenance,HALFORDS
+Transportation,Vehicle Maintenance,KWIK FIT
+Transportation,Vehicle Maintenance,CAR REPAIR
+Transportation,Vehicle Maintenance,rMOT
+Transportation,Parking,PARKING
+Transportation,Parking,rNCP
+Transportation,Parking,APCOA
+Transportation,Parking,Q-PARK
+Health,Medical,MEDICAL BILL
+Health,Medical,rNHS
+Health,Medical,DOCTOR
+Health,Medical,HOSPITAL
+Health,Medical,IVF
+Health,Medical,PSYCHOLOGY
+Health,Medical,rCLINIC
+Health,Dental,DENTIST
+Health,Dental,DENTAL
+Health,Pharmacy,PHARMACY
+Health,Pharmacy,rBOOTS
+Health,Pharmacy,SUPERDRUG
+Health,Pharmacy,LLOYDS PHARMACY
+Health,Insurance,HEALTH INSURANCE
+Health,Insurance,BUPA
+Health,Insurance,AXA
+Health,Veterinarian,rVET 
+Health,Veterinarian,MEDIVET
+Health,Veterinarian,VETS4PETS
+Subscriptions,News,THE TIMES
+Subscriptions,News,THE GUARDIAN
+Subscriptions,News,THE TELEGRAPH
+Subscriptions,Video Streaming,NETFLIX
+Subscriptions,Video Streaming,DISNEY+
+Subscriptions,Video Streaming,AMAZON PRIME
+Subscriptions,Video Streaming,NOW TV
+Subscriptions,Video Streaming,PARAMOUNT
+Subscriptions,Audio Services,AUDIBLE
+Subscriptions,Audio Services,SPOTIFY
+Subscriptions,Audio Services,APPLE MUSIC
+Subscriptions,Software/IT,ADOBE
+Subscriptions,Software/IT,MICROSOFT
+Subscriptions,Software/IT,GOOGLE
+Subscriptions,Software/IT,ZOOM
+Recreation,Gym/Fitness,FITNESS MEMBERSHIP
+Recreation,Gym/Fitness,PUREGYM
+Recreation,Gym/Fitness,THE GYM GROUP
+Recreation,Gym/Fitness,VIRGIN ACTIVE
+Recreation,Sports Equipment,SPORTS DIRECT
+Recreation,Sports Equipment,JD SPORTS
+Recreation,Sports Equipment,DECATHLON
+Entertainment,Tours/Experiences,VIATOR
+Entertainment,Movies/Theater,MOVIE TICKET
+Entertainment,Movies/Theater,ODEON
+Entertainment,Movies/Theater,CINEWORLD
+Entertainment,Movies/Theater,rVUE
+Entertainment,Events/Concerts,CONCERT
+Entertainment,Events/Concerts,TICKETMASTER
+Entertainment,Events/Concerts,SEETICKETS
+Personal,Retail/Clothing,CLOTHING STORE
+Personal,Retail/Clothing,RETAIL
+Personal,Retail/Clothing,JOHN LEWIS
+Personal,Retail/Clothing,TK MAXX
+Personal,Retail/Clothing,MARKS AND SPENCER
+Personal,Retail/Clothing,PRIMARK
+Personal,Retail/Clothing,ASOS
+Personal,Salon/Barber,SALON
+Personal,Salon/Barber,HAIRDRESSER
+Personal,Salon/Barber,BARBER
+Personal,Cosmetics,CHARLOTTE TILBURY
+Personal,Cosmetics,MAC COSMETICS
+Personal,Electronics,ELECTRONICS
+Personal,Electronics,CURRYS PC WORLD
+Personal,Homewares,IKEA
+Personal,Homewares,DUNELM
+Personal,Homewares,THE RANGE
+Personal,Homewares,HOMESENSE
+Travel/Holidays,Flights,AIRLINE
+Travel/Holidays,Flights,EASYJET
+Travel/Holidays,Flights,RYANAIR
+Travel/Holidays,Flights,BRITISH AIRWAYS
+Travel/Holidays,Flights,JET2
+Travel/Holidays,Flights,FLIGHT
+Travel/Holidays,Accommodation,HOTEL
+Travel/Holidays,Accommodation,AIRBNB
+Travel/Holidays,Accommodation,BOOKING.COM
+Travel/Holidays,Accommodation,PREMIER INN
+Travel/Holidays,Accommodation,TRAVELODGE
+Travel/Holidays,Car Hire,HERTZ
+Travel/Holidays,Car Hire,EUROPCAR
+Travel/Holidays,Car Hire,rSIXT
+Travel/Holidays,Car Hire,rBUDGET
+Travel/Holidays,Pet Boarding,rKENNEL
+Travel/Holidays,Pet Boarding,PET SITTER
+Travel/Holidays,Pet Boarding,DOG BOARDING
+Education,Tuition,TUITION PAYMENT
+Education,Tuition,UNIVERSITY
+Education,Tuition,STUDENT FINANCE
+Education,Tuition,SCHOOL FEES
+Education,Books/Stationary,WATERSTONES
+Education,Books/Stationary,AMAZON BOOKS
+Education,Books/Stationary,TEXTBOOK
+Education,Books/Stationary,WHSMITH
+Financial,Savings Transfers,TRANSFER TO SAVINGS
+Financial,Savings Transfers,BANK TRANSFER
+Financial,Savings Transfers,STANDING ORDER
+Financial,Investments,HARGREAVES LANSDOWN
+Financial,Investments,NUTMEG
+Financial,Investments,STOCK PURCHASE
+Financial,Investments,VANGUARD
+Financial,Credit Card Payments,CREDIT CARD PAYMENT
+Financial,Credit Card Payments,BARCLAYCARD
+Financial,Credit Card Payments,AMERICAN EXPRESS
+Financial,Credit Card Payments,CAPITAL ONE
+Financial,Debt/Loans,LOAN REPAYMENT
+Financial,Debt/Loans,STUDENT LOANS COMPANY
+Financial,Debt/Loans,PERSONAL LOAN
+Financial,Debt/Loans,DEBT PAYMENT
+Financial,Debt/Loans,BARCLAYS LOAN
+Financial,Debt/Loans,NATWEST LOAN
+Financial,Debt/Loans,CREDIT REPAYMENT
+Financial,Debt/Loans,PAYDAY LOAN
+Financial,Pensions,PENSION CONTRIBUTION
+Financial,Pensions,rNEST
+Financial,Pensions,AVIVA PENSION
+Financial,Pensions,WORKPLACE PENSION
+Financial,Pensions,rSIPP
+Miscellaneous,Gifts,rGIFT
+Miscellaneous,Gifts,rPRESENT
+Miscellaneous,Gifts,MOONPIG
+Miscellaneous,Donations,CHURCH
+Miscellaneous,Donations,CHARITY
+Miscellaneous,Donations,DONATION
+Miscellaneous,Donations,JUSTGIVING
+Miscellaneous,Bank Fees,BANK FEE
+Miscellaneous,Bank Fees,OVERDRAFT
+Miscellaneous,Bank Fees,SERVICE CHARGE
+Miscellaneous,Other,rMISC\S*
+Miscellaneous,Other,CASH WITHDRAWAL
+Miscellaneous,Other,rATM
+Miscellaneous,Postage,ROYAL MAIL
+Miscellaneous,Postage,POST OFFICE
+Miscellaneous,Postage,PARCELFORCE
