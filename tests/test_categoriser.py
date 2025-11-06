@@ -104,10 +104,10 @@ def full_ml_history_dir(tmp_path):
     d = tmp_path / "full_ml_categorised"
     d.mkdir()
     sample_csv = StringIO(SAMPLE_HISTORY_CSV)
-    hist_df = pd.read_csv(sample_csv)  # 7 unique rows
+    hist_df = pd.read_csv(sample_csv)  # 10 unique rows
     base_date = datetime(2025, 10, 1)
     dfs = []
-    for i in range(72):  # 72 * 7 ≈ 504 rows, all unique dates
+    for i in range(72):  # 72 * 10 ≈ 720 rows, all unique dates
         df_copy = hist_df.copy()
         df_copy['date'] = [(base_date + timedelta(days=i * len(hist_df) + j)).strftime('%Y-%m-%d') for j in range(len(hist_df))]
         dfs.append(df_copy)
@@ -138,6 +138,15 @@ def test_load_rules_file_no_file(tmp_path):
     no_file = str(tmp_path / "no_rules.csv")
     with pytest.raises(FileNotFoundError):
         load_rules_file(no_file)
+
+def test_load_rules_file_default_file():
+    rules = load_rules_file(None)
+    assert 'Food/Dining' in rules
+    assert 'Groceries' in rules['Food/Dining']
+    assert 'TESCO' in rules['Food/Dining']['Groceries']
+    assert 'Transportation' in rules
+    assert 'Public Transport' in rules['Transportation']
+    assert 'TRAINLINE' in rules['Transportation']['Public Transport']
 
 
 # TEST FOR LOAD_HISTORY() ==============================================================================================
@@ -318,7 +327,7 @@ def test_auto_categorise_full_ml_method(sample_rules_file, full_ml_history_dir, 
     assert 'review' in df_out.columns
     assert df_out['review'].isna().all()  # All should be categorized with ML
 
-    # Check specific categorizations (similar to hybrid, but no rules override unless ML fails)
+    # Check specific categorisations (similar to hybrid, but no rules override unless ML fails)
     # Note: Since training data only has 'Food/Dining' and 'Transportation', new categories like 'Home' won't be predicted by ML.
     # With overwrite=True, rules will override matches, so behavior similar to hybrid.
     # TRAINLINE: ML predicts Transportation/Public Transport
