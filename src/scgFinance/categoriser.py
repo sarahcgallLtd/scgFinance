@@ -8,7 +8,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-import joblib
 from importlib.resources import files
 
 # Modular helper function: Load default rules file
@@ -39,7 +38,7 @@ def load_rules_file(rules_file):
     rules_df = pd.read_csv(rules_file)
 
     # Check for required columns to avoid malformed CSV issues
-    required_cols = {'category', 'subcategory', 'pattern'} # Define required columns in the CSV
+    required_cols = {'category', 'subcategory', 'pattern'}
 
     # Verify if all required columns are present; raise error if columns missing
     if not required_cols.issubset(rules_df.columns):
@@ -82,73 +81,65 @@ def load_rules_file(rules_file):
     # Return the nested rules dictionary
     return rules
 
-# Modular helper: Load historical data from directory
-# This function loads all historical categorised CSV files from a directory, concatenates them, and removes duplicates.
-def load_history(history_dir='categorised'):
+# Modular helper: Load previously categorised data from directory
+# This function loads all previously categorised CSV files from a directory, concatenates them, and removes duplicates.
+def load_categorised(categorised_dir='categorised'):
     """
-    Loads and concatenates all historical categorised CSVs from the directory.
+    Loads and concatenates all previously categorised CSVs from the directory, if any.
 
     Args:
-        history_dir (str): Path to history directory.
+        categorised_dir (str): Path to previously categorised directory.
 
     Returns:
-        pd.DataFrame: Combined history DataFrame (deduplicated).
+        pd.DataFrame: Combined categorised DataFrame (deduplicated).
     """
-    # Initialise list to hold DataFrames from historical files
-    historical_dfs = []
+    # Initialise list to hold DataFrames from categorised files
+    categorised_dfs = []
 
-    # Check if the history directory exists and find all CSV files in the directory
-    if os.path.exists(history_dir):
-        hist_files = glob.glob(os.path.join(history_dir, '*.csv'))
+    # Check if the categorised directory exists and find all CSV files in the directory
+    if os.path.exists(categorised_dir):
+        cat_files = glob.glob(os.path.join(categorised_dir, '*.csv'))
 
         # Iterate over each file, reading the CSV into the DataFrame and appending to the list
-        for hist_file in hist_files:
-            hist_df = pd.read_csv(hist_file)
-            historical_dfs.append(hist_df)
+        for cat_file in cat_files:
+            cat_df = pd.read_csv(cat_file)
+            categorised_dfs.append(cat_df)
 
-    # If there are historical DataFrames, concatenate them, reset the index, and remove duplicates based on key columns
-    if historical_dfs:
-        all_history = pd.concat(historical_dfs, ignore_index=True)
-        all_history = all_history.drop_duplicates(subset=['date', 'description', 'amount'])
+    # If there are previously categorised DataFrames, concatenate them, reset the index, and remove duplicates based on key columns
+    if categorised_dfs:
+        all_categorised = pd.concat(categorised_dfs, ignore_index=True)
+        all_categorised = all_categorised.drop_duplicates(subset=['date', 'description', 'amount'])
     else:
         # Define expected columns based on standardised schema
         expected_columns = ['date', 'description', 'amount', 'source', 'category', 'subcategory']
-        all_history = pd.DataFrame(columns=expected_columns)
+        all_categorised = pd.DataFrame(columns=expected_columns)
 
-    # Return the combined historical DataFrame
-    return all_history
+    # Return the combined categorised DataFrame
+    return all_categorised
 
 
-# Modular helper: Train or load ML model
-# This function either loads an existing ML model from file or trains a new one if it doesn't exist.
-# It uses TF-IDF vectorization and logistic regression for classification.
-def load_or_train_model(
+# Modular helper: Train ML model
+# This function trains a new ML model using TF-IDF vectorization and logistic regression for classification.
+def train_model(
         X, # Features (descriptions)
         y, # Labels (categories or subcategories)
-        model_file, # Path to save/load the model
         model_type='category' # Type for printing (category or subcategory)
 ):
     """
-    Loads an existing ML model from file or trains a new one if it doesn't exist or data is sufficient.
-    Uses TF-IDF vectorization and logistic regression.
+    Trains a new ML model using TF-IDF vectorization and logistic regression.
 
     Args:
         X (pd.Series or list): Features, typically transaction descriptions.
         y (pd.Series or list): Labels, either categories or subcategories.
-        model_file (str): Path to the model file for loading/saving.
         model_type (str, optional): Type ('category' or 'subcategory') for printing accuracy. Defaults to 'category'.
 
     Returns:
-        Pipeline or None: The loaded or trained scikit-learn Pipeline model, or None if insufficient data.
+        Pipeline or None: The trained scikit-learn Pipeline model, or None if insufficient data.
     """
-    # Check if model file exists and load and return the model
-    if os.path.exists(model_file):
-        return joblib.load(model_file)
-
     # Check if data is sufficient for training
     if len(X) < 5 or len(np.unique(y)) < 2:
         # Skip training for very small data or single class
-        return None # Return None if insufficient data
+        return None  # Return None if insufficient data
 
     # Split data into train and test sets: 80/20 split, stratified by labels
     X_train, X_test, y_train, y_test = train_test_split(
@@ -171,27 +162,18 @@ def load_or_train_model(
     acc = accuracy_score(y_test, preds)
     print(f"{model_type.capitalize()} model accuracy on test set: {acc:.2f}") # Print accuracy
 
-    # Save the model to file
-    joblib.dump(model, model_file)
-
     # Return the trained model
     return model
 
 
-# Modular helper: Train or load ML model
-# This function gets ML models for category and subcategory, training or loading them based on labeled data.
-def get_ml_model(
-        labeled,
-        model_file='category_model.pkl',
-        sub_model_file='subcategory_model.pkl'
-):
+# Modular helper: Train ML model
+# This function gets ML models for category and subcategory, training them based on labeled data.
+def get_ml_model(labeled):
     """
-    Loads or trains ML models for category and subcategory (if available).
+    Trains ML models for category and subcategory (if available).
 
     Args:
         labeled (pd.DataFrame): Labeled data for training.
-        model_file (str): Path to save/load category model.
-        sub_model_file (str): Path to save/load subcategory model.
 
     Returns:
         dict: {'category': Pipeline or None, 'subcategory': Pipeline or None}
@@ -205,10 +187,9 @@ def get_ml_model(
 
         # If enough data (more than 2 rows):
         if len(cat_labeled) > 2:
-            models['category'] = load_or_train_model(
+            models['category'] = train_model(
                 X=cat_labeled['description'],
                 y=cat_labeled['category'],
-                model_file=model_file,
                 model_type='category'
             )
 
@@ -219,10 +200,9 @@ def get_ml_model(
 
         # If enough data (at least 10 rows):
         if len(sub_labeled) >= 10:
-            models['subcategory'] = load_or_train_model(
+            models['subcategory'] = train_model(
                 X=sub_labeled['description'],
                 y=sub_labeled['subcategory'],
-                model_file=sub_model_file,
                 model_type='subcategory'
             )
 
@@ -360,23 +340,23 @@ def detect_conflicts(df):
 
 
 # Modular helper: Save categorised DataFrame
-# This function saves the categorised DataFrame to a timestamped CSV in the history directory.
-def save_categorised(df, history_dir):
+# This function saves the categorised DataFrame to a timestamped CSV in the categorised directory.
+def save_categorised(df, categorised_dir):
     """
-    Saves the updated DataFrame to history_dir with timestamp.
+    Saves the updated DataFrame to categorised_dir with timestamp.
 
     Args:
         df (pd.DataFrame): DataFrame to save.
-        history_dir (str): Path to history directory.
+        categorised_dir (str): Path to categorised directory.
 
     Returns:
         str: Path where saved.
     """
     # Create directory if it doesn't exist
-    os.makedirs(history_dir, exist_ok=True)
+    os.makedirs(categorised_dir, exist_ok=True)
 
     # Create timestamped filename
-    save_path = os.path.join(history_dir, pd.Timestamp.now().strftime('%Y-%m-%d_%H-%M-%S') + '.csv')
+    save_path = os.path.join(categorised_dir, pd.Timestamp.now().strftime('%Y-%m-%d_%H-%M-%S') + '.csv')
 
     # Save DataFrame to CSV without index
     df.to_csv(save_path, index=False)
@@ -388,14 +368,12 @@ def save_categorised(df, history_dir):
 
 # Main function: auto_categorise
 # This is the main function that orchestrates the categorisation process using rules, ML, or hybrid based on data availability.
-# It loads rules and history, applies categorisation, detects conflicts, generates review file, and saves the result.
+# It loads rules and previously categorised files, applies categorisation, detects conflicts, generates review file, and saves the result.
 def auto_categorise(
         df, # Input DataFrame to categorise
         rules_file=None, # Optional rules file path
         overwrite=False, # Whether to overwrite existing categories
-        model_file='category_model.pkl', # Category model file
-        sub_model_file='subcategory_model.pkl', # Subcategory model file
-        history_dir='categorised' # History directory
+        categorised_dir='categorised' # Previously categorised directory
 ):
     """
     Automatically categorises transactions based on description. Supports rules-based or ML-based (optional), using historical data.
@@ -404,15 +382,13 @@ def auto_categorise(
         df (pd.DataFrame): New DataFrame with 'description' and 'category' columns (from import).
         rules_file (str, optional): Path to CSV file with rules (defaults to bundled 'metadata/rules.csv').
         overwrite (bool): If True, re-categorise even if 'category' exists.
-        model_file (str): Path to save/load category ML model.
-        sub_model_file (str): Path to save/load subcategory ML model.
-        history_dir (str): Directory with historical categorised CSVs (default: 'categorised').
+        categorised_dir (str): Directory with previously categorised CSVs (default: 'categorised').
 
     Returns:
         pd.DataFrame: Updated DF with 'category' and 'subcategory' filled, plus 'review' column for flagging rows needing manual review.
-        Also saves to history_dir.
+        Also saves to categorised_dir.
     """
-    # 1. Initialise category and subcategory if not present (since import doesn't add them)
+    # 1. Initialise category and subcategory if not present (since import doesn't add them) ============================
     # Check and add category column if missing
     if 'category' not in df.columns:
         df['category'] = None
@@ -421,33 +397,33 @@ def auto_categorise(
     if 'subcategory' not in df.columns:
         df['subcategory'] = None
 
-    # 2. Snapshot original for conflict detection
+    # 2. Snapshot original for conflict detection ======================================================================
     # Copy original categories for later comparison
     df['original_category'] = df['category'].copy()
 
-    # 3. Load rules (always, as fallback/hybrid) and historical data (if present)
+    # 3. Load rules (always, as fallback/hybrid) and previously categorised data (if present) ==========================
     # Load rules from file and compile for matching
     rules = load_rules_file(rules_file)
     compiled_rules = compile_rules(rules)
 
-    # Load history
-    all_history = load_history(history_dir)
+    # Load previously categorised
+    all_categorised = load_categorised(categorised_dir)
 
-    # 4. Prepare labeled/unlabeled (combine history + df's pre-labeled)
-    # Concatenate historical labeled and current labeled
+    # 4. Prepare labeled/unlabeled (combine previously categorised + df's pre-labeled) =================================
+    # Concatenate previously categorised labeled and current labeled
     labeled = pd.concat([
-        all_history[all_history['category'].notna() & all_history['category'].ne('')],
+        all_categorised[all_categorised['category'].notna() & all_categorised['category'].ne('')],
         df[df['category'].notna() & df['category'].ne('')]
     ], ignore_index=True) # Reset index
 
     # Select unlabeled in current df
     unlabeled = df[df['category'].isna() | df['category'].eq('')]
 
-    # 5. Determine mode based on data availability (no explicit use_ml param; auto-detect)
-    # Mode 1: Rules only (no/insufficient history/data); If no history or few labeled, use rules only and
-    #         apply rules to each row
-    if len(all_history) == 0 or len(labeled) < 10:
-        print("No or insufficient history/labeled data; using rules only.")
+    # 5. Determine mode based on data availability (no explicit use_ml param; auto-detect) =============================
+    # Mode 1: Rules only (no/insufficient previously categorised/data); If no previously categorised or few labeled,
+    #         use rules only and apply rules to each row
+    if len(all_categorised) == 0 or len(labeled) < 10:
+        print("No or insufficient previously categorised/labeled data; using rules only.")
 
         # Get, and apply, rules
         df[['category', 'subcategory']] = df.apply(
@@ -455,13 +431,13 @@ def auto_categorise(
             axis=1
         )
 
-    # Mode 2: Hybrid (rules + ML) for limited data or potential conflicts; If historical data is "limited"
+    # Mode 2: Hybrid (rules + ML) for limited data or potential conflicts; If previously categorised data is "limited"
     #         (less than 500 labels), use hybrid
     elif len(labeled) < 500:
         print("Limited labeled data; using ML + rules hybrid.")
 
         # Get, and apply, model
-        models = get_ml_model(labeled, model_file, sub_model_file)
+        models = get_ml_model(labeled)
         if models['category']:
             df = apply_ml(df, models)
 
@@ -476,7 +452,7 @@ def auto_categorise(
         print("Sufficient labeled data; using full ML.")
 
         # Get, and apply, model
-        models = get_ml_model(labeled, model_file, sub_model_file)
+        models = get_ml_model(labeled)
         if models['category']:
             df = apply_ml(df, models)
 
@@ -509,7 +485,7 @@ def auto_categorise(
     df.drop(columns=['original_category', 'conflict'], errors='ignore', inplace=True)
 
     # Save updated df (categorised DataFrame)
-    save_categorised(df, history_dir)
+    save_categorised(df, categorised_dir)
 
     # Return the updated DataFrame
     return df

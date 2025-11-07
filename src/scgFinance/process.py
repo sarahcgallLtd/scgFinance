@@ -46,13 +46,13 @@ def update_metadata(imported_files, source, metadata_file='metadata/processed_fi
 def process_statements(
         sources,
         metadata_file='metadata/processed_files.csv',
-        history_dir='categorised/',
+        categorised_dir='categorised/',
         rules_file=None,
         overwrite=False
 ):
     """
     Runs the full finance pipeline: imports statements from multiple sources,
-    categorises them, updates metadata, and saves history.
+    categorises them, updates metadata, and saves categorised.
 
     Args:
         sources (list of dict): Each dict contains:
@@ -60,7 +60,7 @@ def process_statements(
             - 'source': str, source identifier (e.g., 'Lloyds', 'HSBC', 'Mastercard')
             - Optional custom params: 'desc_col', 'time_col', etc., passed to import_statements
         metadata_file (str): Path to metadata CSV for tracking processed files.
-        history_dir (str): Directory for saving categorised history.
+        categorised_dir (str): Directory for saving categorised/processed files.
         rules_file (str, optional): Path to custom rules CSV; None uses default.
         overwrite (bool): If True, re-categorise existing categories.
 
@@ -98,7 +98,7 @@ def process_statements(
         all_df,
         rules_file=rules_file,  # Use None for bundled rules, or specify a path
         overwrite=overwrite,  # Set to True if you want to re-categorise existing categories
-        history_dir=history_dir  # Saves the categorised DF here
+        categorised_dir=categorised_dir  # Saves the categorised DF here
     )
 
     # Step 4: Update metadata to mark imported files as processed

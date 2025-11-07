@@ -6,7 +6,7 @@ from io import StringIO
 from datetime import datetime, timedelta
 from src.scgFinance.categoriser import (
     load_rules_file,
-    load_history,
+    load_categorised,
     get_ml_model,
     apply_ml,
     compile_rules,
@@ -26,7 +26,7 @@ Transportation,Rideshare,BOLT
 Home,Maintenance,B&Q
 '''
 
-SAMPLE_HISTORY_CSV = '''date,description,amount,category,subcategory
+SAMPLE_CATEGORISED_CSV = '''date,description,amount,category,subcategory
 2025-10-01,TRAINLINE.COM LONDON,22.89,Transportation,Public Transport
 2025-10-07,DELIVEROO LONDON,19.37,Food/Dining,Takeaway/Delivery
 2025-10-08,B&Q CHELMSFORD,5.0,Home,Maintenance
@@ -65,28 +65,28 @@ def bad_rules_file(tmp_path):
     return str(p)
 
 @pytest.fixture
-def sample_history_dir(tmp_path):
+def sample_categorised_dir(tmp_path):
     d = tmp_path / "categorised"
     d.mkdir()
     p = d / "test.csv"
-    p.write_text(SAMPLE_HISTORY_CSV)
+    p.write_text(SAMPLE_CATEGORISED_CSV)
     return str(d)
 
 @pytest.fixture
-def empty_history_dir(tmp_path):
+def empty_categorised_dir(tmp_path):
     d = tmp_path / "empty_categorised"
     d.mkdir()
     return str(d)
 
 @pytest.fixture
-def no_history_dir(tmp_path):
+def no_categorised_dir(tmp_path):
     return str(tmp_path / "non_existent_dir")
 
 @pytest.fixture
-def hybrid_history_dir(tmp_path):
+def hybrid_categorised_dir(tmp_path):
     d = tmp_path / "hybrid_categorised"
     d.mkdir()
-    sample_csv = StringIO(SAMPLE_HISTORY_CSV)
+    sample_csv = StringIO(SAMPLE_CATEGORISED_CSV)
     hist_df = pd.read_csv(sample_csv)  # Now 7 unique rows
     base_date = datetime(2025, 10, 1)
     dfs = []
@@ -100,10 +100,10 @@ def hybrid_history_dir(tmp_path):
     return str(d)
 
 @pytest.fixture
-def full_ml_history_dir(tmp_path):
+def full_ml_categorised_dir(tmp_path):
     d = tmp_path / "full_ml_categorised"
     d.mkdir()
-    sample_csv = StringIO(SAMPLE_HISTORY_CSV)
+    sample_csv = StringIO(SAMPLE_CATEGORISED_CSV)
     hist_df = pd.read_csv(sample_csv)  # 10 unique rows
     base_date = datetime(2025, 10, 1)
     dfs = []
@@ -149,22 +149,22 @@ def test_load_rules_file_default_file():
     assert 'TRAINLINE' in rules['Transportation']['Public Transport']
 
 
-# TEST FOR LOAD_HISTORY() ==============================================================================================
-def test_load_history(sample_history_dir):
-    history = load_history(sample_history_dir)
-    assert len(history) == 10
-    assert list(history.columns) == ['date', 'description', 'amount', 'category', 'subcategory']
-    assert history.iloc[0]['description'] == 'TRAINLINE.COM LONDON'
+# TEST FOR LOAD_CATEGORISED() ==========================================================================================
+def test_load_categorised(sample_categorised_dir):
+    categorised = load_categorised(sample_categorised_dir)
+    assert len(categorised) == 10
+    assert list(categorised.columns) == ['date', 'description', 'amount', 'category', 'subcategory']
+    assert categorised.iloc[0]['description'] == 'TRAINLINE.COM LONDON'
 
-def test_load_history_empty(empty_history_dir):
-    history = load_history(empty_history_dir)
-    assert history.empty
-    assert 'category' in history.columns
+def test_load_categorised_empty(empty_categorised_dir):
+    categorised = load_categorised(empty_categorised_dir)
+    assert categorised.empty
+    assert 'category' in categorised.columns
 
-def test_load_history_no_dir(no_history_dir):
-    history = load_history(no_history_dir)
-    assert history.empty
-    assert 'category' in history.columns
+def test_load_categorised_no_dir(no_categorised_dir):
+    categorised = load_categorised(no_categorised_dir)
+    assert categorised.empty
+    assert 'category' in categorised.columns
 
 
 # TEST FOR COMPILE_RULES() =============================================================================================
@@ -214,9 +214,7 @@ def test_get_ml_model(tmp_path):
         'category': ['Food/Dining', 'Food/Dining', 'Transportation', 'Transportation', 'Transportation'] * 10,
         'subcategory': ['Groceries', 'Restaurants/Bars', 'Public Transport', 'Rideshare', 'Rideshare'] * 10
     })
-    model_file = str(tmp_path / "cat_model.pkl")
-    sub_model_file = str(tmp_path / "sub_model.pkl")
-    models = get_ml_model(labeled, model_file, sub_model_file)
+    models = get_ml_model(labeled)
     assert models['category'] is not None
     assert models['subcategory'] is not None
 
@@ -239,17 +237,17 @@ def test_apply_ml():
 # TEST FOR SAVE_CATEGORISED() ==========================================================================================
 def test_save_categorised(tmp_path):
     df = SAMPLE_DF.copy()
-    hist_dir = str(tmp_path / "save_test")
-    save_path = save_categorised(df, hist_dir)
+    cat_dir = str(tmp_path / "save_test")
+    save_path = save_categorised(df, cat_dir)
     assert os.path.exists(save_path)
     loaded = pd.read_csv(save_path)
     assert loaded.shape == df.shape
 
 # TEST FOR AUTO_CATEGORISE() ===========================================================================================
 def test_auto_categorise_rules_method(sample_rules_file, tmp_path):
-    hist_dir = str(tmp_path / "auto_test")
+    cat_dir = str(tmp_path / "auto_test")
     df_test = SAMPLE_DF.copy()
-    df_out = auto_categorise(df_test, rules_file=sample_rules_file, history_dir=hist_dir, overwrite=True)
+    df_out = auto_categorise(df_test, rules_file=sample_rules_file, categorised_dir=cat_dir, overwrite=True)
     assert 'category' in df_out.columns
     assert 'subcategory' in df_out.columns
     assert 'review' in df_out.columns
@@ -262,17 +260,13 @@ def test_auto_categorise_rules_method(sample_rules_file, tmp_path):
     assert 'category conflict - review and resolve' not in df_out['review'].values
 
 
-def test_auto_categorise_hybrid_method(sample_rules_file, hybrid_history_dir, tmp_path, capsys):
-    model_file = str(tmp_path / "cat_hybrid.pkl")
-    sub_model_file = str(tmp_path / "sub_hybrid.pkl")
+def test_auto_categorise_hybrid_method(sample_rules_file, hybrid_categorised_dir, tmp_path, capsys):
     df_test = SAMPLE_DF.copy()
     df_out = auto_categorise(
         df_test,
         rules_file=sample_rules_file,
         overwrite=True,  # Enable overwrite to test hybrid behaviour (rules can override ML if matched)
-        model_file=model_file,
-        sub_model_file=sub_model_file,
-        history_dir=hybrid_history_dir
+        categorised_dir=hybrid_categorised_dir
     )
     captured = capsys.readouterr()
     assert "Limited labeled data; using ML + rules hybrid." in captured.out
@@ -303,21 +297,14 @@ def test_auto_categorise_hybrid_method(sample_rules_file, hybrid_history_dir, tm
     assert df_out[df_out['description'] == 'BOLT LONDON']['category'].values[0] == 'Transportation'
     assert df_out[df_out['description'] == 'BOLT LONDON']['subcategory'].values[0] == 'Rideshare'
 
-    # Confirm models were trained
-    assert os.path.exists(model_file)
-    assert os.path.exists(sub_model_file)
 
-def test_auto_categorise_full_ml_method(sample_rules_file, full_ml_history_dir, tmp_path, capsys):
-    model_file = str(tmp_path / "cat_full.pkl")
-    sub_model_file = str(tmp_path / "sub_full.pkl")
+def test_auto_categorise_full_ml_method(sample_rules_file, full_ml_categorised_dir, tmp_path, capsys):
     df_test = SAMPLE_DF.copy()
     df_out = auto_categorise(
         df_test,
         rules_file=sample_rules_file,
         overwrite=True,  # Enable overwrite for consistency; allows rules fallback if ML fails (though unlikely here)
-        model_file=model_file,
-        sub_model_file=sub_model_file,
-        history_dir=full_ml_history_dir
+        categorised_dir=full_ml_categorised_dir
     )
     captured = capsys.readouterr()
     assert "Sufficient labeled data; using full ML." in captured.out
@@ -349,7 +336,3 @@ def test_auto_categorise_full_ml_method(sample_rules_file, full_ml_history_dir, 
     # BOLT: Rules override to Transportation/Rideshare
     assert df_out[df_out['description'] == 'BOLT LONDON']['category'].values[0] == 'Transportation'
     assert df_out[df_out['description'] == 'BOLT LONDON']['subcategory'].values[0] == 'Rideshare'
-
-    # Confirm models were trained
-    assert os.path.exists(model_file)
-    assert os.path.exists(sub_model_file)
