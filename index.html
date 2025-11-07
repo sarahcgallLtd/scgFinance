@@ -326,6 +326,72 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </div>
 </section>
 </section>
+<section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h1>
+<p><cite>scgFinance</cite> provides a streamlined workflow for importing, categorising, and managing personal finance data from
+bank and credit card statements. Below are examples demonstrating key functions. For full details, refer to
+the [package documentation](<a class="reference external" href="https://docs.sarahcgall.co.uk/scgFinance">https://docs.sarahcgall.co.uk/scgFinance</a>).</p>
+<section id="loading-sample-data">
+<h2>Loading Sample Data<a class="headerlink" href="#loading-sample-data" title="Link to this heading">#</a></h2>
+<p><cite>scgFinance</cite> comes with sample data for you to use, including access to the default rules file which is used to
+classify and categorise statement items when there are insufficient amounts of previously categorised data.</p>
+<p>Use <cite>load_package_data</cite> to access bundled sample datasets for testing or exploration:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scgFinance.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_package_data</span>
+
+<span class="c1"># Load bank sample</span>
+ <span class="n">bank_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;bank&#39;</span><span class="p">)</span>
+ <span class="nb">print</span><span class="p">(</span><span class="n">bank_df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+ <span class="c1"># Load credit card sample</span>
+ <span class="n">cc_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;credit_card&#39;</span><span class="p">)</span>
+
+ <span class="c1"># Load rules</span>
+ <span class="n">rules_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;rules&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="processing-pipeline">
+<h2>Processing Pipeline<a class="headerlink" href="#processing-pipeline" title="Link to this heading">#</a></h2>
+<p>The <cite>process_statements</cite> function runs the end-to-end workflow: importing from multiple sources, categorising, updating metadata, and saving categorised/processed files.</p>
+<p>Example: Processing bank and credit card statements together:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scgFinance.process</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_statements</span>
+
+<span class="c1"># Define sources as a list of configs</span>
+<span class="n">sources</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;path/to/bank_statements/&#39;</span><span class="p">,</span>  <span class="c1"># Directory or single file path</span>
+        <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;bank&#39;</span><span class="p">,</span>                    <span class="c1"># Identifier for tracking (e.g., &#39;bank&#39; or &#39;credit_card&#39;)</span>
+        <span class="s1">&#39;date_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Date&#39;</span><span class="p">,</span>                  <span class="c1"># Column name for date (default = &#39;Date&#39;)</span>
+        <span class="s1">&#39;date_format&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">,</span>           <span class="c1"># Date format in your CSVs (default = &#39;%d/%m/%Y&#39;)</span>
+        <span class="s1">&#39;time_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Time&#39;</span><span class="p">,</span>                  <span class="c1"># Optional: Time column (set to None if absent)</span>
+        <span class="s1">&#39;time_format&#39;</span><span class="p">:</span> <span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">,</span>           <span class="c1"># Optional: Time format (default = &#39;%H:%M:%S&#39;)</span>
+        <span class="s1">&#39;desc_col&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Description&#39;</span><span class="p">],</span> <span class="c1"># Single column or list to concatenate</span>
+        <span class="s1">&#39;amt_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Amount&#39;</span>                  <span class="c1"># Column name for amount (default = &#39;Amount&#39;)</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;path/to/credit_card_statements/&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;credit_card&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;date_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Date&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;date_format&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;desc_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Description&#39;</span><span class="p">,</span>           <span class="c1"># Single column (default = &#39;Description)</span>
+        <span class="s1">&#39;amt_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Amount&#39;</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="c1"># Run the full pipeline</span>
+<span class="n">categorised_df</span> <span class="o">=</span> <span class="n">process_statements</span><span class="p">(</span>
+    <span class="n">sources</span><span class="p">,</span>
+    <span class="n">metadata_file</span><span class="o">=</span><span class="s1">&#39;metadata/processed_files.csv&#39;</span><span class="p">,</span>  <span class="c1"># Location for saving which imports have been processed</span>
+    <span class="n">categorised_dir</span><span class="o">=</span><span class="s1">&#39;categorised/&#39;</span><span class="p">,</span>                <span class="c1"># Directory for previously categorised CSVs (used for ML training)</span>
+    <span class="n">rules_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>                               <span class="c1"># None uses bundled default rules; or &#39;metadata/custom_rules.csv&#39;</span>
+    <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span>                                <span class="c1"># Set True to re-categorise existing entries</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">categorised_df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+</section>
 
 
                 </article>
@@ -360,6 +426,11 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stable-version-from-pypi">Stable Version (from PyPI)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development-version-from-github">Development Version (from GitHub)</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-sample-data">Loading Sample Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#processing-pipeline">Processing Pipeline</a></li>
 </ul>
 </li>
 </ul>
