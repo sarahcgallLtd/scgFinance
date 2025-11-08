@@ -14,7 +14,7 @@
     <link href="../../../_static/android-chrome-512x512.png" sizes="512x512" rel="icon" type="image/png">
     <link rel="mask-icon" color="#459db9" href="../../../_static/safari-pinned-tab.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="../../../_static/apple-touch-icon.png" sizes="180x180" type="image/png">
-    <title>scgFinance.utils &#8212; scgFinance 0.1.0 documentation</title>
+    <title>scgFinance.pipeline &#8212; scgFinance 0.1.0 documentation</title>
   
   
   
@@ -51,12 +51,12 @@
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../_static/copybutton.js?v=f281be69"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/scgFinance/utils/index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/scgFinance/pipeline/index';</script>
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Changelog" href="../../../changeLog.html" />
-    <link rel="prev" title="scgFinance.pipeline" href="../pipeline/index.html" />
+    <link rel="next" title="scgFinance.utils" href="../utils/index.html" />
+    <link rel="prev" title="scgFinance.importers" href="../importers/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -367,8 +367,8 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../categoriser/index.html">scgFinance.categoriser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../importers/index.html">scgFinance.importers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../pipeline/index.html">scgFinance.pipeline</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">scgFinance.utils</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">scgFinance.pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">scgFinance.utils</a></li>
 </ul>
 </div>
 </nav></div>
@@ -415,7 +415,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">scgFinance</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">scgFinance.utils</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">scgFinance.pipeline</span></li>
   </ul>
 </nav>
 </div>
@@ -432,14 +432,14 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-scgFinance.utils">
-<span id="scgfinance-utils"></span><h1>scgFinance.utils<a class="headerlink" href="#module-scgFinance.utils" title="Link to this heading">#</a></h1>
+  <section id="module-scgFinance.pipeline">
+<span id="scgfinance-pipeline"></span><h1>scgFinance.pipeline<a class="headerlink" href="#module-scgFinance.pipeline" title="Link to this heading">#</a></h1>
 <section id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#scgFinance.utils.load_package_data" title="scgFinance.utils.load_package_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_package_data</span></code></a>(data_type)</p></td>
-<td><p>Loads bundled package data from CSV files based on the specified data type.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#scgFinance.pipeline.process_statements" title="scgFinance.pipeline.process_statements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_statements</span></code></a>(sources[, metadata_file, ...])</p></td>
+<td><p>Orchestrates the full financial statement processing pipeline: importing,</p></td>
 </tr>
 </tbody>
 </table>
@@ -448,42 +448,54 @@
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="scgFinance.utils.load_package_data">
-<span class="sig-prename descclassname"><span class="pre">scgFinance.utils.</span></span><span class="sig-name descname"><span class="pre">load_package_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/scgFinance/utils.html#load_package_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.utils.load_package_data" title="Link to this definition">#</a></dt>
-<dd><p>Loads bundled package data from CSV files based on the specified data type.</p>
-<p>This utility function accesses sample data or metadata files packaged
-within the ‘scgFinance’ module using importlib.resources. It supports
-loading example bank statements, credit card statements, or default
-categorisation rules. The file paths are resolved dynamically, and the
-contents are read into a pandas DataFrame. This is useful for testing,
-demonstrations, or default configurations without requiring external
-file access.</p>
+<dt class="sig sig-object py" id="scgFinance.pipeline.process_statements">
+<span class="sig-prename descclassname"><span class="pre">scgFinance.pipeline.</span></span><span class="sig-name descname"><span class="pre">process_statements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sources</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'metadata/processed_files.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categorised_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'categorised/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/scgFinance/pipeline.html#process_statements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.pipeline.process_statements" title="Link to this definition">#</a></dt>
+<dd><p>Orchestrates the full financial statement processing pipeline: importing,
+categorising, updating metadata, and saving results.</p>
+<p>This function processes statements from multiple sources by importing
+unprocessed files, combining them into a single DataFrame, applying
+automatic categorisation, updating the metadata to mark files as
+processed, and returning the categorised DataFrame. If no new transactions
+are found, an empty DataFrame is returned. Custom import parameters can
+be provided per source.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data_type</strong> (<em>str</em>) – <p>The type of data to load. Valid options are:
-- ‘bank’: Loads the sample bank statement from</p>
-<blockquote>
-<div><p>’scgFinance.data.raw_data.bank/251031
-Example Bank Statement.csv’.</p>
-</div></blockquote>
-<ul class="simple">
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sources</strong> (<em>list</em><em> of </em><em>dict</em>) – <dl class="simple">
+<dt>A list of dictionaries, each specifying a</dt><dd><p>source configuration:</p>
+</dd>
+</dl>
+<ul>
+<li><p>’path’ (str): Path to the file or directory of CSV statements.</p></li>
 <li><dl class="simple">
-<dt>’credit_card’: Loads the sample credit card statement from</dt><dd><p>’scgFinance.data.raw_data.credit_card/251031
-Example Credit Card Statement.csv’.</p>
+<dt>’source’ (str): Identifier for the source (e.g., ‘Lloyds’,</dt><dd><p>’HSBC’).</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>’rules’: Loads the default categorisation rules from</dt><dd><p>’scgFinance.data.metadata/rules.csv’.</p>
+<dt>Optional keys: ‘date_col’, ‘date_format’, ‘time_col’,</dt><dd><p>’time_format’, ‘desc_col’, ‘amt_col’ for
+custom import settings.</p>
 </dd>
 </dl>
 </li>
 </ul>
-</p>
+</p></li>
+<li><p><strong>metadata_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the metadata CSV for tracking
+processed files. Defaults to
+‘metadata/processed_files.csv’.</p></li>
+<li><p><strong>categorised_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory to save the categorised CSV
+files. Defaults to ‘categorised/’.</p></li>
+<li><p><strong>rules_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to a custom rules CSV for
+categorisation; None uses the default
+bundled rules.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, re-categorises even existing
+categories during auto_categorise. Defaults
+to False.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>A DataFrame containing the loaded data from the specified</dt><dd><p>CSV file.</p>
+<dt>The combined and categorised DataFrame, or an empty</dt><dd><p>DataFrame if no new transactions were processed.</p>
 </dd>
 </dl>
 </p>
@@ -493,26 +505,23 @@ Example Credit Card Statement.csv’.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If an invalid ‘data_type’ is provided (not one of ‘bank’,
-‘credit_card’, or ‘rules’).</p></li>
-<li><p><strong>FileNotFoundError</strong> – If the bundled file is missing (though this should
-not occur in a properly packaged module).</p></li>
-<li><p><strong>pandas.errors</strong> – If there are issues parsing the CSV file.</p></li>
+<li><p><strong>ValueError</strong> – If ‘path’ or ‘source’ is missing in any source
+configuration, or if columns are not found during import.</p></li>
+<li><p><strong>Other exceptions</strong> – Propagated from import_statements() or
+auto_categorise(), such as FileNotFoundError for
+rules_file.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bank_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;bank&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bank_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-<span class="go">Index([&#39;Date&#39;, &#39;Description&#39;, &#39;Amount&#39;], dtype=&#39;object&#39;)</span>
-<span class="go"># Example columns</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rules_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;rules&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">rules_df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-<span class="go">  category subcategory pattern</span>
-<span class="go">0  Food/Dining   Groceries   TESCO</span>
-<span class="go">...</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sources</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;bank_statements/&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;bank&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;date_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="s1">&#39;date_format&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">,</span>
+<span class="gp">... </span>     <span class="s1">&#39;desc_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Description&#39;</span><span class="p">,</span> <span class="s1">&#39;amt_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Amount&#39;</span><span class="p">}</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">process_statements</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">rules_file</span><span class="o">=</span><span class="s1">&#39;custom_rules.csv&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="go">(10, 7)  # Example assuming 10 transactions processed with 7 columns</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -531,20 +540,20 @@ not occur in a properly packaged module).</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../pipeline/index.html"
+       href="../importers/index.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">scgFinance.pipeline</p>
+        <p class="prev-next-title">scgFinance.importers</p>
       </div>
     </a>
     <a class="right-next"
-       href="../../../changeLog.html"
+       href="../utils/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Changelog</p>
+        <p class="prev-next-title">scgFinance.utils</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -569,7 +578,7 @@ not occur in a properly packaged module).</p></li>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scgFinance.utils.load_package_data"><code class="docutils literal notranslate"><span class="pre">load_package_data()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scgFinance.pipeline.process_statements"><code class="docutils literal notranslate"><span class="pre">process_statements()</span></code></a></li>
 </ul>
 </li>
 </ul>

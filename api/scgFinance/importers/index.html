@@ -55,7 +55,7 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="scgFinance.process" href="../process/index.html" />
+    <link rel="next" title="scgFinance.pipeline" href="../pipeline/index.html" />
     <link rel="prev" title="scgFinance.categoriser" href="../categoriser/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -367,7 +367,7 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../categoriser/index.html">scgFinance.categoriser</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">scgFinance.importers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../process/index.html">scgFinance.process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline/index.html">scgFinance.pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils/index.html">scgFinance.utils</a></li>
 </ul>
 </div>
@@ -439,7 +439,7 @@
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#scgFinance.importers.import_statements" title="scgFinance.importers.import_statements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_statements</span></code></a>(path[, source, date_col, ...])</p></td>
-<td><p>Orchestrates the import of financial statements from one or more CSV files, ensuring only unprocessed files are handled.</p></td>
+<td><p>Orchestrates the import of financial statements from one or more CSV</p></td>
 </tr>
 </tbody>
 </table>
@@ -450,28 +450,44 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="scgFinance.importers.import_statements">
 <span class="sig-prename descclassname"><span class="pre">scgFinance.importers.</span></span><span class="sig-name descname"><span class="pre">import_statements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Date'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%d/%m/%Y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%H:%M:%S'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Description'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amt_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Amount'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'metadata/processed_files.csv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/scgFinance/importers.html#import_statements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.importers.import_statements" title="Link to this definition">#</a></dt>
-<dd><p>Orchestrates the import of financial statements from one or more CSV files, ensuring only unprocessed files are handled.</p>
-<p>This is the primary entry point for importing data. It loads metadata to track processed files, filters out already processed ones,
-processes each remaining file using process_single_file(), concatenates the results into a single DataFrame sorted by date,
-and returns the combined DataFrame along with a list of imported file base names. Note that this function does not update the metadata;
-that should be handled by the caller after successful processing.</p>
+<dd><p>Orchestrates the import of financial statements from one or more CSV
+files, ensuring only unprocessed files are handled.</p>
+<p>This is the primary entry point for importing data. It loads metadata to
+track processed files, filters out already processed ones, processes
+each remaining file using process_single_file(), concatenates the
+results into a single DataFrame sorted by date, and returns the
+combined DataFrame along with a list of imported file base names.
+Note that this function does not update the metadata; that should be
+handled by the caller after successful processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em>) – The path to a single CSV file or a directory containing CSV files.</p></li>
-<li><p><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – The source identifier (e.g., ‘credit card’). Required for metadata filtering.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – The path to a single CSV file or a directory containing
+CSV files.</p></li>
+<li><p><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – The source identifier (e.g., ‘credit card’).
+Required for metadata filtering.</p></li>
 <li><p><strong>date_col</strong> (<em>str</em><em>, </em><em>optional</em>) – The date column name. Defaults to ‘Date’.</p></li>
-<li><p><strong>date_format</strong> (<em>str</em><em>, </em><em>optional</em>) – The date format string. Defaults to ‘%d/%m/%Y’.</p></li>
-<li><p><strong>time_col</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – The time column name. Defaults to None.</p></li>
-<li><p><strong>time_format</strong> (<em>str</em><em>, </em><em>optional</em>) – The time format string. Defaults to ‘%H:%M:%S’.</p></li>
-<li><p><strong>desc_col</strong> (<em>str</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – The description column(s). Defaults to ‘Description’.</p></li>
+<li><p><strong>date_format</strong> (<em>str</em><em>, </em><em>optional</em>) – The date format string. Defaults to
+‘%d/%m/%Y’.</p></li>
+<li><p><strong>time_col</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – The time column name. Defaults
+to None.</p></li>
+<li><p><strong>time_format</strong> (<em>str</em><em>, </em><em>optional</em>) – The time format string. Defaults to
+‘%H:%M:%S’.</p></li>
+<li><p><strong>desc_col</strong> (<em>str</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – The description column(s).
+Defaults to ‘Description’.</p></li>
 <li><p><strong>amt_col</strong> (<em>str</em><em>, </em><em>optional</em>) – The amount column name. Defaults to ‘Amount’.</p></li>
-<li><p><strong>metadata_file</strong> (<em>str</em><em>, </em><em>optional</em>) – The path to the metadata CSV. Defaults to ‘metadata/processed_files.csv’.</p></li>
+<li><p><strong>metadata_file</strong> (<em>str</em><em>, </em><em>optional</em>) – The path to the metadata CSV.
+Defaults to
+‘metadata/processed_files.csv’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p>pd.DataFrame: The combined, sorted DataFrame of all processed files.</p></li>
+<li><dl class="simple">
+<dt>pd.DataFrame: The combined, sorted DataFrame of all</dt><dd><p>processed files.</p>
+</dd>
+</dl>
+</li>
 <li><p>list: A list of base names of the imported (processed) files.</p></li>
 </ul>
 </p>
@@ -480,7 +496,8 @@ that should be handled by the caller after successful processing.</p>
 <dd class="field-odd"><p>tuple</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If path or source is not specified, or if no files are found/processed.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If path or source is not specified, or if no files
+are found/processed.</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -516,11 +533,11 @@ that should be handled by the caller after successful processing.</p>
       </div>
     </a>
     <a class="right-next"
-       href="../process/index.html"
+       href="../pipeline/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">scgFinance.process</p>
+        <p class="prev-next-title">scgFinance.pipeline</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

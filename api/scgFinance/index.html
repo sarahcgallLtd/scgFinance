@@ -367,7 +367,7 @@
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="categoriser/index.html">scgFinance.categoriser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="importers/index.html">scgFinance.importers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="process/index.html">scgFinance.process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline/index.html">scgFinance.pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils/index.html">scgFinance.utils</a></li>
 </ul>
 </div>
@@ -437,7 +437,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="categoriser/index.html">scgFinance.categoriser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="importers/index.html">scgFinance.importers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="process/index.html">scgFinance.process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline/index.html">scgFinance.pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils/index.html">scgFinance.utils</a></li>
 </ul>
 </div>
@@ -447,16 +447,16 @@
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#scgFinance.auto_categorise" title="scgFinance.auto_categorise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">auto_categorise</span></code></a>(df[, rules_file, overwrite, ...])</p></td>
-<td><p>Automatically categorises transactions in a DataFrame using rules, machine learning, or a hybrid approach based on available data.</p></td>
+<td><p>Automatically categorises transactions in a DataFrame using rules,</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#scgFinance.import_statements" title="scgFinance.import_statements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_statements</span></code></a>(path[, source, date_col, ...])</p></td>
-<td><p>Orchestrates the import of financial statements from one or more CSV files, ensuring only unprocessed files are handled.</p></td>
+<td><p>Orchestrates the import of financial statements from one or more CSV</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#scgFinance.load_package_data" title="scgFinance.load_package_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_package_data</span></code></a>(data_type)</p></td>
 <td><p>Loads bundled package data from CSV files based on the specified data type.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#scgFinance.process_statements" title="scgFinance.process_statements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_statements</span></code></a>(sources[, metadata_file, ...])</p></td>
-<td><p>Orchestrates the full financial statement processing pipeline: importing, categorising, updating metadata, and saving results.</p></td>
+<td><p>Orchestrates the full financial statement processing pipeline: importing,</p></td>
 </tr>
 </tbody>
 </table>
@@ -467,21 +467,32 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="scgFinance.auto_categorise">
 <span class="sig-prename descclassname"><span class="pre">scgFinance.</span></span><span class="sig-name descname"><span class="pre">auto_categorise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categorised_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'categorised'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scgFinance/categoriser.html#auto_categorise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.auto_categorise" title="Link to this definition">#</a></dt>
-<dd><p>Automatically categorises transactions in a DataFrame using rules, machine learning, or a hybrid approach based on available data.</p>
-<p>This function initialises category/subcategory columns if missing, loads rules and historical categorised data, determines the
-categorisation mode (rules-only, hybrid, or full ML) based on the amount of labeled data, applies the appropriate method,
-detects conflicts, flags rows for review, and saves the updated DataFrame to a timestamped file.</p>
+<dd><p>Automatically categorises transactions in a DataFrame using rules,
+machine learning, or a hybrid approach based on available data.</p>
+<p>This function initialises category/subcategory columns if missing,
+loads rules and historical categorised data, determines the categorisation
+mode (rules-only, hybrid, or full ML) based on the amount of labeled data,
+applies the appropriate method, detects conflicts, flags rows for review,
+and saves the updated DataFrame to a timestamped file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The input DataFrame with at least ‘description’; ‘category’ may be partially filled.</p></li>
-<li><p><strong>rules_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the rules CSV file. Defaults to bundled ‘metadata/rules.csv’.</p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, re-applies categorisation even to existing categories. Defaults to False.</p></li>
-<li><p><strong>categorised_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory for historical categorised CSVs. Defaults to ‘categorised’.</p></li>
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The input DataFrame with at least ‘description’;
+‘category’ may be partially filled.</p></li>
+<li><p><strong>rules_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the rules CSV file. Defaults to
+bundled ‘metadata/rules.csv’.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, re-applies categorisation even to
+existing categories. Defaults to False.</p></li>
+<li><p><strong>categorised_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory for historical categorised
+CSVs. Defaults to ‘categorised’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The updated DataFrame with ‘category’, ‘subcategory’, and ‘review’ columns added/filled.</p>
+<dd class="field-even"><p><dl class="simple">
+<dt>The updated DataFrame with ‘category’, ‘subcategory’,</dt><dd><p>and ‘review’ columns added/filled.</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
@@ -489,14 +500,16 @@ detects conflicts, flags rows for review, and saves the updated DataFrame to a t
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ValueError</strong> – Propagated from load_rules_file() if rules CSV is invalid.</p></li>
-<li><p><strong>Other exceptions</strong> – From underlying functions like model training or file operations.</p></li>
+<li><p><strong>Other exceptions</strong> – From underlying functions like model training or file
+operations.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;TESCO STORE&#39;</span><span class="p">,</span> <span class="s1">&#39;UBER TRIP&#39;</span><span class="p">]})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">categorised_df</span> <span class="o">=</span> <span class="n">auto_categorise</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<span class="go">No or insufficient previously categorised/labeled data; using rules only.</span>
+<span class="go">No or insufficient previously categorised/labeled data; using rules</span>
+<span class="go">only.</span>
 <span class="go">Saved categorised data to categorised/2025-11-07_12-00-00.csv. ...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">categorised_df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
 <span class="go">[&#39;Food/Dining&#39;, &#39;Transportation&#39;]</span>
@@ -507,28 +520,44 @@ detects conflicts, flags rows for review, and saves the updated DataFrame to a t
 <dl class="py function">
 <dt class="sig sig-object py" id="scgFinance.import_statements">
 <span class="sig-prename descclassname"><span class="pre">scgFinance.</span></span><span class="sig-name descname"><span class="pre">import_statements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Date'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%d/%m/%Y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%H:%M:%S'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Description'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amt_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Amount'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'metadata/processed_files.csv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scgFinance/importers.html#import_statements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.import_statements" title="Link to this definition">#</a></dt>
-<dd><p>Orchestrates the import of financial statements from one or more CSV files, ensuring only unprocessed files are handled.</p>
-<p>This is the primary entry point for importing data. It loads metadata to track processed files, filters out already processed ones,
-processes each remaining file using process_single_file(), concatenates the results into a single DataFrame sorted by date,
-and returns the combined DataFrame along with a list of imported file base names. Note that this function does not update the metadata;
-that should be handled by the caller after successful processing.</p>
+<dd><p>Orchestrates the import of financial statements from one or more CSV
+files, ensuring only unprocessed files are handled.</p>
+<p>This is the primary entry point for importing data. It loads metadata to
+track processed files, filters out already processed ones, processes
+each remaining file using process_single_file(), concatenates the
+results into a single DataFrame sorted by date, and returns the
+combined DataFrame along with a list of imported file base names.
+Note that this function does not update the metadata; that should be
+handled by the caller after successful processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em>) – The path to a single CSV file or a directory containing CSV files.</p></li>
-<li><p><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – The source identifier (e.g., ‘credit card’). Required for metadata filtering.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – The path to a single CSV file or a directory containing
+CSV files.</p></li>
+<li><p><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – The source identifier (e.g., ‘credit card’).
+Required for metadata filtering.</p></li>
 <li><p><strong>date_col</strong> (<em>str</em><em>, </em><em>optional</em>) – The date column name. Defaults to ‘Date’.</p></li>
-<li><p><strong>date_format</strong> (<em>str</em><em>, </em><em>optional</em>) – The date format string. Defaults to ‘%d/%m/%Y’.</p></li>
-<li><p><strong>time_col</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – The time column name. Defaults to None.</p></li>
-<li><p><strong>time_format</strong> (<em>str</em><em>, </em><em>optional</em>) – The time format string. Defaults to ‘%H:%M:%S’.</p></li>
-<li><p><strong>desc_col</strong> (<em>str</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – The description column(s). Defaults to ‘Description’.</p></li>
+<li><p><strong>date_format</strong> (<em>str</em><em>, </em><em>optional</em>) – The date format string. Defaults to
+‘%d/%m/%Y’.</p></li>
+<li><p><strong>time_col</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – The time column name. Defaults
+to None.</p></li>
+<li><p><strong>time_format</strong> (<em>str</em><em>, </em><em>optional</em>) – The time format string. Defaults to
+‘%H:%M:%S’.</p></li>
+<li><p><strong>desc_col</strong> (<em>str</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – The description column(s).
+Defaults to ‘Description’.</p></li>
 <li><p><strong>amt_col</strong> (<em>str</em><em>, </em><em>optional</em>) – The amount column name. Defaults to ‘Amount’.</p></li>
-<li><p><strong>metadata_file</strong> (<em>str</em><em>, </em><em>optional</em>) – The path to the metadata CSV. Defaults to ‘metadata/processed_files.csv’.</p></li>
+<li><p><strong>metadata_file</strong> (<em>str</em><em>, </em><em>optional</em>) – The path to the metadata CSV.
+Defaults to
+‘metadata/processed_files.csv’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p>pd.DataFrame: The combined, sorted DataFrame of all processed files.</p></li>
+<li><dl class="simple">
+<dt>pd.DataFrame: The combined, sorted DataFrame of all</dt><dd><p>processed files.</p>
+</dd>
+</dl>
+</li>
 <li><p>list: A list of base names of the imported (processed) files.</p></li>
 </ul>
 </p>
@@ -537,7 +566,8 @@ that should be handled by the caller after successful processing.</p>
 <dd class="field-odd"><p>tuple</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If path or source is not specified, or if no files are found/processed.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If path or source is not specified, or if no files
+are found/processed.</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -554,27 +584,52 @@ that should be handled by the caller after successful processing.</p>
 <dt class="sig sig-object py" id="scgFinance.load_package_data">
 <span class="sig-prename descclassname"><span class="pre">scgFinance.</span></span><span class="sig-name descname"><span class="pre">load_package_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scgFinance/utils.html#load_package_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.load_package_data" title="Link to this definition">#</a></dt>
 <dd><p>Loads bundled package data from CSV files based on the specified data type.</p>
-<p>This utility function accesses sample data or metadata files packaged within the ‘scgFinance’ module using importlib.resources.
-It supports loading example bank statements, credit card statements, or default categorisation rules. The file paths are resolved
-dynamically, and the contents are read into a pandas DataFrame. This is useful for testing, demonstrations, or default configurations
-without requiring external file access.</p>
+<p>This utility function accesses sample data or metadata files packaged
+within the ‘scgFinance’ module using importlib.resources. It supports
+loading example bank statements, credit card statements, or default
+categorisation rules. The file paths are resolved dynamically, and the
+contents are read into a pandas DataFrame. This is useful for testing,
+demonstrations, or default configurations without requiring external
+file access.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data_type</strong> (<em>str</em>) – The type of data to load. Valid options are:
-- ‘bank’: Loads the sample bank statement from ‘scgFinance.data.raw_data.bank/251031 Example Bank Statement.csv’.
-- ‘credit_card’: Loads the sample credit card statement from ‘scgFinance.data.raw_data.credit_card/251031 Example Credit Card Statement.csv’.
-- ‘rules’: Loads the default categorisation rules from ‘scgFinance.data.metadata/rules.csv’.</p>
+<dd class="field-odd"><p><strong>data_type</strong> (<em>str</em>) – <p>The type of data to load. Valid options are:
+- ‘bank’: Loads the sample bank statement from</p>
+<blockquote>
+<div><p>’scgFinance.data.raw_data.bank/251031
+Example Bank Statement.csv’.</p>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>’credit_card’: Loads the sample credit card statement from</dt><dd><p>’scgFinance.data.raw_data.credit_card/251031
+Example Credit Card Statement.csv’.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>’rules’: Loads the default categorisation rules from</dt><dd><p>’scgFinance.data.metadata/rules.csv’.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A DataFrame containing the loaded data from the specified CSV file.</p>
+<dd class="field-even"><p><dl class="simple">
+<dt>A DataFrame containing the loaded data from the specified</dt><dd><p>CSV file.</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If an invalid ‘data_type’ is provided (not one of ‘bank’, ‘credit_card’, or ‘rules’).</p></li>
-<li><p><strong>FileNotFoundError</strong> – If the bundled file is missing (though this should not occur in a properly packaged module).</p></li>
+<li><p><strong>ValueError</strong> – If an invalid ‘data_type’ is provided (not one of ‘bank’,
+‘credit_card’, or ‘rules’).</p></li>
+<li><p><strong>FileNotFoundError</strong> – If the bundled file is missing (though this should
+not occur in a properly packaged module).</p></li>
 <li><p><strong>pandas.errors</strong> – If there are issues parsing the CSV file.</p></li>
 </ul>
 </dd>
@@ -582,7 +637,8 @@ without requiring external file access.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bank_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;bank&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bank_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-<span class="go">Index([&#39;Date&#39;, &#39;Description&#39;, &#39;Amount&#39;], dtype=&#39;object&#39;)  # Example columns</span>
+<span class="go">Index([&#39;Date&#39;, &#39;Description&#39;, &#39;Amount&#39;], dtype=&#39;object&#39;)</span>
+<span class="go"># Example columns</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rules_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;rules&#39;</span><span class="p">)</span>
@@ -596,40 +652,74 @@ without requiring external file access.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="scgFinance.process_statements">
-<span class="sig-prename descclassname"><span class="pre">scgFinance.</span></span><span class="sig-name descname"><span class="pre">process_statements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sources</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'metadata/processed_files.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categorised_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'categorised/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scgFinance/process.html#process_statements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.process_statements" title="Link to this definition">#</a></dt>
-<dd><p>Orchestrates the full financial statement processing pipeline: importing, categorising, updating metadata, and saving results.</p>
-<p>This function processes statements from multiple sources by importing unprocessed files, combining them into a single DataFrame,
-applying automatic categorisation, updating the metadata to mark files as processed, and returning the categorised DataFrame.
-If no new transactions are found, an empty DataFrame is returned. Custom import parameters can be provided per source.</p>
+<span class="sig-prename descclassname"><span class="pre">scgFinance.</span></span><span class="sig-name descname"><span class="pre">process_statements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sources</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'metadata/processed_files.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categorised_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'categorised/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scgFinance/pipeline.html#process_statements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.process_statements" title="Link to this definition">#</a></dt>
+<dd><p>Orchestrates the full financial statement processing pipeline: importing,
+categorising, updating metadata, and saving results.</p>
+<p>This function processes statements from multiple sources by importing
+unprocessed files, combining them into a single DataFrame, applying
+automatic categorisation, updating the metadata to mark files as
+processed, and returning the categorised DataFrame. If no new transactions
+are found, an empty DataFrame is returned. Custom import parameters can
+be provided per source.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sources</strong> (<em>list</em><em> of </em><em>dict</em>) – A list of dictionaries, each specifying a source configuration:
-- ‘path’ (str): Path to the file or directory of CSV statements.
-- ‘source’ (str): Identifier for the source (e.g., ‘Lloyds’, ‘HSBC’).
-- Optional keys: ‘date_col’, ‘date_format’, ‘time_col’, ‘time_format’, ‘desc_col’, ‘amt_col’ for custom import settings.</p></li>
-<li><p><strong>metadata_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the metadata CSV for tracking processed files. Defaults to ‘metadata/processed_files.csv’.</p></li>
-<li><p><strong>categorised_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory to save the categorised CSV files. Defaults to ‘categorised/’.</p></li>
-<li><p><strong>rules_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to a custom rules CSV for categorisation; None uses the default bundled rules.</p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, re-categorises even existing categories during auto_categorise. Defaults to False.</p></li>
+<li><p><strong>sources</strong> (<em>list</em><em> of </em><em>dict</em>) – <dl class="simple">
+<dt>A list of dictionaries, each specifying a</dt><dd><p>source configuration:</p>
+</dd>
+</dl>
+<ul>
+<li><p>’path’ (str): Path to the file or directory of CSV statements.</p></li>
+<li><dl class="simple">
+<dt>’source’ (str): Identifier for the source (e.g., ‘Lloyds’,</dt><dd><p>’HSBC’).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Optional keys: ‘date_col’, ‘date_format’, ‘time_col’,</dt><dd><p>’time_format’, ‘desc_col’, ‘amt_col’ for
+custom import settings.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p></li>
+<li><p><strong>metadata_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the metadata CSV for tracking
+processed files. Defaults to
+‘metadata/processed_files.csv’.</p></li>
+<li><p><strong>categorised_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory to save the categorised CSV
+files. Defaults to ‘categorised/’.</p></li>
+<li><p><strong>rules_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to a custom rules CSV for
+categorisation; None uses the default
+bundled rules.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, re-categorises even existing
+categories during auto_categorise. Defaults
+to False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The combined and categorised DataFrame, or an empty DataFrame if no new transactions were processed.</p>
+<dd class="field-even"><p><dl class="simple">
+<dt>The combined and categorised DataFrame, or an empty</dt><dd><p>DataFrame if no new transactions were processed.</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If ‘path’ or ‘source’ is missing in any source configuration, or if columns are not found during import.</p></li>
-<li><p><strong>Other exceptions</strong> – Propagated from import_statements() or auto_categorise(), such as FileNotFoundError for rules_file.</p></li>
+<li><p><strong>ValueError</strong> – If ‘path’ or ‘source’ is missing in any source
+configuration, or if columns are not found during import.</p></li>
+<li><p><strong>Other exceptions</strong> – Propagated from import_statements() or
+auto_categorise(), such as FileNotFoundError for
+rules_file.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sources</span> <span class="o">=</span> <span class="p">[</span>
-<span class="gp">... </span>    <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;bank_statements/&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;bank&#39;</span><span class="p">,</span> <span class="s1">&#39;date_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="s1">&#39;date_format&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;bank_statements/&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;bank&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;date_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="s1">&#39;date_format&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">,</span>
 <span class="gp">... </span>     <span class="s1">&#39;desc_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Description&#39;</span><span class="p">,</span> <span class="s1">&#39;amt_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Amount&#39;</span><span class="p">}</span>
 <span class="gp">... </span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">process_statements</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">rules_file</span><span class="o">=</span><span class="s1">&#39;custom_rules.csv&#39;</span><span class="p">)</span>

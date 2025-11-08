@@ -411,38 +411,49 @@
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>  <span class="c1"># Imported for timestamping in metadata updates (if needed elsewhere)</span>
 
 
+<span class="c1"># ================================================</span>
 <span class="c1"># Modular helper function: Load or create the metadata file</span>
-<span class="c1"># This keeps track of processed files to avoid re-importing them.</span>
-<span class="c1"># Returns a DataFrame with columns: &#39;file_name&#39;, &#39;source&#39;, &#39;status&#39;, &#39;process_date&#39;</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">_load_metadata</span><span class="p">(</span><span class="n">metadata_file</span><span class="o">=</span><span class="s1">&#39;metadata/processed_files.csv&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Loads the metadata CSV file that tracks processed files, or creates a new one if it does not exist.</span>
+<span class="c1"># ================================================</span>
 
-<span class="sd">    This function ensures that the directory for the metadata file exists and then attempts to load the CSV.</span>
-<span class="sd">    If the file is missing, it creates an empty DataFrame with the required columns (&#39;file_name&#39;, &#39;source&#39;, &#39;status&#39;, &#39;process_date&#39;)</span>
-<span class="sd">    and saves it to the specified path. This metadata is used to prevent re-processing of already imported files.</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_metadata</span><span class="p">(</span><span class="n">metadata_file</span><span class="o">=</span><span class="s2">&quot;metadata/processed_files.csv&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads the metadata CSV file that tracks processed files, or creates a new</span>
+<span class="sd">    one if it does not exist.</span>
+
+<span class="sd">    This function ensures that the directory for the metadata file exists and</span>
+<span class="sd">    then attempts to load the CSV. If the file is missing, it creates an empty</span>
+<span class="sd">    DataFrame with the required columns (&#39;file_name&#39;, &#39;source&#39;, &#39;status&#39;,</span>
+<span class="sd">    &#39;process_date&#39;) and saves it to the specified path. This metadata is</span>
+<span class="sd">    used to prevent re-processing of already imported files.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        metadata_file (str, optional): The path to the metadata CSV file. Defaults to &#39;metadata/processed_files.csv&#39;.</span>
-<span class="sd">            The directory will be created if it does not exist.</span>
+<span class="sd">        metadata_file (str, optional): The path to the metadata CSV file.</span>
+<span class="sd">                                       Defaults to</span>
+<span class="sd">                                       &#39;metadata/processed_files.csv&#39;.</span>
+<span class="sd">                                       The directory will be created if it</span>
+<span class="sd">                                       does not exist.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        pd.DataFrame: A DataFrame containing the metadata with columns:</span>
-<span class="sd">            - &#39;file_name&#39;: The base name of the processed file (e.g., &#39;statement.csv&#39;).</span>
-<span class="sd">            - &#39;source&#39;: The identifier for the data source (e.g., &#39;credit card&#39;).</span>
+<span class="sd">            - &#39;file_name&#39;: The base name of the processed file (e.g.,</span>
+<span class="sd">                           &#39;statement.csv&#39;).</span>
+<span class="sd">            - &#39;source&#39;: The identifier for the data source (e.g.,</span>
+<span class="sd">                        &#39;credit card&#39;).</span>
 <span class="sd">            - &#39;status&#39;: The processing status (e.g., &#39;processed&#39;).</span>
 <span class="sd">            - &#39;process_date&#39;: The date when the file was processed.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        None explicitly, but may raise OSError if directory creation fails or pandas errors during read/write.</span>
+<span class="sd">        None explicitly, but may raise OSError if directory creation fails or</span>
+<span class="sd">        pandas errors during read/write.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; meta = _load_metadata(&#39;metadata/processed_files.csv&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; print(meta.columns)</span>
-<span class="sd">        Index([&#39;file_name&#39;, &#39;source&#39;, &#39;status&#39;, &#39;process_date&#39;], dtype=&#39;object&#39;)</span>
+<span class="sd">        Index([&#39;file_name&#39;, &#39;source&#39;, &#39;status&#39;, &#39;process_date&#39;],</span>
+<span class="sd">        dtype=&#39;object&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Ensure the directory for the metadata file exists</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">metadata_file</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -450,59 +461,77 @@
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">metadata_file</span><span class="p">):</span>
         <span class="n">meta_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">metadata_file</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># Create an empty DataFrame with the required columns if file doesn&#39;t exist</span>
-        <span class="n">meta_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="s1">&#39;process_date&#39;</span><span class="p">])</span>
+        <span class="c1"># Create an empty DataFrame with the required columns if file doesn&#39;t</span>
+        <span class="c1"># exist</span>
+        <span class="n">meta_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;file_name&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="s2">&quot;process_date&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="n">meta_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">metadata_file</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created new metadata file: </span><span class="si">{</span><span class="n">metadata_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">meta_df</span>
 
 
+<span class="c1"># ================================================</span>
 <span class="c1"># Modular helper function: Filter files to only include unprocessed ones</span>
-<span class="c1"># Uses the metadata to check which files have &#39;status&#39; == &#39;processed&#39; for the given source.</span>
-<span class="c1"># Returns a list of full file paths that are unprocessed.</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">_filter_unprocessed_files</span><span class="p">(</span>
-        <span class="n">path</span><span class="p">,</span>
-        <span class="n">source</span><span class="p">,</span>
-        <span class="n">meta_df</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Filters a list of CSV files to identify those that have not yet been processed for a given source.</span>
+<span class="c1"># ================================================</span>
 
-<span class="sd">    This function checks if the provided path is a directory or a single file. If it&#39;s a directory, it collects all CSV files within it.</span>
-<span class="sd">    It then cross-references the base names of these files against the metadata DataFrame to exclude any files marked as &#39;processed&#39;</span>
-<span class="sd">    for the specified source. This ensures idempotency in the import process by avoiding duplicate processing.</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_filter_unprocessed_files</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">meta_df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filters a list of CSV files to identify those that have not yet been</span>
+<span class="sd">    processed for a given source.</span>
+
+<span class="sd">    This function checks if the provided path is a directory or a single file.</span>
+<span class="sd">    If it&#39;s a directory, it collects all CSV files within it. It then</span>
+<span class="sd">    cross-references the base names of these files against the metadata</span>
+<span class="sd">    DataFrame to exclude any files marked as &#39;processed&#39; for the specified</span>
+<span class="sd">    source. This ensures idempotency in the import process by avoiding</span>
+<span class="sd">    duplicate processing.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        path (str): The path to a single CSV file or a directory containing CSV files.</span>
-<span class="sd">        source (str): The source identifier (e.g., &#39;credit card&#39;, &#39;bank&#39;) used to filter metadata.</span>
-<span class="sd">        meta_df (pd.DataFrame): The metadata DataFrame loaded from load_metadata().</span>
+<span class="sd">        path (str): The path to a single CSV file or a directory containing</span>
+<span class="sd">                    CSV files.</span>
+<span class="sd">        source (str): The source identifier (e.g., &#39;credit card&#39;, &#39;bank&#39;) used</span>
+<span class="sd">                      to filter metadata.</span>
+<span class="sd">        meta_df (pd.DataFrame): The metadata DataFrame loaded from</span>
+<span class="sd">                                load_metadata().</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        list: A list of full paths to unprocessed CSV files. If no unprocessed files are found, returns an empty list.</span>
+<span class="sd">        list: A list of full paths to unprocessed CSV files. If no unprocessed</span>
+<span class="sd">              files are found, returns an empty list.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError: If no CSV files are found in the directory (when path is a directory).</span>
+<span class="sd">        ValueError: If no CSV files are found in the directory (when path is a</span>
+<span class="sd">                    directory).</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; meta = _load_metadata()</span>
-<span class="sd">        &gt;&gt;&gt; unprocessed = _filter_unprocessed_files(&#39;raw_data/bank&#39;, &#39;bank&#39;, meta)</span>
+<span class="sd">        &gt;&gt;&gt; unprocessed = _filter_unprocessed_files(&#39;raw_data/bank&#39;,</span>
+<span class="sd">        ... &#39;bank&#39;, meta)</span>
 <span class="sd">        &gt;&gt;&gt; print(unprocessed)</span>
-<span class="sd">        [&#39;raw_data/bank/statement_2023.csv&#39;]  # Assuming this file is unprocessed</span>
+<span class="sd">        [&#39;raw_data/bank/statement_2023.csv&#39;]  # Assuming this file is</span>
+<span class="sd">        unprocessed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Get all CSV files in the path (if directory) or just the single file</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-        <span class="n">all_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;*.csv&#39;</span><span class="p">))</span>
+        <span class="n">all_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;*.csv&quot;</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">all_files</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No CSV files found in directory: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">all_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">]</span>
 
     <span class="c1"># Get set of processed file names for this source</span>
-    <span class="n">processed_files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">meta_df</span><span class="p">[(</span><span class="n">meta_df</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">source</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">meta_df</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;processed&#39;</span><span class="p">)][</span><span class="s1">&#39;file_name&#39;</span><span class="p">])</span>
+    <span class="n">processed_files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+        <span class="n">meta_df</span><span class="p">[</span>
+            <span class="p">(</span><span class="n">meta_df</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">source</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">meta_df</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;processed&quot;</span><span class="p">)</span>
+        <span class="p">][</span><span class="s2">&quot;file_name&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
 
     <span class="c1"># Filter to files whose basename is not in processed_files</span>
-    <span class="n">unprocessed_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_files</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">processed_files</span><span class="p">]</span>
+    <span class="n">unprocessed_files</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_files</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">processed_files</span>
+    <span class="p">]</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">unprocessed_files</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No unprocessed files for source &#39;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&#39; in </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
@@ -510,49 +539,64 @@
     <span class="k">return</span> <span class="n">unprocessed_files</span>
 
 
-<span class="c1"># Modular helper function: Process a single CSV file into a standardised DataFrame</span>
-<span class="c1"># Handles column extraction, cleaning, and standardisation for date, description, amount.</span>
-<span class="c1"># Returns a DataFrame with columns: &#39;date&#39;, &#39;description&#39;, &#39;amount&#39;, &#39;source&#39;</span>
+<span class="c1"># ================================================</span>
+<span class="c1"># Modular helper function: Process a single CSV file</span>
+<span class="c1"># ================================================</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_process_single_file</span><span class="p">(</span>
-        <span class="n">file</span><span class="p">,</span>
-        <span class="n">source</span><span class="p">,</span>
-        <span class="n">date_col</span><span class="p">,</span>
-        <span class="n">date_format</span><span class="p">,</span>
-        <span class="n">time_col</span><span class="p">,</span>
-        <span class="n">time_format</span><span class="p">,</span>
-        <span class="n">desc_col</span><span class="p">,</span>
-        <span class="n">amt_col</span>
+    <span class="n">file</span><span class="p">,</span>
+    <span class="n">source</span><span class="p">,</span>
+    <span class="n">date_col</span><span class="p">,</span>
+    <span class="n">date_format</span><span class="p">,</span>
+    <span class="n">time_col</span><span class="p">,</span>
+    <span class="n">time_format</span><span class="p">,</span>
+    <span class="n">desc_col</span><span class="p">,</span>
+    <span class="n">amt_col</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Processes a single CSV file by extracting, cleaning, and standardizing key columns into a uniform DataFrame.</span>
+<span class="sd">    Processes a single CSV file by extracting, cleaning, and standardising</span>
+<span class="sd">    key columns into a uniform DataFrame.</span>
 
-<span class="sd">    This function reads the CSV file, parses the date (and optionally time) into a datetime object, constructs a description</span>
-<span class="sd">    (either from a single column or by concatenating multiple columns), cleans and converts the amount to a numeric value,</span>
-<span class="sd">    and adds a source identifier. It drops any rows with invalid dates or amounts to ensure data quality.</span>
+<span class="sd">    This function reads the CSV file, parses the date (and optionally time)</span>
+<span class="sd">    into a datetime object, constructs a description (either from a single</span>
+<span class="sd">    column or by concatenating multiple columns), cleans  and converts the</span>
+<span class="sd">    amount to a numeric value, and adds a source identifier. It drops any</span>
+<span class="sd">    rows with invalid dates or amounts to ensure data quality.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        file (str): The path to the CSV file to process.</span>
-<span class="sd">        source (str): The source identifier to add to the DataFrame (e.g., &#39;credit card&#39;).</span>
+<span class="sd">        source (str): The source identifier to add to the DataFrame</span>
+<span class="sd">                      (e.g., &#39;credit card&#39;).</span>
 <span class="sd">        date_col (str): The name of the column containing date information.</span>
-<span class="sd">        date_format (str): The format string for parsing the date (e.g., &#39;%d/%m/%Y&#39;).</span>
-<span class="sd">        time_col (str or None): The name of the column containing time information (optional).</span>
-<span class="sd">        time_format (str): The format string for parsing the time (e.g., &#39;%H:%M:%S&#39;), used if time_col is provided.</span>
-<span class="sd">        desc_col (str or list): The name of the description column or a list of columns to concatenate.</span>
+<span class="sd">        date_format (str): The format string for parsing the date</span>
+<span class="sd">                           (e.g., &#39;%d/%m/%Y&#39;).</span>
+<span class="sd">        time_col (str or None): The name of the column containing time</span>
+<span class="sd">                                information (optional).</span>
+<span class="sd">        time_format (str): The format string for parsing the time</span>
+<span class="sd">                           (e.g., &#39;%H:%M:%S&#39;), used if time_col is provided.</span>
+<span class="sd">        desc_col (str or list): The name of the description column or a</span>
+<span class="sd">                                list of columns to concatenate.</span>
 <span class="sd">        amt_col (str): The name of the column containing amount information.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        pd.DataFrame: A standardized DataFrame with columns:</span>
+<span class="sd">        pd.DataFrame: A standardised DataFrame with columns:</span>
 <span class="sd">            - &#39;date&#39;: Parsed datetime object.</span>
 <span class="sd">            - &#39;description&#39;: Cleaned description string.</span>
 <span class="sd">            - &#39;amount&#39;: Numeric amount (float).</span>
 <span class="sd">            - &#39;source&#39;: The provided source identifier.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError: If required columns (date_col, desc_col, amt_col) are missing from the CSV.</span>
-<span class="sd">        pandas.errors: If date/time parsing or numeric conversion fails extensively.</span>
+<span class="sd">        ValueError: If required columns (date_col, desc_col, amt_col)</span>
+<span class="sd">                    are missing from the CSV.</span>
+<span class="sd">        pandas.errors: If date/time parsing or numeric conversion fails</span>
+<span class="sd">                       extensively.</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; df = _process_single_file(file=&#39;raw_data/bank/statement.csv&#39;, source=&#39;bank&#39;, date_col=&#39;Date&#39;, date_format=&#39;%d/%m/%Y&#39;, time_col=None, time_format=&#39;%H:%M:%S&#39;, desc_col=&#39;Description&#39;, amt_col=&#39;Amount&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; df = _process_single_file(file=&#39;raw_data/bank/statement.csv&#39;,</span>
+<span class="sd">        ... source=&#39;bank&#39;, date_col=&#39;Date&#39;, date_format=&#39;%d/%m/%Y&#39;,</span>
+<span class="sd">        ... time_col=None, time_format=&#39;%H:%M:%S&#39;, desc_col=&#39;Description&#39;,</span>
+<span class="sd">        ... amt_col=&#39;Amount&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; print(df.head())</span>
 <span class="sd">                   date description  amount source</span>
 <span class="sd">        0 2023-01-01  Groceries   -50.0   bank</span>
@@ -562,84 +606,115 @@
 
     <span class="c1"># Handle date (required)</span>
     <span class="k">if</span> <span class="n">date_col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">date_format</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">[</span><span class="n">date_col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">date_format</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Date column &#39;</span><span class="si">{</span><span class="n">date_col</span><span class="si">}</span><span class="s2">&#39; not found in </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
     <span class="c1"># Optionally merge time into date if time_col is provided and exists</span>
     <span class="k">if</span> <span class="n">time_col</span> <span class="ow">and</span> <span class="n">time_col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="n">time_col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> &#39;</span> <span class="o">+</span> <span class="n">time_format</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="n">time_col</span><span class="p">],</span>
+            <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">,</span>
+            <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">time_format</span><span class="p">,</span>
+        <span class="p">)</span>
 
-    <span class="c1"># Handle description (required; supports single str or list for concatenation)</span>
+    <span class="c1"># Handle description (required; supports single str or list for</span>
+    <span class="c1"># concatenation)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">desc_col</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="c1"># Concatenate multiple columns into one &#39;description&#39;</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">desc_col</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">desc_col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">df</span><span class="p">[</span><span class="n">desc_col</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">desc_col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="p">)</span>
         <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">desc_col</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
             <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">df</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">desc_col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">desc_col</span><span class="p">]</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">desc_col</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Description column(s) &#39;</span><span class="si">{</span><span class="n">desc_col</span><span class="si">}</span><span class="s2">&#39; not found in </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Description column(s) &#39;</span><span class="si">{</span><span class="n">desc_col</span><span class="si">}</span><span class="s2">&#39; not found &quot;</span> <span class="sa">f</span><span class="s2">&quot;in </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
 
     <span class="c1"># Handle amount (required; clean currency symbols and convert to numeric)</span>
     <span class="k">if</span> <span class="n">amt_col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="c1"># Remove common currency symbols/commas and convert to float</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;amount&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span>
-            <span class="n">df</span><span class="p">[</span><span class="n">amt_col</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[$£€,]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;amount&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">[</span><span class="n">amt_col</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[$£€,]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount column &#39;</span><span class="si">{</span><span class="n">amt_col</span><span class="si">}</span><span class="s2">&#39; not found in </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
     <span class="c1"># Select only core columns and drop rows with invalid date/amount</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">])</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span>
+        <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
 
     <span class="c1"># Add the source column for traceability</span>
-    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">source</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">source</span>
 
     <span class="k">return</span> <span class="n">df</span>
 
 
+<span class="c1"># ================================================</span>
 <span class="c1"># Main function: import_statements</span>
-<span class="c1"># Orchestrates the process: loads metadata, filters files, processes each, concatenates, and returns combined DF + imported file names.</span>
+<span class="c1"># ================================================</span>
+
+
 <div class="viewcode-block" id="import_statements">
 <a class="viewcode-back" href="../../api/scgFinance/index.html#scgFinance.importers.import_statements">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">import_statements</span><span class="p">(</span>
-        <span class="n">path</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">date_col</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span>
-        <span class="n">date_format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">,</span>
-        <span class="n">time_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">time_format</span><span class="o">=</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">,</span>
-        <span class="n">desc_col</span><span class="o">=</span><span class="s1">&#39;Description&#39;</span><span class="p">,</span>
-        <span class="n">amt_col</span><span class="o">=</span><span class="s1">&#39;Amount&#39;</span><span class="p">,</span>
-        <span class="n">metadata_file</span><span class="o">=</span><span class="s1">&#39;metadata/processed_files.csv&#39;</span>
+    <span class="n">path</span><span class="p">,</span>
+    <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">date_col</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span>
+    <span class="n">date_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span><span class="p">,</span>
+    <span class="n">time_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">time_format</span><span class="o">=</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">,</span>
+    <span class="n">desc_col</span><span class="o">=</span><span class="s2">&quot;Description&quot;</span><span class="p">,</span>
+    <span class="n">amt_col</span><span class="o">=</span><span class="s2">&quot;Amount&quot;</span><span class="p">,</span>
+    <span class="n">metadata_file</span><span class="o">=</span><span class="s2">&quot;metadata/processed_files.csv&quot;</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Orchestrates the import of financial statements from one or more CSV files, ensuring only unprocessed files are handled.</span>
+<span class="sd">    Orchestrates the import of financial statements from one or more CSV</span>
+<span class="sd">    files, ensuring only unprocessed files are handled.</span>
 
-<span class="sd">    This is the primary entry point for importing data. It loads metadata to track processed files, filters out already processed ones,</span>
-<span class="sd">    processes each remaining file using process_single_file(), concatenates the results into a single DataFrame sorted by date,</span>
-<span class="sd">    and returns the combined DataFrame along with a list of imported file base names. Note that this function does not update the metadata;</span>
-<span class="sd">    that should be handled by the caller after successful processing.</span>
+<span class="sd">    This is the primary entry point for importing data. It loads metadata to</span>
+<span class="sd">    track processed files, filters out already processed ones, processes</span>
+<span class="sd">    each remaining file using process_single_file(), concatenates the</span>
+<span class="sd">    results into a single DataFrame sorted by date, and returns the</span>
+<span class="sd">    combined DataFrame along with a list of imported file base names.</span>
+<span class="sd">    Note that this function does not update the metadata; that should be</span>
+<span class="sd">    handled by the caller after successful processing.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        path (str): The path to a single CSV file or a directory containing CSV files.</span>
-<span class="sd">        source (str, optional): The source identifier (e.g., &#39;credit card&#39;). Required for metadata filtering.</span>
+<span class="sd">        path (str): The path to a single CSV file or a directory containing</span>
+<span class="sd">                    CSV files.</span>
+<span class="sd">        source (str, optional): The source identifier (e.g., &#39;credit card&#39;).</span>
+<span class="sd">                                Required for metadata filtering.</span>
 <span class="sd">        date_col (str, optional): The date column name. Defaults to &#39;Date&#39;.</span>
-<span class="sd">        date_format (str, optional): The date format string. Defaults to &#39;%d/%m/%Y&#39;.</span>
-<span class="sd">        time_col (str or None, optional): The time column name. Defaults to None.</span>
-<span class="sd">        time_format (str, optional): The time format string. Defaults to &#39;%H:%M:%S&#39;.</span>
-<span class="sd">        desc_col (str or list, optional): The description column(s). Defaults to &#39;Description&#39;.</span>
+<span class="sd">        date_format (str, optional): The date format string. Defaults to</span>
+<span class="sd">                                     &#39;%d/%m/%Y&#39;.</span>
+<span class="sd">        time_col (str or None, optional): The time column name. Defaults</span>
+<span class="sd">                                          to None.</span>
+<span class="sd">        time_format (str, optional): The time format string. Defaults to</span>
+<span class="sd">                                     &#39;%H:%M:%S&#39;.</span>
+<span class="sd">        desc_col (str or list, optional): The description column(s).</span>
+<span class="sd">                                          Defaults to &#39;Description&#39;.</span>
 <span class="sd">        amt_col (str, optional): The amount column name. Defaults to &#39;Amount&#39;.</span>
-<span class="sd">        metadata_file (str, optional): The path to the metadata CSV. Defaults to &#39;metadata/processed_files.csv&#39;.</span>
+<span class="sd">        metadata_file (str, optional): The path to the metadata CSV.</span>
+<span class="sd">                                       Defaults to</span>
+<span class="sd">                                       &#39;metadata/processed_files.csv&#39;.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        tuple:</span>
-<span class="sd">            - pd.DataFrame: The combined, sorted DataFrame of all processed files.</span>
+<span class="sd">            - pd.DataFrame: The combined, sorted DataFrame of all</span>
+<span class="sd">                            processed files.</span>
 <span class="sd">            - list: A list of base names of the imported (processed) files.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError: If path or source is not specified, or if no files are found/processed.</span>
+<span class="sd">        ValueError: If path or source is not specified, or if no files</span>
+<span class="sd">                    are found/processed.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; df, files = import_statements(&#39;raw_data/bank/&#39;, &#39;bank&#39;)</span>
@@ -649,7 +724,9 @@
 <span class="sd">        [&#39;statement_2023.csv&#39;]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Path must be specified for each source configuration.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Path must be specified for each source &quot;</span> <span class="s2">&quot;configuration.&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Source must be specified for metadata tracking.&quot;</span><span class="p">)</span>
@@ -667,12 +744,21 @@
     <span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">imported_files</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-        <span class="n">file_df</span> <span class="o">=</span> <span class="n">_process_single_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">date_col</span><span class="p">,</span> <span class="n">date_format</span><span class="p">,</span> <span class="n">time_col</span><span class="p">,</span> <span class="n">time_format</span><span class="p">,</span> <span class="n">desc_col</span><span class="p">,</span> <span class="n">amt_col</span><span class="p">)</span>
+        <span class="n">file_df</span> <span class="o">=</span> <span class="n">_process_single_file</span><span class="p">(</span>
+            <span class="n">file</span><span class="p">,</span>
+            <span class="n">source</span><span class="p">,</span>
+            <span class="n">date_col</span><span class="p">,</span>
+            <span class="n">date_format</span><span class="p">,</span>
+            <span class="n">time_col</span><span class="p">,</span>
+            <span class="n">time_format</span><span class="p">,</span>
+            <span class="n">desc_col</span><span class="p">,</span>
+            <span class="n">amt_col</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_df</span><span class="p">)</span>
         <span class="n">imported_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
 
     <span class="c1"># Step 4: Concatenate all processed DataFrames and sort by date</span>
-    <span class="n">combined_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span>
+    <span class="n">combined_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">combined_df</span><span class="p">,</span> <span class="n">imported_files</span></div>
 

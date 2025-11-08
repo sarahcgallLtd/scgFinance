@@ -367,7 +367,7 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">scgFinance.categoriser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../importers/index.html">scgFinance.importers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../process/index.html">scgFinance.process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline/index.html">scgFinance.pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils/index.html">scgFinance.utils</a></li>
 </ul>
 </div>
@@ -439,7 +439,7 @@
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#scgFinance.categoriser.auto_categorise" title="scgFinance.categoriser.auto_categorise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">auto_categorise</span></code></a>(df[, rules_file, overwrite, ...])</p></td>
-<td><p>Automatically categorises transactions in a DataFrame using rules, machine learning, or a hybrid approach based on available data.</p></td>
+<td><p>Automatically categorises transactions in a DataFrame using rules,</p></td>
 </tr>
 </tbody>
 </table>
@@ -450,21 +450,32 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="scgFinance.categoriser.auto_categorise">
 <span class="sig-prename descclassname"><span class="pre">scgFinance.categoriser.</span></span><span class="sig-name descname"><span class="pre">auto_categorise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categorised_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'categorised'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/scgFinance/categoriser.html#auto_categorise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.categoriser.auto_categorise" title="Link to this definition">#</a></dt>
-<dd><p>Automatically categorises transactions in a DataFrame using rules, machine learning, or a hybrid approach based on available data.</p>
-<p>This function initialises category/subcategory columns if missing, loads rules and historical categorised data, determines the
-categorisation mode (rules-only, hybrid, or full ML) based on the amount of labeled data, applies the appropriate method,
-detects conflicts, flags rows for review, and saves the updated DataFrame to a timestamped file.</p>
+<dd><p>Automatically categorises transactions in a DataFrame using rules,
+machine learning, or a hybrid approach based on available data.</p>
+<p>This function initialises category/subcategory columns if missing,
+loads rules and historical categorised data, determines the categorisation
+mode (rules-only, hybrid, or full ML) based on the amount of labeled data,
+applies the appropriate method, detects conflicts, flags rows for review,
+and saves the updated DataFrame to a timestamped file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The input DataFrame with at least ‘description’; ‘category’ may be partially filled.</p></li>
-<li><p><strong>rules_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the rules CSV file. Defaults to bundled ‘metadata/rules.csv’.</p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, re-applies categorisation even to existing categories. Defaults to False.</p></li>
-<li><p><strong>categorised_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory for historical categorised CSVs. Defaults to ‘categorised’.</p></li>
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The input DataFrame with at least ‘description’;
+‘category’ may be partially filled.</p></li>
+<li><p><strong>rules_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the rules CSV file. Defaults to
+bundled ‘metadata/rules.csv’.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, re-applies categorisation even to
+existing categories. Defaults to False.</p></li>
+<li><p><strong>categorised_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory for historical categorised
+CSVs. Defaults to ‘categorised’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The updated DataFrame with ‘category’, ‘subcategory’, and ‘review’ columns added/filled.</p>
+<dd class="field-even"><p><dl class="simple">
+<dt>The updated DataFrame with ‘category’, ‘subcategory’,</dt><dd><p>and ‘review’ columns added/filled.</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
@@ -472,14 +483,16 @@ detects conflicts, flags rows for review, and saves the updated DataFrame to a t
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ValueError</strong> – Propagated from load_rules_file() if rules CSV is invalid.</p></li>
-<li><p><strong>Other exceptions</strong> – From underlying functions like model training or file operations.</p></li>
+<li><p><strong>Other exceptions</strong> – From underlying functions like model training or file
+operations.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;TESCO STORE&#39;</span><span class="p">,</span> <span class="s1">&#39;UBER TRIP&#39;</span><span class="p">]})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">categorised_df</span> <span class="o">=</span> <span class="n">auto_categorise</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<span class="go">No or insufficient previously categorised/labeled data; using rules only.</span>
+<span class="go">No or insufficient previously categorised/labeled data; using rules</span>
+<span class="go">only.</span>
 <span class="go">Saved categorised data to categorised/2025-11-07_12-00-00.csv. ...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">categorised_df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
 <span class="go">[&#39;Food/Dining&#39;, &#39;Transportation&#39;]</span>
