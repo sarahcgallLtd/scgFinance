@@ -1,0 +1,1126 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>scgFinance.categoriser &#8212; scgFinance 0.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=a1637f0b"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/scgFinance/categoriser';</script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="Nov 08, 2025"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo-dark.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">scgFinance</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../changeLog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sarahcgallLtd/scgFinance" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.sarahcgall.co.uk" title="Website" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-globe fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Website</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://docs.sarahcgall.co.uk" title="Other Packages by Sarah Gall" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-database fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Other Packages by Sarah Gall</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../changeLog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sarahcgallLtd/scgFinance" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.sarahcgall.co.uk" title="Website" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-globe fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Website</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://docs.sarahcgall.co.uk" title="Other Packages by Sarah Gall" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-database fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Other Packages by Sarah Gall</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">scgFinance.categoriser</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for scgFinance.categoriser</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_extraction.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">files</span>
+
+<span class="c1"># Modular helper function: Load default rules file</span>
+<span class="c1"># This function loads categorisation rules from a CSV file, either a custom one or a default bundled file.</span>
+<span class="c1"># It parses the CSV into a nested dictionary structure: {category: {subcategory: [patterns]}}</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_rules_file</span><span class="p">(</span><span class="n">rules_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads categorisation rules from a specified CSV file or defaults to the bundled &#39;metadata/rules.csv&#39;.</span>
+
+<span class="sd">    This function checks for the existence of the rules file and reads it into a DataFrame. It validates the required columns</span>
+<span class="sd">    (&#39;category&#39;, &#39;subcategory&#39;, &#39;pattern&#39;) and constructs a nested dictionary where patterns are stored under their respective</span>
+<span class="sd">    categories and subcategories. Duplicates within subcategory patterns are removed for efficiency. Patterns are stripped of</span>
+<span class="sd">    whitespace and quotes for clean matching.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rules_file (str, optional): Path to the custom rules CSV file. If None, uses the default bundled file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A nested dictionary of rules in the format {category: {subcategory: [pattern]}}.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: If the specified rules file does not exist.</span>
+<span class="sd">        ValueError: If the CSV is missing required columns or is empty.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; rules = _load_rules_file(&#39;metadata/custom_rules.csv&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; print(rules[&#39;Food/Dining&#39;][&#39;Groceries&#39;])</span>
+<span class="sd">        [&#39;TESCO&#39;, &#39;SAINSBURY&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If no rules_file provided, use the default bundled in the package</span>
+    <span class="k">if</span> <span class="n">rules_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Locate the default rules file in the package and convert to str for open/read_csv</span>
+        <span class="n">default_rules_path</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span><span class="s1">&#39;scgFinance.data.metadata&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;rules.csv&#39;</span><span class="p">)</span>
+        <span class="n">rules_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">default_rules_path</span><span class="p">)</span>
+
+    <span class="c1"># Load from CSV (multi-row format: category, subcategory, pattern) =================================================</span>
+    <span class="c1"># Check if the file exists; raise error if file not found</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">rules_file</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rules file not found: </span><span class="si">{</span><span class="n">rules_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Read the CSV into a DataFrame</span>
+    <span class="n">rules_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">rules_file</span><span class="p">)</span>
+
+    <span class="c1"># Check for required columns to avoid malformed CSV issues</span>
+    <span class="n">required_cols</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;subcategory&#39;</span><span class="p">,</span> <span class="s1">&#39;pattern&#39;</span><span class="p">}</span>
+
+    <span class="c1"># Verify if all required columns are present; raise error if columns missing</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">required_cols</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">rules_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rules CSV missing required columns: </span><span class="si">{</span><span class="n">required_cols</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">set</span><span class="p">(</span><span class="n">rules_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Check if the DataFrame is empty; raise error if empty</span>
+    <span class="k">if</span> <span class="n">rules_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Rules CSV is empty.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Initialise an empty dictionary to hold the nested rules</span>
+    <span class="n">rules</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Nested: {category: {subcategory: [pattern]}}</span>
+
+    <span class="c1"># Iterate over each row in the DataFrame ===========================================================================</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rules_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">category</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="c1"># Extract and strip whitespace from category</span>
+        <span class="n">subcategory</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;subcategory&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="c1"># Extract and strip whitespace from subcategory</span>
+        <span class="n">pattern_str</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;pattern&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>  <span class="c1"># Extract pattern, strip whitespace and quotes</span>
+
+        <span class="c1"># Skip if no valid pattern after parsing, then continue to next row if pattern is empty</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pattern_str</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># If category not yet in rules, add it, and initialise subcategory dict for this category</span>
+        <span class="k">if</span> <span class="n">category</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
+            <span class="n">rules</span><span class="p">[</span><span class="n">category</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># If subcategory not yet in category, add it, and initialise list for patterns</span>
+        <span class="k">if</span> <span class="n">subcategory</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">[</span><span class="n">category</span><span class="p">]:</span>
+            <span class="n">rules</span><span class="p">[</span><span class="n">category</span><span class="p">][</span><span class="n">subcategory</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Append the pattern to the list</span>
+        <span class="n">rules</span><span class="p">[</span><span class="n">category</span><span class="p">][</span><span class="n">subcategory</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pattern_str</span><span class="p">)</span>
+
+    <span class="c1"># Deduplicate pattern for each subcategory (optional, but helps avoid duplicates) ==================================</span>
+    <span class="c1"># Iterate over categories and subcategories to remove duplicates by converting to set and back to list</span>
+    <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">subcategory</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">[</span><span class="n">category</span><span class="p">]:</span>
+            <span class="n">rules</span><span class="p">[</span><span class="n">category</span><span class="p">][</span><span class="n">subcategory</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">rules</span><span class="p">[</span><span class="n">category</span><span class="p">][</span><span class="n">subcategory</span><span class="p">]))</span>
+
+    <span class="c1"># Return the nested rules dictionary</span>
+    <span class="k">return</span> <span class="n">rules</span>
+
+<span class="c1"># Modular helper: Load previously categorised data from directory</span>
+<span class="c1"># This function loads all previously categorised CSV files from a directory, concatenates them, and removes duplicates.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_categorised</span><span class="p">(</span><span class="n">categorised_dir</span><span class="o">=</span><span class="s1">&#39;categorised&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads and concatenates all previously categorised CSV files from a specified directory, removing duplicates.</span>
+
+<span class="sd">    This function scans the directory for CSV files, reads each one, and combines them into a single DataFrame. Duplicates are</span>
+<span class="sd">    removed based on &#39;date&#39;, &#39;description&#39;, and &#39;amount&#39; columns to ensure data integrity. If no files are found or the directory</span>
+<span class="sd">    does not exist, an empty DataFrame with expected columns is returned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        categorised_dir (str, optional): Path to the directory containing previously categorised CSV files. Defaults to &#39;categorised&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: A combined DataFrame of all categorised data, with duplicates removed.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        None explicitly, but may raise pandas errors if CSV files are malformed.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; categorised = _load_categorised(&#39;categorised&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; print(categorised.shape)</span>
+<span class="sd">        (50, 6)  # Example assuming 50 unique rows loaded</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialise list to hold DataFrames from categorised files</span>
+    <span class="n">categorised_dfs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Check if the categorised directory exists and find all CSV files in the directory</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">categorised_dir</span><span class="p">):</span>
+        <span class="n">cat_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">categorised_dir</span><span class="p">,</span> <span class="s1">&#39;*.csv&#39;</span><span class="p">))</span>
+
+        <span class="c1"># Iterate over each file, reading the CSV into the DataFrame and appending to the list</span>
+        <span class="k">for</span> <span class="n">cat_file</span> <span class="ow">in</span> <span class="n">cat_files</span><span class="p">:</span>
+            <span class="n">cat_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cat_file</span><span class="p">)</span>
+            <span class="n">categorised_dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cat_df</span><span class="p">)</span>
+
+    <span class="c1"># If there are previously categorised DataFrames, concatenate them, reset the index, and remove duplicates based on key columns</span>
+    <span class="k">if</span> <span class="n">categorised_dfs</span><span class="p">:</span>
+        <span class="n">all_categorised</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">categorised_dfs</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">all_categorised</span> <span class="o">=</span> <span class="n">all_categorised</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Define expected columns based on standardised schema</span>
+        <span class="n">expected_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;subcategory&#39;</span><span class="p">]</span>
+        <span class="n">all_categorised</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">expected_columns</span><span class="p">)</span>
+
+    <span class="c1"># Return the combined categorised DataFrame</span>
+    <span class="k">return</span> <span class="n">all_categorised</span>
+
+
+<span class="c1"># Modular helper: Train ML model</span>
+<span class="c1"># This function trains a new ML model using TF-IDF vectorization and logistic regression for classification.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_train_model</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="c1"># Features (descriptions)</span>
+        <span class="n">y</span><span class="p">,</span> <span class="c1"># Labels (categories or subcategories)</span>
+        <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;category&#39;</span> <span class="c1"># Type for printing (category or subcategory)</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Trains a machine learning model using TF-IDF vectorization and logistic regression for text classification.</span>
+
+<span class="sd">    This function splits the data into training and testing sets, builds a pipeline with TF-IDF vectorization (limited to 500 features)</span>
+<span class="sd">    and logistic regression, trains the model, evaluates its accuracy on the test set, and prints the result. It skips training if</span>
+<span class="sd">    there is insufficient data or only one unique label.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X (pd.Series or list): The feature data, typically transaction descriptions.</span>
+<span class="sd">        y (pd.Series or list): The target labels, either categories or subcategories.</span>
+<span class="sd">        model_type (str, optional): Specifies if training for &#39;category&#39; or &#39;subcategory&#39; for printing purposes. Defaults to &#39;category&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Pipeline or None: The trained scikit-learn Pipeline if successful, otherwise None.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        None explicitly, but may raise scikit-learn errors if data issues arise during fitting.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; X = [&#39;Buy groceries at TESCO&#39;, &#39;Ride with UBER&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; y = [&#39;Food/Dining&#39;, &#39;Transportation&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; model = _train_model(X, y)</span>
+<span class="sd">        Category model accuracy on test set: 1.00</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if data is sufficient for training</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Skip training for very small data or single class</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Return None if insufficient data</span>
+
+    <span class="c1"># Split data into train and test sets: 80/20 split, stratified by labels</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Create a pipeline: TF-IDF vectorizer + Logistic Regression</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+        <span class="p">(</span><span class="s1">&#39;tfidf&#39;</span><span class="p">,</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">max_features</span><span class="o">=</span><span class="mi">500</span><span class="p">)),</span> <span class="c1"># Vectorise text with max 500 features</span>
+        <span class="p">(</span><span class="s1">&#39;clf&#39;</span><span class="p">,</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">200</span><span class="p">))</span> <span class="c1"># Classifier with max 200 iterations</span>
+    <span class="p">])</span>
+
+    <span class="c1"># Train the model on training data</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+    <span class="c1"># Predict on test data</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+    <span class="c1"># Calculate accuracy</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">preds</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_type</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> model accuracy on test set: </span><span class="si">{</span><span class="n">acc</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># Print accuracy</span>
+
+    <span class="c1"># Return the trained model</span>
+    <span class="k">return</span> <span class="n">model</span>
+
+
+<span class="c1"># Modular helper: Train ML model</span>
+<span class="c1"># This function gets ML models for category and subcategory, training them based on labeled data.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_ml_model</span><span class="p">(</span><span class="n">labeled</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Trains separate ML models for predicting categories and subcategories using available labeled data.</span>
+
+<span class="sd">    This function filters the labeled DataFrame for non-null categories and subcategories, then trains models using train_model()</span>
+<span class="sd">    if sufficient data is available (more than 2 rows for categories, at least 10 for subcategories).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        labeled (pd.DataFrame): The DataFrame containing labeled data with &#39;description&#39;, &#39;category&#39;, and optionally &#39;subcategory&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary with keys &#39;category&#39; and &#39;subcategory&#39;, each mapping to a trained Pipeline or None.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        None explicitly, but propagates errors from train_model().</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; labeled = pd.DataFrame({&#39;description&#39;: [&#39;TESCO&#39;, &#39;UBER&#39;], &#39;category&#39;: [&#39;Food/Dining&#39;, &#39;Transportation&#39;]})</span>
+<span class="sd">        &gt;&gt;&gt; models = _get_ml_model(labeled)</span>
+<span class="sd">        &gt;&gt;&gt; assert models[&#39;category&#39;] is not None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;subcategory&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+    <span class="c1"># Category model ===================================================================================================</span>
+    <span class="c1"># Check if &#39;category&#39; column exists and filter non-null, non-empty categories</span>
+    <span class="k">if</span> <span class="s1">&#39;category&#39;</span> <span class="ow">in</span> <span class="n">labeled</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">cat_labeled</span> <span class="o">=</span> <span class="n">labeled</span><span class="p">[</span><span class="n">labeled</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">labeled</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)]</span>
+
+        <span class="c1"># If enough data (more than 2 rows):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_labeled</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">models</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_train_model</span><span class="p">(</span>
+                <span class="n">X</span><span class="o">=</span><span class="n">cat_labeled</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">],</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">cat_labeled</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">],</span>
+                <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;category&#39;</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Subcategory model ================================================================================================</span>
+    <span class="c1"># Check if &#39;subcategory&#39; column exists</span>
+    <span class="k">if</span> <span class="s1">&#39;subcategory&#39;</span> <span class="ow">in</span> <span class="n">labeled</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">sub_labeled</span> <span class="o">=</span> <span class="n">labeled</span><span class="p">[</span><span class="n">labeled</span><span class="p">[</span><span class="s1">&#39;subcategory&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">labeled</span><span class="p">[</span><span class="s1">&#39;subcategory&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)]</span>
+
+        <span class="c1"># If enough data (at least 10 rows):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_labeled</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="n">models</span><span class="p">[</span><span class="s1">&#39;subcategory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_train_model</span><span class="p">(</span>
+                <span class="n">X</span><span class="o">=</span><span class="n">sub_labeled</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">],</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">sub_labeled</span><span class="p">[</span><span class="s1">&#39;subcategory&#39;</span><span class="p">],</span>
+                <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;subcategory&#39;</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Return the models dictionary</span>
+    <span class="k">return</span> <span class="n">models</span>
+
+
+<span class="c1"># Modular helper: Apply ML to unlabeled data</span>
+<span class="c1"># This function applies loaded/trained ML models to predict categories and subcategories for unlabeled rows.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_apply_ml</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">models</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies trained ML models to predict categories and subcategories for unlabeled rows in the DataFrame.</span>
+
+<span class="sd">    This function identifies rows without categories, uses the category model to predict them if available, and then applies the</span>
+<span class="sd">    subcategory model if present. The updated rows are reintegrated into the original DataFrame, preserving order.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): The DataFrame to update with predictions, containing &#39;description&#39;, &#39;category&#39;, and optionally &#39;subcategory&#39;.</span>
+<span class="sd">        models (dict): Dictionary of trained models {&#39;category&#39;: Pipeline or None, &#39;subcategory&#39;: Pipeline or None}.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: The updated DataFrame with ML predictions filled in for unlabeled rows.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        None explicitly, but may raise prediction errors if models are incompatible with data.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({&#39;description&#39;: [&#39;TESCO&#39;, &#39;UBER&#39;], &#39;category&#39;: [None, &#39;Transportation&#39;]})</span>
+<span class="sd">        &gt;&gt;&gt; models = {&#39;category&#39;: trained_model, &#39;subcategory&#39;: None}</span>
+<span class="sd">        &gt;&gt;&gt; updated_df = _apply_ml(df, models)</span>
+<span class="sd">        &gt;&gt;&gt; print(updated_df[&#39;category&#39;].iloc[0])</span>
+<span class="sd">        &#39;Food/Dining&#39;  # Assuming model prediction</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Select rows without category</span>
+    <span class="n">unlabeled</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">|</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># If there are unlabeled rows and category model exists, predict categories</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">unlabeled</span><span class="o">.</span><span class="n">empty</span> <span class="ow">and</span> <span class="n">models</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]:</span>
+        <span class="n">unlabeled</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">unlabeled</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">])</span>
+
+        <span class="c1"># If subcategory model exists, predict subcategories</span>
+        <span class="k">if</span> <span class="n">models</span><span class="p">[</span><span class="s1">&#39;subcategory&#39;</span><span class="p">]:</span>
+            <span class="n">unlabeled</span><span class="p">[</span><span class="s1">&#39;subcategory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="s1">&#39;subcategory&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">unlabeled</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Concatenate labeled and newly predicted unlabeled, sort by original index</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)],</span> <span class="n">unlabeled</span><span class="p">])</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+
+    <span class="c1"># Return updated DataFrame</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="c1"># Modular helper: Compile rules for efficient matching</span>
+<span class="c1"># This function compiles patterns into regex objects (if prefixed with &#39;r&#39;) or lowercase strings for matching.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compile_rules</span><span class="p">(</span><span class="n">rules</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compiles the rules patterns for efficient matching, converting &#39;r&#39;-prefixed patterns to regex objects.</span>
+
+<span class="sd">    This function processes each pattern in the nested rules dictionary: if a pattern starts with &#39;r&#39;, it is compiled into a</span>
+<span class="sd">    case-insensitive regex pattern; otherwise, it is converted to lowercase for substring matching.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rules (dict): The nested rules dictionary {category: {subcategory: [pattern]}}.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A compiled nested rules dictionary with patterns as strings or re.Pattern objects.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        re.error: If a regex pattern is invalid.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; rules = {&#39;Cat&#39;: {&#39;Sub&#39;: [&#39;keyword&#39;, &#39;r[a-z]+&#39;]}}</span>
+<span class="sd">        &gt;&gt;&gt; compiled = _compile_rules(rules)</span>
+<span class="sd">        &gt;&gt;&gt; assert isinstance(compiled[&#39;Cat&#39;][&#39;Sub&#39;][1], re.Pattern)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialise dictionary for compiled rules</span>
+    <span class="n">compiled_rules</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Iterate over categories and subcategories</span>
+    <span class="k">for</span> <span class="n">category</span><span class="p">,</span> <span class="n">subcats</span> <span class="ow">in</span> <span class="n">rules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Initialise subcategory dict</span>
+        <span class="n">compiled_rules</span><span class="p">[</span><span class="n">category</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Iterate over subcategories and patterns</span>
+        <span class="k">for</span> <span class="n">subcategory</span><span class="p">,</span> <span class="n">pats</span> <span class="ow">in</span> <span class="n">subcats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Compile each pattern: regex if &#39;r&#39; prefix, else lowercase string</span>
+            <span class="n">compiled_rules</span><span class="p">[</span><span class="n">category</span><span class="p">][</span><span class="n">subcategory</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pat</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="k">if</span> <span class="n">pat</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">pat</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">pat</span> <span class="ow">in</span> <span class="n">pats</span>
+            <span class="p">]</span>
+
+    <span class="c1"># Return compiled rules</span>
+    <span class="k">return</span> <span class="n">compiled_rules</span>
+
+
+<span class="c1"># Modular helper: Apply rules to a row</span>
+<span class="c1"># This function applies compiled rules to a single row&#39;s description to assign category and subcategory.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_apply_rules_to_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">compiled_rules</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies compiled rules to assign a category and subcategory to a single DataFrame row based on its description.</span>
+
+<span class="sd">    This function checks if the row already has a category and respects the overwrite flag. It lowers the description for matching</span>
+<span class="sd">    and iterates through the compiled rules, returning the first matching category and subcategory. Regex patterns use search(),</span>
+<span class="sd">    while string patterns check for substring presence.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        row (pd.Series): A single row from the DataFrame, containing at least &#39;description&#39; and &#39;category&#39;.</span>
+<span class="sd">        compiled_rules (dict): The compiled rules dictionary.</span>
+<span class="sd">        overwrite (bool): If True, applies rules even if a category already exists.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: (category, subcategory) - The assigned or existing values.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; row = pd.Series({&#39;description&#39;: &#39;Buy at TESCO&#39;, &#39;category&#39;: None})</span>
+<span class="sd">        &gt;&gt;&gt; compiled_rules = {&#39;Food/Dining&#39;: {&#39;Groceries&#39;: [&#39;tesco&#39;]}}</span>
+<span class="sd">        &gt;&gt;&gt; cat, sub = _apply_rules_to_row(row, compiled_rules, True)</span>
+<span class="sd">        &gt;&gt;&gt; print(cat, sub)</span>
+<span class="sd">        &#39;Food/Dining&#39; &#39;Groceries&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If category exists and no overwrite, keep existing</span>
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
+        <span class="c1"># Return existing category and subcategory (if any)</span>
+        <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">],</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;subcategory&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Lowercase description for matching</span>
+    <span class="n">desc</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="c1"># Iterate over categories, subcategories, and patterns</span>
+    <span class="k">for</span> <span class="n">category</span><span class="p">,</span> <span class="n">subcats</span> <span class="ow">in</span> <span class="n">compiled_rules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">subcategory</span><span class="p">,</span> <span class="n">patterns</span> <span class="ow">in</span> <span class="n">subcats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">pat</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+                <span class="c1"># Check for match (regex search or substring)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pat</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">desc</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pat</span> <span class="ow">in</span> <span class="n">desc</span><span class="p">):</span>
+                    <span class="c1"># Return first matching category and subcategory</span>
+                    <span class="k">return</span> <span class="n">category</span><span class="p">,</span> <span class="n">subcategory</span>
+
+    <span class="c1"># If no match, return original (likely None)</span>
+    <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">],</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;subcategory&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+
+<span class="c1"># Modular helper: Detect conflicts</span>
+<span class="c1"># This function detects conflicts in categorisation, such as changes from original or inconsistent categories for same description.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_detect_conflicts</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Detects categorisation conflicts in the DataFrame, such as changes from original categories or inconsistencies across similar descriptions.</span>
+
+<span class="sd">    This function adds a &#39;conflict&#39; boolean column to the DataFrame. Conflicts are flagged if a category has changed from its original</span>
+<span class="sd">    value or if the same description has multiple different categories across rows.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): The DataFrame with &#39;description&#39;, &#39;category&#39;, and &#39;original_category&#39; columns.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: The updated DataFrame with an added &#39;conflict&#39; column.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({&#39;description&#39;: [&#39;TESCO&#39;, &#39;TESCO&#39;], &#39;category&#39;: [&#39;Food&#39;, &#39;Transport&#39;], &#39;original_category&#39;: [&#39;Food&#39;, &#39;Food&#39;]})</span>
+<span class="sd">        &gt;&gt;&gt; updated_df = _detect_conflicts(df)</span>
+<span class="sd">        &gt;&gt;&gt; print(updated_df[&#39;conflict&#39;].all())</span>
+<span class="sd">        True  # Conflicts due to inconsistency and change</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialise conflict column as False</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;conflict&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># Conflict if category changed from original (without overwrite intent); Set True if changed</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;conflict&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;original_category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">())</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;original_category&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Check for similar transactions with different categories (group by description)</span>
+    <span class="c1"># Count unique categories per description</span>
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">)[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+
+    <span class="c1"># Get descriptions with more than 1 category</span>
+    <span class="n">conflicting_desc</span> <span class="o">=</span> <span class="n">grouped</span><span class="p">[</span><span class="n">grouped</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
+
+    <span class="c1"># Set conflict True for those</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">conflicting_desc</span><span class="p">),</span> <span class="s1">&#39;conflict&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Return updated DataFrame</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="c1"># Modular helper: Save categorised DataFrame</span>
+<span class="c1"># This function saves the categorised DataFrame to a timestamped CSV in the categorised directory.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_save_categorised</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">categorised_dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves the categorised DataFrame to a timestamped CSV file in the specified directory.</span>
+
+<span class="sd">    This function creates the directory if it does not exist, generates a unique filename based on the current timestamp,</span>
+<span class="sd">    and saves the DataFrame without the index. It prints the save path and a reminder to review flagged rows.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): The DataFrame to save.</span>
+<span class="sd">        categorised_dir (str): The path to the directory where the file should be saved.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The full path to the saved CSV file.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        OSError: If directory creation or file writing fails.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({&#39;date&#39;: [&#39;2025-01-01&#39;], &#39;description&#39;: [&#39;TESCO&#39;], &#39;category&#39;: [&#39;Food/Dining&#39;]})</span>
+<span class="sd">        &gt;&gt;&gt; save_path = _save_categorised(df, &#39;output_dir&#39;)</span>
+<span class="sd">        Saved categorised data to output_dir/2025-11-07_12-00-00.csv. Review rows where &#39;review&#39; is not NaN manually.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create directory if it doesn&#39;t exist</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">categorised_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Create timestamped filename</span>
+    <span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">categorised_dir</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H-%M-%S&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Save DataFrame to CSV without index</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved categorised data to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">. Review rows where &#39;review&#39; is not NaN manually.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Return the save path</span>
+    <span class="k">return</span> <span class="n">save_path</span>
+
+
+<span class="c1"># Main function: auto_categorise</span>
+<span class="c1"># This is the main function that orchestrates the categorisation process using rules, ML, or hybrid based on data availability.</span>
+<span class="c1"># It loads rules and previously categorised files, applies categorisation, detects conflicts, generates review file, and saves the result.</span>
+<div class="viewcode-block" id="auto_categorise">
+<a class="viewcode-back" href="../../api/scgFinance/index.html#scgFinance.categoriser.auto_categorise">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">auto_categorise</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="c1"># Input DataFrame to categorise</span>
+        <span class="n">rules_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="c1"># Optional rules file path</span>
+        <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># Whether to overwrite existing categories</span>
+        <span class="n">categorised_dir</span><span class="o">=</span><span class="s1">&#39;categorised&#39;</span> <span class="c1"># Previously categorised directory</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Automatically categorises transactions in a DataFrame using rules, machine learning, or a hybrid approach based on available data.</span>
+
+<span class="sd">    This function initialises category/subcategory columns if missing, loads rules and historical categorised data, determines the</span>
+<span class="sd">    categorisation mode (rules-only, hybrid, or full ML) based on the amount of labeled data, applies the appropriate method,</span>
+<span class="sd">    detects conflicts, flags rows for review, and saves the updated DataFrame to a timestamped file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): The input DataFrame with at least &#39;description&#39;; &#39;category&#39; may be partially filled.</span>
+<span class="sd">        rules_file (str, optional): Path to the rules CSV file. Defaults to bundled &#39;metadata/rules.csv&#39;.</span>
+<span class="sd">        overwrite (bool, optional): If True, re-applies categorisation even to existing categories. Defaults to False.</span>
+<span class="sd">        categorised_dir (str, optional): Directory for historical categorised CSVs. Defaults to &#39;categorised&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: The updated DataFrame with &#39;category&#39;, &#39;subcategory&#39;, and &#39;review&#39; columns added/filled.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: Propagated from load_rules_file() if rules CSV is invalid.</span>
+<span class="sd">        Other exceptions: From underlying functions like model training or file operations.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({&#39;description&#39;: [&#39;TESCO STORE&#39;, &#39;UBER TRIP&#39;]})</span>
+<span class="sd">        &gt;&gt;&gt; categorised_df = auto_categorise(df)</span>
+<span class="sd">        No or insufficient previously categorised/labeled data; using rules only.</span>
+<span class="sd">        Saved categorised data to categorised/2025-11-07_12-00-00.csv. ...</span>
+<span class="sd">        &gt;&gt;&gt; print(categorised_df[&#39;category&#39;].tolist())</span>
+<span class="sd">        [&#39;Food/Dining&#39;, &#39;Transportation&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># 1. Initialise category and subcategory if not present (since import doesn&#39;t add them) ============================</span>
+    <span class="c1"># Check and add category column if missing</span>
+    <span class="k">if</span> <span class="s1">&#39;category&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Check and add subcategory column if missing</span>
+    <span class="k">if</span> <span class="s1">&#39;subcategory&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;subcategory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># 2. Snapshot original for conflict detection ======================================================================</span>
+    <span class="c1"># Copy original categories for later comparison</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;original_category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># 3. Load rules (always, as fallback/hybrid) and previously categorised data (if present) ==========================</span>
+    <span class="c1"># Load rules from file and compile for matching</span>
+    <span class="n">rules</span> <span class="o">=</span> <span class="n">_load_rules_file</span><span class="p">(</span><span class="n">rules_file</span><span class="p">)</span>
+    <span class="n">compiled_rules</span> <span class="o">=</span> <span class="n">_compile_rules</span><span class="p">(</span><span class="n">rules</span><span class="p">)</span>
+
+    <span class="c1"># Load previously categorised</span>
+    <span class="n">all_categorised</span> <span class="o">=</span> <span class="n">_load_categorised</span><span class="p">(</span><span class="n">categorised_dir</span><span class="p">)</span>
+
+    <span class="c1"># 4. Prepare labeled/unlabeled (combine previously categorised + df&#39;s pre-labeled) =================================</span>
+    <span class="c1"># Concatenate previously categorised labeled and current labeled</span>
+    <span class="n">labeled</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+        <span class="n">all_categorised</span><span class="p">[</span><span class="n">all_categorised</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">all_categorised</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)],</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)]</span>
+    <span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># Reset index</span>
+
+    <span class="c1"># Select unlabeled in current df</span>
+    <span class="n">unlabeled</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">|</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)]</span>
+
+    <span class="c1"># 5. Determine mode based on data availability (no explicit use_ml param; auto-detect) =============================</span>
+    <span class="c1"># Mode 1: Rules only (no/insufficient previously categorised/data); If no previously categorised or few labeled,</span>
+    <span class="c1">#         use rules only and apply rules to each row</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_categorised</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">labeled</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No or insufficient previously categorised/labeled data; using rules only.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Get, and apply, rules</span>
+        <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;subcategory&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">_apply_rules_to_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">compiled_rules</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)),</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Mode 2: Hybrid (rules + ML) for limited data or potential conflicts; If previously categorised data is &quot;limited&quot;</span>
+    <span class="c1">#         (less than 500 labels), use hybrid</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">labeled</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">500</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Limited labeled data; using ML + rules hybrid.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Get, and apply, model</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="n">_get_ml_model</span><span class="p">(</span><span class="n">labeled</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">models</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">_apply_ml</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+
+        <span class="c1"># Then apply rules (as hybrid/fallback, sets both)</span>
+        <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;subcategory&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">_apply_rules_to_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">compiled_rules</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)),</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Mode 3: Full ML when enough data for over 500 labelled historical data</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sufficient labeled data; using full ML.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Get, and apply, model</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="n">_get_ml_model</span><span class="p">(</span><span class="n">labeled</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">models</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">_apply_ml</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+
+        <span class="c1"># Fallback to rules if model fails (safetynet)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ML model unavailable; falling back to rules.&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Apply rules</span>
+            <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;subcategory&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">_apply_rules_to_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">compiled_rules</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)),</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Detect conflicts and add conflict column</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_detect_conflicts</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="c1"># Create single &#39;review&#39; column</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;review&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">uncat_mask</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">|</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">uncat_mask</span><span class="p">,</span> <span class="s1">&#39;review&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;uncategorised&#39;</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;conflict&#39;</span><span class="p">],</span> <span class="s1">&#39;review&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;category conflict - review and resolve&#39;</span>
+
+    <span class="c1"># Print review summary</span>
+    <span class="n">review_count</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;review&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">conflict_count</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;review&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;conflict&#39;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">review_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">review_count</span><span class="si">}</span><span class="s2"> rows need manual review (including </span><span class="si">{</span><span class="n">conflict_count</span><span class="si">}</span><span class="s2"> conflicts).&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Drop temp columns (Remove temporary columns)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;original_category&#39;</span><span class="p">,</span> <span class="s1">&#39;conflict&#39;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Save updated df (categorised DataFrame)</span>
+    <span class="n">_save_categorised</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">categorised_dir</span><span class="p">)</span>
+
+    <span class="c1"># Return the updated DataFrame</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div class="sidebar-custom-link">
+    <h6>OTHER LINKS</h6>
+    <a class="reference external" href="https://github.com/sarahcgallLtd/scgFinance">Browse Source Code</a>
+    <br>
+    <a class="reference external" href="https://github.com/sarahcgallLtd/scgFinance/issues">Report a Bug</a>
+    <br>
+    <a class="reference external" href="https://docs.sarahcgall.co.uk">Other Packages</a>
+</div>
+<div class="sidebar-custom-link mt-1">
+    <h6>LICENSE</h6>
+    <a class="reference external" href="https://opensource.org/license/mit">MIT</a> + file <a class="reference internal" href="../../license.html">License</a>
+</div>
+<div class="sidebar-custom-link mt-1">
+    <h6>CITATION</h6>
+    <a class="reference internal" href="../../citation.html">Citing scgFinance</a>
+</div>
+<div class="sidebar-custom-link mt-1">
+    <h6>DEVELOPERS</h6>
+    <a class="reference external" href="https://www.sarahcgall.co.uk">Sarah Gall</a>
+    <p>Author, maintainer</p>
+</div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Sarah C Gall.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

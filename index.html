@@ -7,7 +7,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <link href="_static/favicon-32x32.png" sizes="32x32" rel="icon" type="image/png">
+    <link href="_static/favicon-16x16.png" sizes="16x16" rel="icon" type="image/png">
+    <link rel="shortcut icon" sizes="any" href="_static/favicon.ico" type="image/x-icon">
+    <link href="_static/android-chrome-192x192.png" sizes="192x192" rel="icon" type="image/png">
+    <link href="_static/android-chrome-512x512.png" sizes="512x512" rel="icon" type="image/png">
+    <link rel="mask-icon" color="#459db9" href="_static/safari-pinned-tab.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="_static/apple-touch-icon.png" sizes="180x180" type="image/png">
     <title>Overview &#8212; scgFinance 0.1.0 documentation</title>
   
   
@@ -31,6 +37,8 @@
 <link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,16 +46,20 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/documentation_options.js?v=a1637f0b"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="User Guide" href="user_guide/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="Nov 08, 2025"/>
   </head>
   
   
@@ -131,6 +143,26 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="changeLog.html">
+    Changelog
+  </a>
+</li>
+
   </ul>
 </nav></div>
       
@@ -171,6 +203,30 @@
           
           <a href="https://github.com/sarahcgallLtd/scgFinance" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.sarahcgall.co.uk" title="Website" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-globe fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Website</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://docs.sarahcgall.co.uk" title="Other Packages by Sarah Gall" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-database fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Other Packages by Sarah Gall</span></a>
         </li>
 </ul></div>
       
@@ -222,6 +278,26 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="changeLog.html">
+    Changelog
+  </a>
+</li>
+
   </ul>
 </nav></div>
           
@@ -253,6 +329,30 @@
           
           <a href="https://github.com/sarahcgallLtd/scgFinance" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.sarahcgall.co.uk" title="Website" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-globe fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Website</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://docs.sarahcgall.co.uk" title="Other Packages by Sarah Gall" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-database fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Other Packages by Sarah Gall</span></a>
         </li>
 </ul></div>
         
@@ -294,26 +394,31 @@
   <h1 style="margin: 0;">scgFinance</h1>
 </div><section id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h1>
-<p>The <cite>scgFinance</cite> package provides tools for managing personal finances, including the ability to: import bank statements, categorise expenses automatically or manually, track and visualise spending, forecast trends, and compare against budgets.</p>
-<div class="toctree-wrapper compound">
-</div>
+<p><code class="docutils literal notranslate"><span class="pre">scgFinance</span></code> is a Python package designed to simplify personal finance management. It provides tools to import,
+categorise, track, visualise, and forecast financial data from bank and credit card statements. Using a
+combination of rule-based and machine learning approaches, it adapts to your spending patterns over time, making
+it easier to monitor budgets and identify trends.</p>
+<section id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+<li><p><em>Automatic Categorisation</em>: Uses rules and machine learning to classify transactions, improving accuracy with more data.</p></li>
+<li><p><em>Import from Multiple Sources</em>: Supports bank and credit card CSV files with customisable column mappings.</p></li>
+<li><p><em>Tracking and Visualisation</em>: Generate reports, charts, and forecasts for spending patterns.</p></li>
+<li><p><em>Budget Comparison</em>: Compare actual spending against predefined budgets.</p></li>
+<li><p><em>Metadata Tracking</em>: Avoids re-processing files by maintaining a record of imported data.</p></li>
 </ul>
 </section>
 <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
-<p><cite>scgFinance</cite> requires Python 3.12 or later. You can install the stable version from PyPI (if available) or the development version directly from GitHub.</p>
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">scgFinance</span></code> requires Python 3.12 or later. You can install the stable version from PyPI (if available) or the development version directly from GitHub.</p>
 <section id="stable-version-from-pypi">
-<h2>Stable Version (from PyPI)<a class="headerlink" href="#stable-version-from-pypi" title="Link to this heading">#</a></h2>
+<h3>Stable Version (from PyPI)<a class="headerlink" href="#stable-version-from-pypi" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>scgFinance
 </pre></div>
 </div>
 </section>
 <section id="development-version-from-github">
-<h2>Development Version (from GitHub)<a class="headerlink" href="#development-version-from-github" title="Link to this heading">#</a></h2>
+<h3>Development Version (from GitHub)<a class="headerlink" href="#development-version-from-github" title="Link to this heading">#</a></h3>
 <p>To install the latest development version, use pip to install directly from the repository:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/sarahcgallLtd/scgFinance.git@main
 </pre></div>
@@ -326,16 +431,14 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </div>
 </section>
 </section>
-<section id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h1>
-<p><cite>scgFinance</cite> provides a streamlined workflow for importing, categorising, and managing personal finance data from
-bank and credit card statements. Below are examples demonstrating key functions. For full details, refer to
-the [package documentation](<a class="reference external" href="https://docs.sarahcgall.co.uk/scgFinance">https://docs.sarahcgall.co.uk/scgFinance</a>).</p>
+<section id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
+<p>Get started quickly with sample data and the processing pipeline.</p>
 <section id="loading-sample-data">
-<h2>Loading Sample Data<a class="headerlink" href="#loading-sample-data" title="Link to this heading">#</a></h2>
-<p><cite>scgFinance</cite> comes with sample data for you to use, including access to the default rules file which is used to
+<h3>Loading Sample Data<a class="headerlink" href="#loading-sample-data" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">scgFinance</span></code> comes with sample data for you to use, including access to the default rules file which is used to
 classify and categorise statement items when there are insufficient amounts of previously categorised data.</p>
-<p>Use <cite>load_package_data</cite> to access bundled sample datasets for testing or exploration:</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">load_package_data</span></code> to access bundled sample datasets for testing or exploration:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scgFinance.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_package_data</span>
 
 <span class="c1"># Load bank sample</span>
@@ -351,9 +454,8 @@ classify and categorise statement items when there are insufficient amounts of p
 </div>
 </section>
 <section id="processing-pipeline">
-<h2>Processing Pipeline<a class="headerlink" href="#processing-pipeline" title="Link to this heading">#</a></h2>
-<p>The <cite>process_statements</cite> function runs the end-to-end workflow: importing from multiple sources, categorising, updating metadata, and saving categorised/processed files.</p>
-<p>Example: Processing bank and credit card statements together:</p>
+<h3>Processing Pipeline<a class="headerlink" href="#processing-pipeline" title="Link to this heading">#</a></h3>
+<p>Run the end-to-end workflow with <code class="docutils literal notranslate"><span class="pre">process_statements</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scgFinance.process</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_statements</span>
 
 <span class="c1"># Define sources as a list of configs</span>
@@ -390,6 +492,10 @@ classify and categorise statement items when there are insufficient amounts of p
 <span class="nb">print</span><span class="p">(</span><span class="n">categorised_df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
+<p>For more details, see the <a class="reference internal" href="user_guide/index.html"><span class="doc">User Guide</span></a>.</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
 </section>
 </section>
 
@@ -403,6 +509,15 @@ classify and categorise statement items when there are insufficient amounts of p
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="right-next"
+       href="user_guide/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">User Guide</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -422,45 +537,41 @@ classify and categorise statement items when there are insufficient amounts of p
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Overview</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stable-version-from-pypi">Stable Version (from PyPI)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development-version-from-github">Development Version (from GitHub)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-features">Key Features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stable-version-from-pypi">Stable Version (from PyPI)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-version-from-github">Development Version (from GitHub)</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-sample-data">Loading Sample Data</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#processing-pipeline">Processing Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quickstart">Quickstart</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-sample-data">Loading Sample Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#processing-pipeline">Processing Pipeline</a></li>
 </ul>
 </li>
 </ul>
-
   </nav></div>
 
-  <div class="sidebar-secondary-item">
-
-  
-  <div class="tocsection editthispage">
-    <a href="https://github.com/sarahcgallLtd/scgFinance/edit/main/docs/source/index.rst">
-      <i class="fa-solid fa-pencil"></i>
-      
-      
-        
-          Edit on GitHub
-        
-      
-    </a>
-  </div>
+  <div class="sidebar-secondary-item"><div class="sidebar-custom-link">
+    <h6>OTHER LINKS</h6>
+    <a class="reference external" href="https://github.com/sarahcgallLtd/scgFinance">Browse Source Code</a>
+    <br>
+    <a class="reference external" href="https://github.com/sarahcgallLtd/scgFinance/issues">Report a Bug</a>
+    <br>
+    <a class="reference external" href="https://docs.sarahcgall.co.uk">Other Packages</a>
 </div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
+<div class="sidebar-custom-link mt-1">
+    <h6>LICENSE</h6>
+    <a class="reference external" href="https://opensource.org/license/mit">MIT</a> + file <a class="reference internal" href="license.html">License</a>
+</div>
+<div class="sidebar-custom-link mt-1">
+    <h6>CITATION</h6>
+    <a class="reference internal" href="citation.html">Citing scgFinance</a>
+</div>
+<div class="sidebar-custom-link mt-1">
+    <h6>DEVELOPERS</h6>
+    <a class="reference external" href="https://www.sarahcgall.co.uk">Sarah Gall</a>
+    <p>Author, maintainer</p>
+</div></div>
 
 </div></div>
               
