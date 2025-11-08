@@ -16,6 +16,12 @@ python = "^3.12"
 pandas = "^2.3.3"
 scikit-learn = "^1.7.2"
 numpy = "^2.3.4"
+sphinx-favicon = "^1.0.1"
+sphinx-copybutton = "^0.5.2"
+myst-parser = "^4.0.1"
+linkify-it-py = "^2.0.3"
+e = "^1.4.5"
+sphinx-autoapi = "^3.6.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0"

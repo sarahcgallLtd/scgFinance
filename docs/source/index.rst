@@ -9,26 +9,32 @@
    </div>
 
 Overview
-==========
+========
 
-The `scgFinance` package provides tools for managing personal finances, including the ability to: import bank statements, categorise expenses automatically or manually, track and visualise spending, forecast trends, and compare against budgets.
+``scgFinance`` is a Python package designed to simplify personal finance management. It provides tools to import,
+categorise, track, visualise, and forecast financial data from bank and credit card statements. Using a
+combination of rule-based and machine learning approaches, it adapts to your spending patterns over time, making
+it easier to monitor budgets and identify trends.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+Key Features
+------------
+
+- *Automatic Categorisation*: Uses rules and machine learning to classify transactions, improving accuracy with more data.
+- *Import from Multiple Sources*: Supports bank and credit card CSV files with customisable column mappings.
+- *Tracking and Visualisation*: Generate reports, charts, and forecasts for spending patterns.
+- *Budget Comparison*: Compare actual spending against predefined budgets.
+- *Metadata Tracking*: Avoids re-processing files by maintaining a record of imported data.
 
 
 Installation
-============
+------------
 
-`scgFinance` requires Python 3.12 or later. You can install the stable version from PyPI (if available) or the development version directly from GitHub.
+``scgFinance`` requires Python 3.12 or later. You can install the stable version from PyPI (if available) or the development version directly from GitHub.
+
 
 Stable Version (from PyPI)
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -36,7 +42,7 @@ Stable Version (from PyPI)
 
 
 Development Version (from GitHub)
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To install the latest development version, use pip to install directly from the repository:
 
@@ -53,21 +59,19 @@ Alternatively, clone the repository and install locally:
    pip install -e .
 
 
-Usage
-============
+Quickstart
+----------
 
-`scgFinance` provides a streamlined workflow for importing, categorising, and managing personal finance data from
-bank and credit card statements. Below are examples demonstrating key functions. For full details, refer to
-the [package documentation](https://docs.sarahcgall.co.uk/scgFinance).
+Get started quickly with sample data and the processing pipeline.
 
 
 Loading Sample Data
--------------------
+~~~~~~~~~~~~~~~~~~~
 
-`scgFinance` comes with sample data for you to use, including access to the default rules file which is used to
+``scgFinance`` comes with sample data for you to use, including access to the default rules file which is used to
 classify and categorise statement items when there are insufficient amounts of previously categorised data.
 
-Use `load_package_data` to access bundled sample datasets for testing or exploration:
+Use ``load_package_data`` to access bundled sample datasets for testing or exploration:
 
 .. code-block:: python
 
@@ -86,10 +90,9 @@ Use `load_package_data` to access bundled sample datasets for testing or explora
 
 
 Processing Pipeline
-------------------------
-The `process_statements` function runs the end-to-end workflow: importing from multiple sources, categorising, updating metadata, and saving categorised/processed files.
+~~~~~~~~~~~~~~~~~~~
 
-Example: Processing bank and credit card statements together:
+Run the end-to-end workflow with ``process_statements``:
 
 .. code-block:: python
 
@@ -127,3 +130,14 @@ Example: Processing bank and credit card statements together:
     )
 
     print(categorised_df.head())
+
+For more details, see the :doc:`User Guide <user_guide/index>`.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+   :hidden:
+
+   user_guide/index
+   api
+   changeLog

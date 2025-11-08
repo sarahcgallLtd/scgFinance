@@ -6,15 +6,30 @@ from datetime import datetime
 
 # Helper function for tracking which files have been processed and which have not
 # This function updates the metadata CSV with the status and process date for the imported files.
-def update_metadata(imported_files, source, metadata_file='metadata/processed_files.csv', status='processed'):
+def _update_metadata(imported_files, source, metadata_file='metadata/processed_files.csv', status='processed'):
     """
-    Updates the metadata CSV with processed status and date for given files.
+    Updates the metadata CSV file with the processing status and timestamp for the specified imported files.
+
+    This function loads the existing metadata DataFrame or creates a new one if it does not exist. For each imported file,
+    it checks if an entry already exists for that file and source; if so, it updates the status and process date; otherwise,
+    it adds a new row. The updated metadata is then saved back to the CSV file.
 
     Args:
-        imported_files (list): List of file base names that were imported.
-        source (str): 'credit card' or 'bank'.
-        metadata_file (str): Path to metadata CSV.
-        status (str): Status to set (default: 'processed').
+        imported_files (list): A list of base file names (e.g., 'statement.csv') that were successfully imported.
+        source (str): The source identifier (e.g., 'bank', 'credit_card') for the files.
+        metadata_file (str, optional): Path to the metadata CSV file. Defaults to 'metadata/processed_files.csv'.
+        status (str, optional): The status to set for the files (e.g., 'processed', 'reprocessed'). Defaults to 'processed'.
+
+    Returns:
+        None
+
+    Raises:
+        pandas.errors: If there are issues reading or writing the CSV file.
+
+    Example:
+        >>> imported_files = ['statement1.csv', 'statement2.csv']
+        >>> _update_metadata(imported_files, 'bank', 'my_metadata.csv')
+        Updated metadata for 2 files with status 'processed'.
     """
     if not imported_files:
         return
@@ -51,21 +66,37 @@ def process_statements(
         overwrite=False
 ):
     """
-    Runs the full finance pipeline: imports statements from multiple sources,
-    categorises them, updates metadata, and saves categorised.
+    Orchestrates the full financial statement processing pipeline: importing, categorising, updating metadata, and saving results.
+
+    This function processes statements from multiple sources by importing unprocessed files, combining them into a single DataFrame,
+    applying automatic categorisation, updating the metadata to mark files as processed, and returning the categorised DataFrame.
+    If no new transactions are found, an empty DataFrame is returned. Custom import parameters can be provided per source.
 
     Args:
-        sources (list of dict): Each dict contains:
-            - 'path': str, path to statements (file or directory)
-            - 'source': str, source identifier (e.g., 'Lloyds', 'HSBC', 'Mastercard')
-            - Optional custom params: 'desc_col', 'time_col', etc., passed to import_statements
-        metadata_file (str): Path to metadata CSV for tracking processed files.
-        categorised_dir (str): Directory for saving categorised/processed files.
-        rules_file (str, optional): Path to custom rules CSV; None uses default.
-        overwrite (bool): If True, re-categorise existing categories.
+        sources (list of dict): A list of dictionaries, each specifying a source configuration:
+            - 'path' (str): Path to the file or directory of CSV statements.
+            - 'source' (str): Identifier for the source (e.g., 'Lloyds', 'HSBC').
+            - Optional keys: 'date_col', 'date_format', 'time_col', 'time_format', 'desc_col', 'amt_col' for custom import settings.
+        metadata_file (str, optional): Path to the metadata CSV for tracking processed files. Defaults to 'metadata/processed_files.csv'.
+        categorised_dir (str, optional): Directory to save the categorised CSV files. Defaults to 'categorised/'.
+        rules_file (str, optional): Path to a custom rules CSV for categorisation; None uses the default bundled rules.
+        overwrite (bool, optional): If True, re-categorises even existing categories during auto_categorise. Defaults to False.
 
     Returns:
-        pd.DataFrame: The categorised DataFrame, or empty if no new transactions.
+        pd.DataFrame: The combined and categorised DataFrame, or an empty DataFrame if no new transactions were processed.
+
+    Raises:
+        ValueError: If 'path' or 'source' is missing in any source configuration, or if columns are not found during import.
+        Other exceptions: Propagated from import_statements() or auto_categorise(), such as FileNotFoundError for rules_file.
+
+    Example:
+        >>> sources = [
+        ...     {'path': 'bank_statements/', 'source': 'bank', 'date_col': 'Date', 'date_format': '%d/%m/%Y',
+        ...      'desc_col': 'Description', 'amt_col': 'Amount'}
+        ... ]
+        >>> df = process_statements(sources, rules_file='custom_rules.csv')
+        >>> print(df.shape)
+        (10, 7)  # Example assuming 10 transactions processed with 7 columns
     """
     all_df = pd.DataFrame()
     imported_by_source = {}
@@ -103,6 +134,6 @@ def process_statements(
 
     # Step 4: Update metadata to mark imported files as processed
     for source, imported_files in imported_by_source.items():
-        update_metadata(imported_files, source, metadata_file=metadata_file)
+        _update_metadata(imported_files, source, metadata_file=metadata_file)
 
     return categorised_df

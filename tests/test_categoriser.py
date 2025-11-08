@@ -5,14 +5,14 @@ import re
 from io import StringIO
 from datetime import datetime, timedelta
 from src.scgFinance.categoriser import (
-    load_rules_file,
-    load_categorised,
-    get_ml_model,
-    apply_ml,
-    compile_rules,
-    apply_rules_to_row,
-    detect_conflicts,
-    save_categorised,
+    _load_rules_file,
+    _load_categorised,
+    _get_ml_model,
+    _apply_ml,
+    _compile_rules,
+    _apply_rules_to_row,
+    _detect_conflicts,
+    _save_categorised,
     auto_categorise
 )
 
@@ -118,7 +118,7 @@ def full_ml_categorised_dir(tmp_path):
 
 # TEST FOR LOAD_RULES_FILES() ==========================================================================================
 def test_load_rules_file(sample_rules_file):
-    rules = load_rules_file(sample_rules_file)
+    rules = _load_rules_file(sample_rules_file)
     assert 'Food/Dining' in rules
     assert 'Groceries' in rules['Food/Dining']
     assert 'TESCO' in rules['Food/Dining']['Groceries']
@@ -128,19 +128,19 @@ def test_load_rules_file(sample_rules_file):
 
 def test_load_rules_file_empty(empty_rules_file):
     with pytest.raises(ValueError, match="Rules CSV is empty."):
-        load_rules_file(empty_rules_file)
+        _load_rules_file(empty_rules_file)
 
 def test_load_rules_file_missing_cols(bad_rules_file):
     with pytest.raises(ValueError, match="missing required columns"):
-        load_rules_file(bad_rules_file)
+        _load_rules_file(bad_rules_file)
 
 def test_load_rules_file_no_file(tmp_path):
     no_file = str(tmp_path / "no_rules.csv")
     with pytest.raises(FileNotFoundError):
-        load_rules_file(no_file)
+        _load_rules_file(no_file)
 
 def test_load_rules_file_default_file():
-    rules = load_rules_file(None)
+    rules = _load_rules_file(None)
     assert 'Food/Dining' in rules
     assert 'Groceries' in rules['Food/Dining']
     assert 'TESCO' in rules['Food/Dining']['Groceries']
@@ -151,18 +151,18 @@ def test_load_rules_file_default_file():
 
 # TEST FOR LOAD_CATEGORISED() ==========================================================================================
 def test_load_categorised(sample_categorised_dir):
-    categorised = load_categorised(sample_categorised_dir)
+    categorised = _load_categorised(sample_categorised_dir)
     assert len(categorised) == 10
     assert list(categorised.columns) == ['date', 'description', 'amount', 'category', 'subcategory']
     assert categorised.iloc[0]['description'] == 'TRAINLINE.COM LONDON'
 
 def test_load_categorised_empty(empty_categorised_dir):
-    categorised = load_categorised(empty_categorised_dir)
+    categorised = _load_categorised(empty_categorised_dir)
     assert categorised.empty
     assert 'category' in categorised.columns
 
 def test_load_categorised_no_dir(no_categorised_dir):
-    categorised = load_categorised(no_categorised_dir)
+    categorised = _load_categorised(no_categorised_dir)
     assert categorised.empty
     assert 'category' in categorised.columns
 
@@ -172,7 +172,7 @@ def test_compile_rules():
     rules = {
         'Category1': {'Sub1': ['keyword', 'rregex pattern']},
     }
-    compiled = compile_rules(rules)
+    compiled = _compile_rules(rules)
     assert compiled['Category1']['Sub1'][0] == 'keyword'
     assert isinstance(compiled['Category1']['Sub1'][1], re.Pattern)
     assert compiled['Category1']['Sub1'][1].search('Regex Pattern') is not None  # Case insensitive
@@ -183,18 +183,18 @@ def test_apply_rules_to_row():
         'Food/Dining': {'Groceries': ['tesco']},
         'Transportation': {'Rideshare': ['uber trip']}
     }
-    compiled = compile_rules(rules)
+    compiled = _compile_rules(rules)
     row = pd.Series({'description': 'UBER TRIP HELP', 'category': None, 'subcategory': None})
-    cat, sub = apply_rules_to_row(row, compiled, False)
+    cat, sub = _apply_rules_to_row(row, compiled, False)
     assert cat == 'Transportation'
     assert sub == 'Rideshare'
 
     # Test overwrite
     row['category'] = 'Other'
-    cat, sub = apply_rules_to_row(row, compiled, False)
+    cat, sub = _apply_rules_to_row(row, compiled, False)
     assert cat == 'Other'  # Not overwritten
 
-    cat, sub = apply_rules_to_row(row, compiled, True)
+    cat, sub = _apply_rules_to_row(row, compiled, True)
     assert cat == 'Transportation'  # Overwritten
 
 # TEST FOR DETECT_CONFLICTS() ==========================================================================================
@@ -204,7 +204,7 @@ def test_detect_conflicts():
         'category': ['CatA', 'CatB', 'CatC', None],
         'original_category': ['CatA', 'CatA', None, None]
     })
-    df = detect_conflicts(df)
+    df = _detect_conflicts(df)
     assert df['conflict'].tolist() == [True, True, False, False]  # True for inconsistent cats in Desc1 and change in second
 
 # TEST FOR GET_ML_MODEL() ==============================================================================================
@@ -214,7 +214,7 @@ def test_get_ml_model(tmp_path):
         'category': ['Food/Dining', 'Food/Dining', 'Transportation', 'Transportation', 'Transportation'] * 10,
         'subcategory': ['Groceries', 'Restaurants/Bars', 'Public Transport', 'Rideshare', 'Rideshare'] * 10
     })
-    models = get_ml_model(labeled)
+    models = _get_ml_model(labeled)
     assert models['category'] is not None
     assert models['subcategory'] is not None
 
@@ -230,7 +230,7 @@ def test_apply_ml():
         'description': ['TESCO', None],
         'category': [None, 'Existing']
     })
-    df = apply_ml(df, models)
+    df = _apply_ml(df, models)
     assert df.iloc[0]['category'] == 'Food/Dining'
     assert df.iloc[1]['category'] == 'Existing'  # Not overwritten
 
@@ -238,7 +238,7 @@ def test_apply_ml():
 def test_save_categorised(tmp_path):
     df = SAMPLE_DF.copy()
     cat_dir = str(tmp_path / "save_test")
-    save_path = save_categorised(df, cat_dir)
+    save_path = _save_categorised(df, cat_dir)
     assert os.path.exists(save_path)
     loaded = pd.read_csv(save_path)
     assert loaded.shape == df.shape

@@ -57,7 +57,7 @@ cc_df = load_package_data('credit_card')
 rules_df = load_package_data('rules')
 ```
 
-### Full Processing Pipeline
+### Processing Pipeline
 The `process_statements` function runs the end-to-end workflow: 
 - importing from multiple sources, 
 - categorising, 

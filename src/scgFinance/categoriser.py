@@ -13,15 +13,29 @@ from importlib.resources import files
 # Modular helper function: Load default rules file
 # This function loads categorisation rules from a CSV file, either a custom one or a default bundled file.
 # It parses the CSV into a nested dictionary structure: {category: {subcategory: [patterns]}}
-def load_rules_file(rules_file):
+def _load_rules_file(rules_file):
     """
-    Loads rules from the specified CSV or defaults to the bundled 'metadata/rules.csv'.
+    Loads categorisation rules from a specified CSV file or defaults to the bundled 'metadata/rules.csv'.
+
+    This function checks for the existence of the rules file and reads it into a DataFrame. It validates the required columns
+    ('category', 'subcategory', 'pattern') and constructs a nested dictionary where patterns are stored under their respective
+    categories and subcategories. Duplicates within subcategory patterns are removed for efficiency. Patterns are stripped of
+    whitespace and quotes for clean matching.
 
     Args:
-        rules_file (str, optional): Path to custom rules CSV.
+        rules_file (str, optional): Path to the custom rules CSV file. If None, uses the default bundled file.
 
     Returns:
-        dict: Nested rules {category: {subcategory: [pattern]}}.
+        dict: A nested dictionary of rules in the format {category: {subcategory: [pattern]}}.
+
+    Raises:
+        FileNotFoundError: If the specified rules file does not exist.
+        ValueError: If the CSV is missing required columns or is empty.
+
+    Example:
+        >>> rules = _load_rules_file('metadata/custom_rules.csv')
+        >>> print(rules['Food/Dining']['Groceries'])
+        ['TESCO', 'SAINSBURY']
     """
     # If no rules_file provided, use the default bundled in the package
     if rules_file is None:
@@ -83,15 +97,27 @@ def load_rules_file(rules_file):
 
 # Modular helper: Load previously categorised data from directory
 # This function loads all previously categorised CSV files from a directory, concatenates them, and removes duplicates.
-def load_categorised(categorised_dir='categorised'):
+def _load_categorised(categorised_dir='categorised'):
     """
-    Loads and concatenates all previously categorised CSVs from the directory, if any.
+    Loads and concatenates all previously categorised CSV files from a specified directory, removing duplicates.
+
+    This function scans the directory for CSV files, reads each one, and combines them into a single DataFrame. Duplicates are
+    removed based on 'date', 'description', and 'amount' columns to ensure data integrity. If no files are found or the directory
+    does not exist, an empty DataFrame with expected columns is returned.
 
     Args:
-        categorised_dir (str): Path to previously categorised directory.
+        categorised_dir (str, optional): Path to the directory containing previously categorised CSV files. Defaults to 'categorised'.
 
     Returns:
-        pd.DataFrame: Combined categorised DataFrame (deduplicated).
+        pd.DataFrame: A combined DataFrame of all categorised data, with duplicates removed.
+
+    Raises:
+        None explicitly, but may raise pandas errors if CSV files are malformed.
+
+    Example:
+        >>> categorised = _load_categorised('categorised')
+        >>> print(categorised.shape)
+        (50, 6)  # Example assuming 50 unique rows loaded
     """
     # Initialise list to hold DataFrames from categorised files
     categorised_dfs = []
@@ -120,21 +146,34 @@ def load_categorised(categorised_dir='categorised'):
 
 # Modular helper: Train ML model
 # This function trains a new ML model using TF-IDF vectorization and logistic regression for classification.
-def train_model(
+def _train_model(
         X, # Features (descriptions)
         y, # Labels (categories or subcategories)
         model_type='category' # Type for printing (category or subcategory)
 ):
     """
-    Trains a new ML model using TF-IDF vectorization and logistic regression.
+    Trains a machine learning model using TF-IDF vectorization and logistic regression for text classification.
+
+    This function splits the data into training and testing sets, builds a pipeline with TF-IDF vectorization (limited to 500 features)
+    and logistic regression, trains the model, evaluates its accuracy on the test set, and prints the result. It skips training if
+    there is insufficient data or only one unique label.
 
     Args:
-        X (pd.Series or list): Features, typically transaction descriptions.
-        y (pd.Series or list): Labels, either categories or subcategories.
-        model_type (str, optional): Type ('category' or 'subcategory') for printing accuracy. Defaults to 'category'.
+        X (pd.Series or list): The feature data, typically transaction descriptions.
+        y (pd.Series or list): The target labels, either categories or subcategories.
+        model_type (str, optional): Specifies if training for 'category' or 'subcategory' for printing purposes. Defaults to 'category'.
 
     Returns:
-        Pipeline or None: The trained scikit-learn Pipeline model, or None if insufficient data.
+        Pipeline or None: The trained scikit-learn Pipeline if successful, otherwise None.
+
+    Raises:
+        None explicitly, but may raise scikit-learn errors if data issues arise during fitting.
+
+    Example:
+        >>> X = ['Buy groceries at TESCO', 'Ride with UBER']
+        >>> y = ['Food/Dining', 'Transportation']
+        >>> model = _train_model(X, y)
+        Category model accuracy on test set: 1.00
     """
     # Check if data is sufficient for training
     if len(X) < 5 or len(np.unique(y)) < 2:
@@ -168,15 +207,26 @@ def train_model(
 
 # Modular helper: Train ML model
 # This function gets ML models for category and subcategory, training them based on labeled data.
-def get_ml_model(labeled):
+def _get_ml_model(labeled):
     """
-    Trains ML models for category and subcategory (if available).
+    Trains separate ML models for predicting categories and subcategories using available labeled data.
+
+    This function filters the labeled DataFrame for non-null categories and subcategories, then trains models using train_model()
+    if sufficient data is available (more than 2 rows for categories, at least 10 for subcategories).
 
     Args:
-        labeled (pd.DataFrame): Labeled data for training.
+        labeled (pd.DataFrame): The DataFrame containing labeled data with 'description', 'category', and optionally 'subcategory'.
 
     Returns:
-        dict: {'category': Pipeline or None, 'subcategory': Pipeline or None}
+        dict: A dictionary with keys 'category' and 'subcategory', each mapping to a trained Pipeline or None.
+
+    Raises:
+        None explicitly, but propagates errors from train_model().
+
+    Example:
+        >>> labeled = pd.DataFrame({'description': ['TESCO', 'UBER'], 'category': ['Food/Dining', 'Transportation']})
+        >>> models = _get_ml_model(labeled)
+        >>> assert models['category'] is not None
     """
     models = {'category': None, 'subcategory': None}
 
@@ -187,7 +237,7 @@ def get_ml_model(labeled):
 
         # If enough data (more than 2 rows):
         if len(cat_labeled) > 2:
-            models['category'] = train_model(
+            models['category'] = _train_model(
                 X=cat_labeled['description'],
                 y=cat_labeled['category'],
                 model_type='category'
@@ -200,7 +250,7 @@ def get_ml_model(labeled):
 
         # If enough data (at least 10 rows):
         if len(sub_labeled) >= 10:
-            models['subcategory'] = train_model(
+            models['subcategory'] = _train_model(
                 X=sub_labeled['description'],
                 y=sub_labeled['subcategory'],
                 model_type='subcategory'
@@ -212,16 +262,29 @@ def get_ml_model(labeled):
 
 # Modular helper: Apply ML to unlabeled data
 # This function applies loaded/trained ML models to predict categories and subcategories for unlabeled rows.
-def apply_ml(df, models):
+def _apply_ml(df, models):
     """
-    Applies ML predictions to unlabeled rows in df for category and subcategory (if model available).
+    Applies trained ML models to predict categories and subcategories for unlabeled rows in the DataFrame.
+
+    This function identifies rows without categories, uses the category model to predict them if available, and then applies the
+    subcategory model if present. The updated rows are reintegrated into the original DataFrame, preserving order.
 
     Args:
-        df (pd.DataFrame): DataFrame to categorise.
-        models (dict): {'category': Pipeline, 'subcategory': Pipeline or None}
+        df (pd.DataFrame): The DataFrame to update with predictions, containing 'description', 'category', and optionally 'subcategory'.
+        models (dict): Dictionary of trained models {'category': Pipeline or None, 'subcategory': Pipeline or None}.
 
     Returns:
-        pd.DataFrame: Updated df with ML predictions.
+        pd.DataFrame: The updated DataFrame with ML predictions filled in for unlabeled rows.
+
+    Raises:
+        None explicitly, but may raise prediction errors if models are incompatible with data.
+
+    Example:
+        >>> df = pd.DataFrame({'description': ['TESCO', 'UBER'], 'category': [None, 'Transportation']})
+        >>> models = {'category': trained_model, 'subcategory': None}
+        >>> updated_df = _apply_ml(df, models)
+        >>> print(updated_df['category'].iloc[0])
+        'Food/Dining'  # Assuming model prediction
     """
     # Select rows without category
     unlabeled = df[df['category'].isna() | df['category'].eq('')].copy()
@@ -243,15 +306,26 @@ def apply_ml(df, models):
 
 # Modular helper: Compile rules for efficient matching
 # This function compiles patterns into regex objects (if prefixed with 'r') or lowercase strings for matching.
-def compile_rules(rules):
+def _compile_rules(rules):
     """
-    Compiles rules pattern into regex/lowercase for matching.
+    Compiles the rules patterns for efficient matching, converting 'r'-prefixed patterns to regex objects.
+
+    This function processes each pattern in the nested rules dictionary: if a pattern starts with 'r', it is compiled into a
+    case-insensitive regex pattern; otherwise, it is converted to lowercase for substring matching.
 
     Args:
-        rules (dict): Nested rules dict.
+        rules (dict): The nested rules dictionary {category: {subcategory: [pattern]}}.
 
     Returns:
-        dict: Compiled nested rules.
+        dict: A compiled nested rules dictionary with patterns as strings or re.Pattern objects.
+
+    Raises:
+        re.error: If a regex pattern is invalid.
+
+    Example:
+        >>> rules = {'Cat': {'Sub': ['keyword', 'r[a-z]+']}}
+        >>> compiled = _compile_rules(rules)
+        >>> assert isinstance(compiled['Cat']['Sub'][1], re.Pattern)
     """
     # Initialise dictionary for compiled rules
     compiled_rules = {}
@@ -274,17 +348,28 @@ def compile_rules(rules):
 
 # Modular helper: Apply rules to a row
 # This function applies compiled rules to a single row's description to assign category and subcategory.
-def apply_rules_to_row(row, compiled_rules, overwrite):
+def _apply_rules_to_row(row, compiled_rules, overwrite):
     """
-    Applies rules to a single row, assigning category and subcategory if matched.
+    Applies compiled rules to assign a category and subcategory to a single DataFrame row based on its description.
+
+    This function checks if the row already has a category and respects the overwrite flag. It lowers the description for matching
+    and iterates through the compiled rules, returning the first matching category and subcategory. Regex patterns use search(),
+    while string patterns check for substring presence.
 
     Args:
-        row (pd.Series): DataFrame row.
-        compiled_rules (dict): Compiled rules.
-        overwrite (bool): Whether to overwrite existing category.
+        row (pd.Series): A single row from the DataFrame, containing at least 'description' and 'category'.
+        compiled_rules (dict): The compiled rules dictionary.
+        overwrite (bool): If True, applies rules even if a category already exists.
 
     Returns:
-        tuple: (category, subcategory)
+        tuple: (category, subcategory) - The assigned or existing values.
+
+    Example:
+        >>> row = pd.Series({'description': 'Buy at TESCO', 'category': None})
+        >>> compiled_rules = {'Food/Dining': {'Groceries': ['tesco']}}
+        >>> cat, sub = _apply_rules_to_row(row, compiled_rules, True)
+        >>> print(cat, sub)
+        'Food/Dining' 'Groceries'
     """
     # If category exists and no overwrite, keep existing
     if pd.notna(row['category']) and not overwrite:
@@ -309,15 +394,24 @@ def apply_rules_to_row(row, compiled_rules, overwrite):
 
 # Modular helper: Detect conflicts
 # This function detects conflicts in categorisation, such as changes from original or inconsistent categories for same description.
-def detect_conflicts(df):
+def _detect_conflicts(df):
     """
-    Detects category conflicts in the DataFrame.
+    Detects categorisation conflicts in the DataFrame, such as changes from original categories or inconsistencies across similar descriptions.
+
+    This function adds a 'conflict' boolean column to the DataFrame. Conflicts are flagged if a category has changed from its original
+    value or if the same description has multiple different categories across rows.
 
     Args:
-        df (pd.DataFrame): DataFrame with 'category', 'original_category'.
+        df (pd.DataFrame): The DataFrame with 'description', 'category', and 'original_category' columns.
 
     Returns:
-        pd.DataFrame: Updated df with 'conflict' column.
+        pd.DataFrame: The updated DataFrame with an added 'conflict' column.
+
+    Example:
+        >>> df = pd.DataFrame({'description': ['TESCO', 'TESCO'], 'category': ['Food', 'Transport'], 'original_category': ['Food', 'Food']})
+        >>> updated_df = _detect_conflicts(df)
+        >>> print(updated_df['conflict'].all())
+        True  # Conflicts due to inconsistency and change
     """
     # Initialise conflict column as False
     df['conflict'] = False
@@ -341,16 +435,27 @@ def detect_conflicts(df):
 
 # Modular helper: Save categorised DataFrame
 # This function saves the categorised DataFrame to a timestamped CSV in the categorised directory.
-def save_categorised(df, categorised_dir):
+def _save_categorised(df, categorised_dir):
     """
-    Saves the updated DataFrame to categorised_dir with timestamp.
+    Saves the categorised DataFrame to a timestamped CSV file in the specified directory.
+
+    This function creates the directory if it does not exist, generates a unique filename based on the current timestamp,
+    and saves the DataFrame without the index. It prints the save path and a reminder to review flagged rows.
 
     Args:
-        df (pd.DataFrame): DataFrame to save.
-        categorised_dir (str): Path to categorised directory.
+        df (pd.DataFrame): The DataFrame to save.
+        categorised_dir (str): The path to the directory where the file should be saved.
 
     Returns:
-        str: Path where saved.
+        str: The full path to the saved CSV file.
+
+    Raises:
+        OSError: If directory creation or file writing fails.
+
+    Example:
+        >>> df = pd.DataFrame({'date': ['2025-01-01'], 'description': ['TESCO'], 'category': ['Food/Dining']})
+        >>> save_path = _save_categorised(df, 'output_dir')
+        Saved categorised data to output_dir/2025-11-07_12-00-00.csv. Review rows where 'review' is not NaN manually.
     """
     # Create directory if it doesn't exist
     os.makedirs(categorised_dir, exist_ok=True)
@@ -376,17 +481,32 @@ def auto_categorise(
         categorised_dir='categorised' # Previously categorised directory
 ):
     """
-    Automatically categorises transactions based on description. Supports rules-based or ML-based (optional), using historical data.
+    Automatically categorises transactions in a DataFrame using rules, machine learning, or a hybrid approach based on available data.
+
+    This function initialises category/subcategory columns if missing, loads rules and historical categorised data, determines the
+    categorisation mode (rules-only, hybrid, or full ML) based on the amount of labeled data, applies the appropriate method,
+    detects conflicts, flags rows for review, and saves the updated DataFrame to a timestamped file.
 
     Args:
-        df (pd.DataFrame): New DataFrame with 'description' and 'category' columns (from import).
-        rules_file (str, optional): Path to CSV file with rules (defaults to bundled 'metadata/rules.csv').
-        overwrite (bool): If True, re-categorise even if 'category' exists.
-        categorised_dir (str): Directory with previously categorised CSVs (default: 'categorised').
+        df (pd.DataFrame): The input DataFrame with at least 'description'; 'category' may be partially filled.
+        rules_file (str, optional): Path to the rules CSV file. Defaults to bundled 'metadata/rules.csv'.
+        overwrite (bool, optional): If True, re-applies categorisation even to existing categories. Defaults to False.
+        categorised_dir (str, optional): Directory for historical categorised CSVs. Defaults to 'categorised'.
 
     Returns:
-        pd.DataFrame: Updated DF with 'category' and 'subcategory' filled, plus 'review' column for flagging rows needing manual review.
-        Also saves to categorised_dir.
+        pd.DataFrame: The updated DataFrame with 'category', 'subcategory', and 'review' columns added/filled.
+
+    Raises:
+        ValueError: Propagated from load_rules_file() if rules CSV is invalid.
+        Other exceptions: From underlying functions like model training or file operations.
+
+    Example:
+        >>> df = pd.DataFrame({'description': ['TESCO STORE', 'UBER TRIP']})
+        >>> categorised_df = auto_categorise(df)
+        No or insufficient previously categorised/labeled data; using rules only.
+        Saved categorised data to categorised/2025-11-07_12-00-00.csv. ...
+        >>> print(categorised_df['category'].tolist())
+        ['Food/Dining', 'Transportation']
     """
     # 1. Initialise category and subcategory if not present (since import doesn't add them) ============================
     # Check and add category column if missing
@@ -403,11 +523,11 @@ def auto_categorise(
 
     # 3. Load rules (always, as fallback/hybrid) and previously categorised data (if present) ==========================
     # Load rules from file and compile for matching
-    rules = load_rules_file(rules_file)
-    compiled_rules = compile_rules(rules)
+    rules = _load_rules_file(rules_file)
+    compiled_rules = _compile_rules(rules)
 
     # Load previously categorised
-    all_categorised = load_categorised(categorised_dir)
+    all_categorised = _load_categorised(categorised_dir)
 
     # 4. Prepare labeled/unlabeled (combine previously categorised + df's pre-labeled) =================================
     # Concatenate previously categorised labeled and current labeled
@@ -427,7 +547,7 @@ def auto_categorise(
 
         # Get, and apply, rules
         df[['category', 'subcategory']] = df.apply(
-            lambda row: pd.Series(apply_rules_to_row(row, compiled_rules, overwrite)),
+            lambda row: pd.Series(_apply_rules_to_row(row, compiled_rules, overwrite)),
             axis=1
         )
 
@@ -437,13 +557,13 @@ def auto_categorise(
         print("Limited labeled data; using ML + rules hybrid.")
 
         # Get, and apply, model
-        models = get_ml_model(labeled)
+        models = _get_ml_model(labeled)
         if models['category']:
-            df = apply_ml(df, models)
+            df = _apply_ml(df, models)
 
         # Then apply rules (as hybrid/fallback, sets both)
         df[['category', 'subcategory']] = df.apply(
-            lambda row: pd.Series(apply_rules_to_row(row, compiled_rules, overwrite)),
+            lambda row: pd.Series(_apply_rules_to_row(row, compiled_rules, overwrite)),
             axis=1
         )
 
@@ -452,9 +572,9 @@ def auto_categorise(
         print("Sufficient labeled data; using full ML.")
 
         # Get, and apply, model
-        models = get_ml_model(labeled)
+        models = _get_ml_model(labeled)
         if models['category']:
-            df = apply_ml(df, models)
+            df = _apply_ml(df, models)
 
         # Fallback to rules if model fails (safetynet)
         else:
@@ -462,12 +582,12 @@ def auto_categorise(
 
             # Apply rules
             df[['category', 'subcategory']] = df.apply(
-                lambda row: pd.Series(apply_rules_to_row(row, compiled_rules, overwrite)),
+                lambda row: pd.Series(_apply_rules_to_row(row, compiled_rules, overwrite)),
                 axis=1
             )
 
     # Detect conflicts and add conflict column
-    df = detect_conflicts(df)
+    df = _detect_conflicts(df)
 
     # Create single 'review' column
     df['review'] = None
@@ -485,7 +605,7 @@ def auto_categorise(
     df.drop(columns=['original_category', 'conflict'], errors='ignore', inplace=True)
 
     # Save updated df (categorised DataFrame)
-    save_categorised(df, categorised_dir)
+    _save_categorised(df, categorised_dir)
 
     # Return the updated DataFrame
     return df

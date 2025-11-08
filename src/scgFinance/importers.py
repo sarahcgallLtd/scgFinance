@@ -7,15 +7,32 @@ from datetime import datetime  # Imported for timestamping in metadata updates (
 # Modular helper function: Load or create the metadata file
 # This keeps track of processed files to avoid re-importing them.
 # Returns a DataFrame with columns: 'file_name', 'source', 'status', 'process_date'
-def load_metadata(metadata_file='metadata/processed_files.csv'):
+def _load_metadata(metadata_file='metadata/processed_files.csv'):
     """
-    Loads the metadata CSV or creates it if it doesn't exist.
+    Loads the metadata CSV file that tracks processed files, or creates a new one if it does not exist.
+
+    This function ensures that the directory for the metadata file exists and then attempts to load the CSV.
+    If the file is missing, it creates an empty DataFrame with the required columns ('file_name', 'source', 'status', 'process_date')
+    and saves it to the specified path. This metadata is used to prevent re-processing of already imported files.
 
     Args:
-        metadata_file (str): Path to the metadata CSV.
+        metadata_file (str, optional): The path to the metadata CSV file. Defaults to 'metadata/processed_files.csv'.
+            The directory will be created if it does not exist.
 
     Returns:
-        pd.DataFrame: The metadata DataFrame.
+        pd.DataFrame: A DataFrame containing the metadata with columns:
+            - 'file_name': The base name of the processed file (e.g., 'statement.csv').
+            - 'source': The identifier for the data source (e.g., 'credit card').
+            - 'status': The processing status (e.g., 'processed').
+            - 'process_date': The date when the file was processed.
+
+    Raises:
+        None explicitly, but may raise OSError if directory creation fails or pandas errors during read/write.
+
+    Example:
+        >>> meta = _load_metadata('metadata/processed_files.csv')
+        >>> print(meta.columns)
+        Index(['file_name', 'source', 'status', 'process_date'], dtype='object')
     """
     # Ensure the directory for the metadata file exists
     os.makedirs(os.path.dirname(metadata_file), exist_ok=True)
@@ -34,21 +51,34 @@ def load_metadata(metadata_file='metadata/processed_files.csv'):
 # Modular helper function: Filter files to only include unprocessed ones
 # Uses the metadata to check which files have 'status' == 'processed' for the given source.
 # Returns a list of full file paths that are unprocessed.
-def filter_unprocessed_files(
+def _filter_unprocessed_files(
         path,
         source,
         meta_df
 ):
     """
-    Filters files in the path to only those not marked as 'processed' in metadata.
+    Filters a list of CSV files to identify those that have not yet been processed for a given source.
+
+    This function checks if the provided path is a directory or a single file. If it's a directory, it collects all CSV files within it.
+    It then cross-references the base names of these files against the metadata DataFrame to exclude any files marked as 'processed'
+    for the specified source. This ensures idempotency in the import process by avoiding duplicate processing.
 
     Args:
-        path (str): Path to a file or directory.
-        source (str): Source identifier (e.g., 'credit card', 'bank').
-        meta_df (pd.DataFrame): Loaded metadata DataFrame.
+        path (str): The path to a single CSV file or a directory containing CSV files.
+        source (str): The source identifier (e.g., 'credit card', 'bank') used to filter metadata.
+        meta_df (pd.DataFrame): The metadata DataFrame loaded from load_metadata().
 
     Returns:
-        list: List of unprocessed file paths.
+        list: A list of full paths to unprocessed CSV files. If no unprocessed files are found, returns an empty list.
+
+    Raises:
+        ValueError: If no CSV files are found in the directory (when path is a directory).
+
+    Example:
+        >>> meta = _load_metadata()
+        >>> unprocessed = _filter_unprocessed_files('raw_data/bank', 'bank', meta)
+        >>> print(unprocessed)
+        ['raw_data/bank/statement_2023.csv']  # Assuming this file is unprocessed
     """
     # Get all CSV files in the path (if directory) or just the single file
     if os.path.isdir(path):
@@ -73,7 +103,7 @@ def filter_unprocessed_files(
 # Modular helper function: Process a single CSV file into a standardised DataFrame
 # Handles column extraction, cleaning, and standardisation for date, description, amount.
 # Returns a DataFrame with columns: 'date', 'description', 'amount', 'source'
-def process_single_file(
+def _process_single_file(
         file,
         source,
         date_col,
@@ -84,20 +114,38 @@ def process_single_file(
         amt_col
 ):
     """
-    Processes a single CSV file: reads, standardises columns, cleans data.
+    Processes a single CSV file by extracting, cleaning, and standardizing key columns into a uniform DataFrame.
+
+    This function reads the CSV file, parses the date (and optionally time) into a datetime object, constructs a description
+    (either from a single column or by concatenating multiple columns), cleans and converts the amount to a numeric value,
+    and adds a source identifier. It drops any rows with invalid dates or amounts to ensure data quality.
 
     Args:
-        file (str): Path to the CSV file.
-        source (str): Source identifier.
-        date_col (str): Date column name.
-        date_format (str): Date format string.
-        time_col (str or None): Time column name (optional).
-        time_format (str): Time format string (optional)..
-        desc_col (str or list): Description column(s).
-        amt_col (str): Amount column name.
+        file (str): The path to the CSV file to process.
+        source (str): The source identifier to add to the DataFrame (e.g., 'credit card').
+        date_col (str): The name of the column containing date information.
+        date_format (str): The format string for parsing the date (e.g., '%d/%m/%Y').
+        time_col (str or None): The name of the column containing time information (optional).
+        time_format (str): The format string for parsing the time (e.g., '%H:%M:%S'), used if time_col is provided.
+        desc_col (str or list): The name of the description column or a list of columns to concatenate.
+        amt_col (str): The name of the column containing amount information.
 
     Returns:
-        pd.DataFrame: Standardised DataFrame for this file.
+        pd.DataFrame: A standardized DataFrame with columns:
+            - 'date': Parsed datetime object.
+            - 'description': Cleaned description string.
+            - 'amount': Numeric amount (float).
+            - 'source': The provided source identifier.
+
+    Raises:
+        ValueError: If required columns (date_col, desc_col, amt_col) are missing from the CSV.
+        pandas.errors: If date/time parsing or numeric conversion fails extensively.
+
+    Example:
+        >>> df = _process_single_file(file='raw_data/bank/statement.csv', source='bank', date_col='Date', date_format='%d/%m/%Y', time_col=None, time_format='%H:%M:%S', desc_col='Description', amt_col='Amount')
+        >>> print(df.head())
+                   date description  amount source
+        0 2023-01-01  Groceries   -50.0   bank
     """
     # Read the CSV with all columns as strings to avoid type inference issues
     df = pd.read_csv(file, dtype=str)
@@ -155,22 +203,38 @@ def import_statements(
         metadata_file='metadata/processed_files.csv'
 ):
     """
-    Imports statements from CSV files, filtering unprocessed ones via metadata.
-    Processes and standardises data from one or more files.
+    Orchestrates the import of financial statements from one or more CSV files, ensuring only unprocessed files are handled.
+
+    This is the primary entry point for importing data. It loads metadata to track processed files, filters out already processed ones,
+    processes each remaining file using process_single_file(), concatenates the results into a single DataFrame sorted by date,
+    and returns the combined DataFrame along with a list of imported file base names. Note that this function does not update the metadata;
+    that should be handled by the caller after successful processing.
 
     Args:
-        path (str): Path to a single file or directory of CSVs.
-        source (str, optional): Source identifier (e.g., 'credit card', 'bank'). Used for metadata filtering.
-        date_col (str): Date column name (default: 'Date').
-        date_format (str, optional): Date column format (default: '%d/%m/%Y').
-        time_col (str or None): Time column name (optional, default: None).
-        time_format (str, optional): Time column format (optional, default: '%H:%M:%S').
-        desc_col (str or list): Description column(s) (default: 'Description').
-        amt_col (str): Amount column name (default: 'Amount').
-        metadata_file (str): Path to metadata CSV (default: 'metadata/processed_files.csv').
+        path (str): The path to a single CSV file or a directory containing CSV files.
+        source (str, optional): The source identifier (e.g., 'credit card'). Required for metadata filtering.
+        date_col (str, optional): The date column name. Defaults to 'Date'.
+        date_format (str, optional): The date format string. Defaults to '%d/%m/%Y'.
+        time_col (str or None, optional): The time column name. Defaults to None.
+        time_format (str, optional): The time format string. Defaults to '%H:%M:%S'.
+        desc_col (str or list, optional): The description column(s). Defaults to 'Description'.
+        amt_col (str, optional): The amount column name. Defaults to 'Amount'.
+        metadata_file (str, optional): The path to the metadata CSV. Defaults to 'metadata/processed_files.csv'.
 
     Returns:
-        tuple: (pd.DataFrame with combined data, list of imported file base names).
+        tuple:
+            - pd.DataFrame: The combined, sorted DataFrame of all processed files.
+            - list: A list of base names of the imported (processed) files.
+
+    Raises:
+        ValueError: If path or source is not specified, or if no files are found/processed.
+
+    Example:
+        >>> df, files = import_statements('raw_data/bank/', 'bank')
+        >>> print(df.shape)
+        (100, 4)  # Example output
+        >>> print(files)
+        ['statement_2023.csv']
     """
     if path is None:
         raise ValueError("Path must be specified for each source configuration.")
@@ -179,10 +243,10 @@ def import_statements(
         raise ValueError("Source must be specified for metadata tracking.")
 
     # Step 1: Load metadata
-    meta_df = load_metadata(metadata_file)
+    meta_df = _load_metadata(metadata_file)
 
     # Step 2: Filter to unprocessed files
-    files = filter_unprocessed_files(path, source, meta_df)
+    files = _filter_unprocessed_files(path, source, meta_df)
 
     if not files:
         return pd.DataFrame(), []  # Return empty if nothing to process
@@ -191,7 +255,7 @@ def import_statements(
     dfs = []
     imported_files = []
     for file in files:
-        file_df = process_single_file(file, source, date_col, date_format, time_col, time_format, desc_col, amt_col)
+        file_df = _process_single_file(file, source, date_col, date_format, time_col, time_format, desc_col, amt_col)
         dfs.append(file_df)
         imported_files.append(os.path.basename(file))
 

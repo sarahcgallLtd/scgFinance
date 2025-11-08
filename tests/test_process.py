@@ -2,7 +2,7 @@ import pytest
 import pandas as pd
 import os
 from datetime import datetime
-from src.scgFinance.process import update_metadata, process_statements
+from src.scgFinance.process import _update_metadata, process_statements
 
 
 # Fixture for temporary directory
@@ -91,7 +91,7 @@ def sample_categorised_dir(temp_dir):
 def test_update_metadata_add_new(temp_dir, sample_metadata):
     imported_files = ['new_file.csv']
     source = 'bank'
-    update_metadata(imported_files, source, metadata_file=sample_metadata)
+    _update_metadata(imported_files, source, metadata_file=sample_metadata)
 
     meta_df = pd.read_csv(sample_metadata)
     assert len(meta_df) == 3  # Original 2 + 1 new
@@ -107,7 +107,7 @@ def test_update_metadata_add_new(temp_dir, sample_metadata):
 def test_update_metadata_update_existing(temp_dir, sample_metadata):
     imported_files = ['old_bank.csv']
     source = 'bank'
-    update_metadata(imported_files, source, metadata_file=sample_metadata, status='reprocessed')
+    _update_metadata(imported_files, source, metadata_file=sample_metadata, status='reprocessed')
 
     meta_df = pd.read_csv(sample_metadata)
     assert len(meta_df) == 2  # No new rows
@@ -121,7 +121,7 @@ def test_update_metadata_update_existing(temp_dir, sample_metadata):
 def test_update_metadata_empty_list(sample_metadata):
     imported_files = []
     source = 'bank'
-    update_metadata(imported_files, source, metadata_file=sample_metadata)
+    _update_metadata(imported_files, source, metadata_file=sample_metadata)
     meta_df = pd.read_csv(sample_metadata)
     assert len(meta_df) == 2  # Unchanged
 
@@ -130,7 +130,7 @@ def test_update_metadata_new_file(temp_dir):
     metadata_path = str(temp_dir / "new_metadata.csv")
     imported_files = ['file1.csv']
     source = 'test'
-    update_metadata(imported_files, source, metadata_file=metadata_path)
+    _update_metadata(imported_files, source, metadata_file=metadata_path)
 
     assert os.path.exists(metadata_path)
     meta_df = pd.read_csv(metadata_path)
