@@ -2,7 +2,7 @@ import pytest
 import pandas as pd
 import os
 from datetime import datetime
-from src.scgFinance.process import _update_metadata, process_statements
+from src.scgFinance.pipeline import _update_metadata, process_statements
 
 
 # Fixture for temporary directory

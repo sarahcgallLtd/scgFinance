@@ -1,4 +1,4 @@
-name: CI
+name: build
 
 on:
   push:
@@ -6,6 +6,9 @@ on:
 
   pull_request:
     branches: [ main ]
+
+  release:
+    types: [ published ]
 
 jobs:
   test:
@@ -20,16 +23,52 @@ jobs:
         python-version: '3.12'
 
     - name: Install Poetry
-      run: pip install poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
 
     - name: Install dependencies
-      run: poetry install
+      run: poetry install --no-interaction
 
     - name: Run tests
       run: poetry run pytest
 
-#    - name: Lint with flake8
-#      run: poetry run flake8 src/
-#
-#    - name: Format check with black
-#      run: poetry run black --check src/
+    - name: Lint with flake8
+      run: poetry run flake8 src/
+
+    - name: Format check with black
+      run: poetry run black --check src/ --line-length=79
+
+publish:
+    runs-on: ubuntu-latest
+    needs: test  # Only run if tests pass
+    if: github.event_name == 'release'  # Restrict to release events
+
+    permissions:
+      id-token: write  # For trusted publishing
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Install dependencies
+      run: poetry install --no-interaction
+
+    - name: Build package
+      run: poetry build
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1

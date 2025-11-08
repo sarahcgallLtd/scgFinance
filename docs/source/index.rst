@@ -11,6 +11,22 @@
 Overview
 ========
 
+.. image:: https://img.shields.io/badge/Release-development%20version%200.1.0-blue
+   :alt: Release
+   :target: https://docs.sarahcgall.co.uk/scgFinance/changeLog.html
+
+.. image:: https://github.com/sarahcgallLtd/scgFinance/actions/workflows/ci.yml/badge.svg
+   :alt: CI
+   :target: https://github.com/sarahcgallLtd/scgFinance/actions/workflows/ci.yml
+
+.. image:: https://codecov.io/gh/sarahcgallLtd/scgFinance/graph/badge.svg?token=aHcnsCGhVZ
+   :alt: codecov
+   :target: https://codecov.io/gh/sarahcgallLtd/scgFinance
+
+.. raw:: html
+
+   <div style="margin-bottom: 10px;"></div>
+
 ``scgFinance`` is a Python package designed to simplify personal finance management. It provides tools to import,
 categorise, track, visualise, and forecast financial data from bank and credit card statements. Using a
 combination of rule-based and machine learning approaches, it adapts to your spending patterns over time, making

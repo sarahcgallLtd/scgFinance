@@ -3,9 +3,10 @@ scgFinance <a href="https://sarahcgallLtd.github.io/scgFinance/"><img src="docs/
 
 <!-- badges: start -->
 
-[![Release](https://img.shields.io/badge/Release-development%20version%200.1.0-blue)](https://github.com/sarahcgallLtd/scgFinance/blob/main/CHANGELOG.md)
-[![CI](https://github.com/sarahcgallLtd/scgFinance/actions/workflows/ci.yml/badge.svg)](https://github.com/sarahcgallLtd/scgFinance/actions/workflows/ci.yml)
+[![release](https://img.shields.io/badge/release-v0.1.0-blue)](https://github.com/sarahcgallLtd/scgFinance/blob/main/CHANGELOG.md)
+[![build](https://github.com/sarahcgallLtd/scgFinance/actions/workflows/ci.yml/badge.svg)](https://github.com/sarahcgallLtd/scgFinance/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/sarahcgallLtd/scgFinance/graph/badge.svg?token=aHcnsCGhVZ)](https://codecov.io/gh/sarahcgallLtd/scgFinance)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 <!-- badges: end -->
 

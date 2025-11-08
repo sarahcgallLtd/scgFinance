@@ -1,12 +1,19 @@
 [tool.poetry]
 name = "scgFinance"
 version = "0.1.0"
-description = "A Python package for managing personal finances: import bank statements, categorise expenses automatically or manually, track and visualise spending, forecast trends, and compare against budgets."
+description = "A package for categorising and tracking personal finances."
 authors = ["Sarah C Gall <contact@sarahcgall.co.uk>"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/sarahcgallLtd/scgFinance"
+documentation = "https://docs.sarahcgall.co.uk/scgFinance"
+keywords = ["finance", "personal-finance", "budgeting"]
 packages = [{include = "scgFinance", from = "src"}]
-
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 include = [
     "scgfinance/data/**/*",
 ]
