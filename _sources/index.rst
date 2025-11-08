@@ -11,7 +11,7 @@
 Overview
 ========
 
-.. image:: https://img.shields.io/badge/Release-development%20version%200.1.0-blue
+.. image:: https://img.shields.io/badge/release-v0.1.0-blue
    :alt: Release
    :target: https://docs.sarahcgall.co.uk/scgFinance/changeLog.html
 
@@ -22,6 +22,10 @@ Overview
 .. image:: https://codecov.io/gh/sarahcgallLtd/scgFinance/graph/badge.svg?token=aHcnsCGhVZ
    :alt: codecov
    :target: https://codecov.io/gh/sarahcgallLtd/scgFinance
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :alt: Code style: black
+   :target: https://github.com/psf/black
 
 .. raw:: html
 
