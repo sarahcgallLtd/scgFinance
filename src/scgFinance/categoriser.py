@@ -130,7 +130,7 @@ def _load_rules_file(rules_file):
 # ================================================
 
 
-def _load_categorised(categorised_dir="categorised"):
+def _load_categorised(categorised_dir="categorised/"):
     """
     Loads and concatenates all previously categorised CSV files from a
     specified directory, removing duplicates.
@@ -143,7 +143,7 @@ def _load_categorised(categorised_dir="categorised"):
 
     Args:
         categorised_dir (str, optional): Path to the directory containing
-        previously categorised CSV files. Defaults to 'categorised'.
+        previously categorised CSV files. Defaults to 'categorised/'.
 
     Returns:
         pd.DataFrame: A combined DataFrame of all categorised data,
@@ -154,7 +154,7 @@ def _load_categorised(categorised_dir="categorised"):
         are malformed.
 
     Example:
-        >>> categorised = _load_categorised('categorised')
+        >>> categorised = _load_categorised('categorised/')
         >>> print(categorised.shape)
         (50, 6)  # Example assuming 50 unique rows loaded
     """
@@ -624,7 +624,7 @@ def _save_categorised(df, categorised_dir):
 
 
 def auto_categorise(
-    df, rules_file=None, overwrite=False, categorised_dir="categorised"
+    df, rules_file=None, overwrite=False, categorised_dir="categorised/"
 ):
     """
     Automatically categorises transactions in a DataFrame using rules,
@@ -644,7 +644,7 @@ def auto_categorise(
         overwrite (bool, optional): If True, re-applies categorisation even to
                                     existing categories. Defaults to False.
         categorised_dir (str, optional): Directory for historical categorised
-                                         CSVs. Defaults to 'categorised'.
+                                         CSVs. Defaults to 'categorised/'.
 
     Returns:
         pd.DataFrame: The updated DataFrame with 'category', 'subcategory',

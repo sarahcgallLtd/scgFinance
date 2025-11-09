@@ -1,5 +1,6 @@
 from importlib.resources import files
 import pandas as pd
+import os
 
 
 # ================================================
@@ -75,3 +76,90 @@ def load_package_data(data_type: str) -> pd.DataFrame:
         )
 
     return pd.read_csv(str(file_path))
+
+
+# ================================================
+# Main function: for saving template structure
+# ================================================
+
+
+def download_template(
+    root_dir: str,
+    rules_filename: str = "rules.csv",
+) -> None:
+    """
+    Saves a predefined project structure to the specified root directory,
+    populating it with metadata and a template script from the package.
+
+    This function creates the following directory structure:
+    - root_dir/
+      - categorised/ (empty directory)
+      - metadata/
+        - rules.csv (or specified filename; default categorisation rules)
+      - raw_data/
+        - bank/ (empty directory to save bank statements)
+        - credit_card/ (empty directory to save credit card statements)
+      - categorise_statements.py (template script copied from package)
+
+    Directories are created if they do not exist, and files are overwritten
+    if they already exist. The sample data and template script are copied
+    directly from the package resources to preserve original formatting.
+    This is useful for setting up a new project with a standard template,
+    improving ease of access by allowing users to initialise a local
+    working directory with bundled examples. The rules.csv can be customised
+    to be more specific to your financial statements. The
+    categorise_statements.py is bundled in the package (e.g., at '
+    scgFinance.data/categorise_statements.py') and copied to the root
+    directory. Users can customise it after the template is saved.
+
+    Args:
+        root_dir (str): The path to the root directory where the structure
+                        will be saved.
+        rules_filename (str, optional): The filename for the rules CSV in
+                                        metadata/. Defaults to "rules.csv"
+                                        to match the requested structure.
+
+    Returns:
+        None
+
+    Raises:
+        OSError: If there are issues creating directories or writing files.
+        ImportError or AttributeError: If issues occur accessing package
+                                       resources.
+
+    Example:
+        >>> download_template('/path/to/my_project')
+        # Creates the structure in /path/to/my_project
+
+        >>> donwload_template('/path/to/my_project',
+        ... rules_filename='custom_rules.csv')
+        # Uses 'custom_rules.csv' instead of 'rules.csv'
+    """
+    # Create directories
+    os.makedirs(os.path.join(root_dir, "categorised"), exist_ok=True)
+
+    metadata_dir = os.path.join(root_dir, "metadata")
+    os.makedirs(metadata_dir, exist_ok=True)
+
+    raw_data_dir = os.path.join(root_dir, "raw_data")
+    bank_dir = os.path.join(raw_data_dir, "bank")
+    os.makedirs(bank_dir, exist_ok=True)
+
+    credit_card_dir = os.path.join(raw_data_dir, "credit_card")
+    os.makedirs(credit_card_dir, exist_ok=True)
+
+    # Copy data directly
+    rules_file_path = files("scgFinance.data.metadata").joinpath("rules.csv")
+    rules_target = os.path.join(metadata_dir, rules_filename)
+    with rules_file_path.open("rb") as src, open(rules_target, "wb") as dst:
+        dst.write(src.read())
+
+    # Copy categorise_statements.py template directly from package
+    script_file_path = files("scgFinance.data").joinpath(
+        "categorise_statements.py"
+    )
+    script_target = os.path.join(root_dir, "categorise_statements.py")
+    with script_file_path.open("rb") as src, open(script_target, "wb") as dst:
+        dst.write(src.read())
+
+    print(f"Project template saved to: {root_dir}")

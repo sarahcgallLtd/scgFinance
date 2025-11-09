@@ -37,6 +37,42 @@ pip install -e .
 bank and credit card statements. Below are examples demonstrating key functions. For full details, refer to 
 the [package documentation](https://docs.sarahcgall.co.uk/scgFinance).
 
+### Downloading Project Structure
+`scgFinance` includes a utility function to set up a recommended project directory structure, complete with empty 
+folders for your data, a default rules file for categorisation, and a template script to get started with processing.
+
+Use `download_template` to initialise the structure:
+
+```python
+from scgFinance.utils import download_template
+
+# Create the project structure in the specified root directory
+download_template('path/to/your/project_root', rules_filename='rules.csv')  # Optional: customise rules filename
+```
+
+This will generate the following structure:
+
+```
+your_project_root/
+│
+├── categorised/             # For saving categorised output files
+│
+├── metadata/                
+│   └── rules.csv            # Default categorisation rules (customisable)
+│
+├── raw_data/   
+│   ├── bank/                # Place your bank statement CSVs here
+│   └── credit_card/         # Place your credit card statement CSVs here
+│
+└── categorise_statements.py # Template script for running the processing pipeline
+```
+
+After setup:
+1. Download your statements from your financial institution (e.g., your bank) in a CSV format.
+2. Save your statements in the `raw_data/bank/` or `raw_data/credit_card` folders (rename, add, 
+or delete folders depending on your needs e.g., to `raw_data/HSBC/`).
+3. Customise `metadata/rules.csv` if needed based on your financial statements and common transactions
+4. Modify/run `categorise_statements.py` to process your data.
 
 ### Loading Sample Data
 `scgFinance` comes with sample data for you to use, including access to the default rules file which is used to 
@@ -68,7 +104,7 @@ The `process_statements` function runs the end-to-end workflow:
 Example: Processing bank and credit card statements together:
 
 ``` python 
-from scgFinance.process import process_statements
+from scgFinance.pipeline import process_statements
 
 # Define sources as a list of configs
 sources = [
