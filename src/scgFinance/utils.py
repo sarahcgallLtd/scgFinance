@@ -99,7 +99,7 @@ def load_package_data(data_type: str, save_path: str = None) -> pd.DataFrame:
 
 
 def download_template(
-    root_dir: str = '.',
+    root_dir: str = ".",
     rules_filename: str = "rules.csv",
 ) -> None:
     """
