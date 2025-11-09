@@ -82,74 +82,49 @@ Alternatively, clone the repository and install locally:
 Quickstart
 ----------
 
-Get started quickly with sample data and the processing pipeline.
+Get started quickly with a template and the processing pipeline.
 
+Downloading Project Structure
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Loading Sample Data
-~~~~~~~~~~~~~~~~~~~
+``scgFinance`` includes a utility function to set up a recommended project directory structure, complete with empty
+folders for your data, a default rules file for categorisation, and a template script to get started with processing.
 
-``scgFinance`` comes with sample data for you to use, including access to the default rules file which is used to
-classify and categorise statement items when there are insufficient amounts of previously categorised data.
-
-Use ``load_package_data`` to access bundled sample datasets for testing or exploration:
-
-.. code-block:: python
-
-   from scgFinance.utils import load_package_data
-
-   # Load bank sample
-    bank_df = load_package_data('bank')
-    print(bank_df.head())
-
-    # Load credit card sample
-    cc_df = load_package_data('credit_card')
-
-    # Load rules
-    rules_df = load_package_data('rules')
-
-
-
-Processing Pipeline
-~~~~~~~~~~~~~~~~~~~
-
-Run the end-to-end workflow with ``process_statements``:
+Use ``download_template`` to initialise the structure:
 
 .. code-block:: python
 
-    from scgFinance.process import process_statements
+    from scgFinance.utils import download_template
 
-    # Define sources as a list of configs
-    sources = [
-        {
-            'path': 'path/to/bank_statements/',  # Directory or single file path
-            'source': 'bank',                    # Identifier for tracking (e.g., 'bank' or 'credit_card')
-            'date_col': 'Date',                  # Column name for date (default = 'Date')
-            'date_format': '%d/%m/%Y',           # Date format in your CSVs (default = '%d/%m/%Y')
-            'time_col': 'Time',                  # Optional: Time column (set to None if absent)
-            'time_format': '%H:%M:%S',           # Optional: Time format (default = '%H:%M:%S')
-            'desc_col': ['Name', 'Description'], # Single column or list to concatenate
-            'amt_col': 'Amount'                  # Column name for amount (default = 'Amount')
-        },
-        {
-            'path': 'path/to/credit_card_statements/',
-            'source': 'credit_card',
-            'date_col': 'Date',
-            'date_format': '%d/%m/%Y',
-            'desc_col': 'Description',           # Single column (default = 'Description)
-            'amt_col': 'Amount'
-        }
-    ]
+    # Create the project structure in the specified root directory
+    download_template('path/to/your/project_root', rules_filename='rules.csv')  # Optional: customise rules filename
 
-    # Run the full pipeline
-    categorised_df = process_statements(
-        sources,
-        metadata_file='metadata/processed_files.csv',  # Location for saving which imports have been processed
-        categorised_dir='categorised/',                # Directory for previously categorised CSVs (used for ML training)
-        rules_file=None,                               # None uses bundled default rules; or 'metadata/custom_rules.csv'
-        overwrite=False                                # Set True to re-categorise existing entries
-    )
 
-    print(categorised_df.head())
+This will generate the following structure:
+
+.. code-block:: python
+
+    your_project_root/
+    │
+    ├── categorised/             # For saving categorised output files
+    │
+    ├── metadata/
+    │   └── rules.csv            # Default categorisation rules (customisable)
+    │
+    ├── raw_data/
+    │   ├── bank/                # Place your bank statement CSVs here
+    │   └── credit_card/         # Place your credit card statement CSVs here
+    │
+    └── categorise_statements.py # Template script for running the processing pipeline
+
+
+After setup:
+
+1. Download your statements from your financial institution (e.g., your bank) in a CSV format.
+2. Save your statements in the ``raw_data/bank/`` or ``raw_data/credit_card`` folders (rename, add, or delete folders depending on your needs e.g., to ``raw_data/HSBC/``).
+3. Customise ``metadata/rules.csv`` if needed based on your financial statements and common transactions
+4. Modify/run ``categorise_statements.py`` to process your data.
+
 
 For more details, see the :doc:`User Guide <user_guide/index>`.
 

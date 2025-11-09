@@ -540,7 +540,7 @@
 <span class="c1"># ================================================</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_load_categorised</span><span class="p">(</span><span class="n">categorised_dir</span><span class="o">=</span><span class="s2">&quot;categorised&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_categorised</span><span class="p">(</span><span class="n">categorised_dir</span><span class="o">=</span><span class="s2">&quot;categorised/&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Loads and concatenates all previously categorised CSV files from a</span>
 <span class="sd">    specified directory, removing duplicates.</span>
@@ -553,7 +553,7 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        categorised_dir (str, optional): Path to the directory containing</span>
-<span class="sd">        previously categorised CSV files. Defaults to &#39;categorised&#39;.</span>
+<span class="sd">        previously categorised CSV files. Defaults to &#39;categorised/&#39;.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        pd.DataFrame: A combined DataFrame of all categorised data,</span>
@@ -564,7 +564,7 @@
 <span class="sd">        are malformed.</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; categorised = _load_categorised(&#39;categorised&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; categorised = _load_categorised(&#39;categorised/&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; print(categorised.shape)</span>
 <span class="sd">        (50, 6)  # Example assuming 50 unique rows loaded</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1036,7 +1036,7 @@
 <div class="viewcode-block" id="auto_categorise">
 <a class="viewcode-back" href="../../api/scgFinance/index.html#scgFinance.categoriser.auto_categorise">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">auto_categorise</span><span class="p">(</span>
-    <span class="n">df</span><span class="p">,</span> <span class="n">rules_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">categorised_dir</span><span class="o">=</span><span class="s2">&quot;categorised&quot;</span>
+    <span class="n">df</span><span class="p">,</span> <span class="n">rules_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">categorised_dir</span><span class="o">=</span><span class="s2">&quot;categorised/&quot;</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Automatically categorises transactions in a DataFrame using rules,</span>
@@ -1056,7 +1056,7 @@
 <span class="sd">        overwrite (bool, optional): If True, re-applies categorisation even to</span>
 <span class="sd">                                    existing categories. Defaults to False.</span>
 <span class="sd">        categorised_dir (str, optional): Directory for historical categorised</span>
-<span class="sd">                                         CSVs. Defaults to &#39;categorised&#39;.</span>
+<span class="sd">                                         CSVs. Defaults to &#39;categorised/&#39;.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        pd.DataFrame: The updated DataFrame with &#39;category&#39;, &#39;subcategory&#39;,</span>

@@ -9,11 +9,62 @@ Functions
 
 .. autoapisummary::
 
+   scgFinance.utils.download_template
    scgFinance.utils.load_package_data
 
 
 Module Contents
 ---------------
+
+.. py:function:: download_template(root_dir, rules_filename = 'rules.csv')
+
+   Saves a predefined project structure to the specified root directory,
+   populating it with metadata and a template script from the package.
+
+   This function creates the following directory structure:
+   - root_dir/
+     - categorised/ (empty directory)
+     - metadata/
+       - rules.csv (or specified filename; default categorisation rules)
+     - raw_data/
+       - bank/ (empty directory to save bank statements)
+       - credit_card/ (empty directory to save credit card statements)
+     - categorise_statements.py (template script copied from package)
+
+   Directories are created if they do not exist, and files are overwritten
+   if they already exist. The sample data and template script are copied
+   directly from the package resources to preserve original formatting.
+   This is useful for setting up a new project with a standard template,
+   improving ease of access by allowing users to initialise a local
+   working directory with bundled examples. The rules.csv can be customised
+   to be more specific to your financial statements. The
+   categorise_statements.py is bundled in the package (e.g., at '
+   scgFinance.data/categorise_statements.py') and copied to the root
+   directory. Users can customise it after the template is saved.
+
+   :param root_dir: The path to the root directory where the structure
+                    will be saved.
+   :type root_dir: str
+   :param rules_filename: The filename for the rules CSV in
+                          metadata/. Defaults to "rules.csv"
+                          to match the requested structure.
+   :type rules_filename: str, optional
+
+   :returns: None
+
+   :raises OSError: If there are issues creating directories or writing files.
+   :raises ImportError or AttributeError: If issues occur accessing package
+       resources.
+
+   .. rubric:: Example
+
+   >>> download_template('/path/to/my_project')
+   # Creates the structure in /path/to/my_project
+
+   >>> donwload_template('/path/to/my_project',
+   ... rules_filename='custom_rules.csv')
+   # Uses 'custom_rules.csv' instead of 'rules.csv'
+
 
 .. py:function:: load_package_data(data_type)
 

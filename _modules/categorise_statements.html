@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Overview: module code &#8212; scgFinance 0.1.0 documentation</title>
+    <title>categorise_statements &#8212; scgFinance 0.1.0 documentation</title>
   
   
   
@@ -44,7 +44,7 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/categorise_statements';</script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -387,7 +387,10 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Overview: module code</span></li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">categorise_statements</span></li>
   </ul>
 </nav>
 </div>
@@ -404,13 +407,54 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="categorise_statements.html">categorise_statements</a></li>
-<li><a href="scgFinance/categoriser.html">scgFinance.categoriser</a></li>
-<li><a href="scgFinance/importers.html">scgFinance.importers</a></li>
-<li><a href="scgFinance/pipeline.html">scgFinance.pipeline</a></li>
-<li><a href="scgFinance/utils.html">scgFinance.utils</a></li>
-</ul>
+  <h1>Source code for categorise_statements</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This is a template for categorising financial statements.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scgFinance.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_statements</span>
+
+<span class="c1"># Define sources as a list of configs</span>
+<div class="viewcode-block" id="sources">
+<a class="viewcode-back" href="../api/categorise_statements/index.html#categorise_statements.sources">[docs]</a>
+<span class="n">sources</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;raw_data/bank/&quot;</span><span class="p">,</span>  <span class="c1"># Directory or single file path</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;bank&quot;</span><span class="p">,</span>  <span class="c1"># Identifier for tracking (e.g., &#39;bank&#39;)</span>
+        <span class="s2">&quot;date_col&quot;</span><span class="p">:</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span>  <span class="c1"># Column name for date (default = &#39;Date&#39;)</span>
+        <span class="s2">&quot;date_format&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span><span class="p">,</span>  <span class="c1"># Date format in your CSVs</span>
+        <span class="s2">&quot;time_col&quot;</span><span class="p">:</span> <span class="s2">&quot;Time&quot;</span><span class="p">,</span>  <span class="c1"># Optional: Time column (set to None if absent)</span>
+        <span class="s2">&quot;time_format&quot;</span><span class="p">:</span> <span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">,</span>  <span class="c1"># Optional: Time format</span>
+        <span class="s2">&quot;desc_col&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Description&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;amt_col&quot;</span><span class="p">:</span> <span class="s2">&quot;Amount&quot;</span><span class="p">,</span>  <span class="c1"># Column name for amount (default = &#39;Amount&#39;)</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;raw_data/credit_card/&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;credit card&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;date_col&quot;</span><span class="p">:</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;date_format&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;desc_col&quot;</span><span class="p">:</span> <span class="s2">&quot;Description&quot;</span><span class="p">,</span>  <span class="c1"># Single column (default = &#39;Description)</span>
+        <span class="s2">&quot;amt_col&quot;</span><span class="p">:</span> <span class="s2">&quot;Amount&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">]</span></div>
+
+
+<span class="c1"># Run the full pipeline</span>
+<div class="viewcode-block" id="categorised_df">
+<a class="viewcode-back" href="../api/categorise_statements/index.html#categorise_statements.categorised_df">[docs]</a>
+<span class="n">categorised_df</span> <span class="o">=</span> <span class="n">process_statements</span><span class="p">(</span>
+    <span class="n">sources</span><span class="p">,</span>
+    <span class="c1"># Location for saving which imports have been processed:</span>
+    <span class="n">metadata_file</span><span class="o">=</span><span class="s2">&quot;metadata/processed_files.csv&quot;</span><span class="p">,</span>
+    <span class="c1"># Directory for previously categorised CSVs (used for ML training)</span>
+    <span class="n">categorised_dir</span><span class="o">=</span><span class="s2">&quot;categorised/&quot;</span><span class="p">,</span>
+    <span class="c1"># None uses bundled default rules; or &#39;metadata/custom_rules.csv&#39;</span>
+    <span class="n">rules_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="c1"># Set True to re-categorise existing entries</span>
+    <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span></div>
+
+</pre></div>
 
                 </article>
               

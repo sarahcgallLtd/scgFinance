@@ -410,6 +410,7 @@
   <h1>Source code for scgFinance.utils</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">files</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 
 <span class="c1"># ================================================</span>
@@ -487,6 +488,96 @@
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span></div>
+
+
+
+<span class="c1"># ================================================</span>
+<span class="c1"># Main function: for saving template structure</span>
+<span class="c1"># ================================================</span>
+
+
+<div class="viewcode-block" id="download_template">
+<a class="viewcode-back" href="../../api/scgFinance/utils/index.html#scgFinance.download_template">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">download_template</span><span class="p">(</span>
+    <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">rules_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rules.csv&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves a predefined project structure to the specified root directory,</span>
+<span class="sd">    populating it with metadata and a template script from the package.</span>
+
+<span class="sd">    This function creates the following directory structure:</span>
+<span class="sd">    - root_dir/</span>
+<span class="sd">      - categorised/ (empty directory)</span>
+<span class="sd">      - metadata/</span>
+<span class="sd">        - rules.csv (or specified filename; default categorisation rules)</span>
+<span class="sd">      - raw_data/</span>
+<span class="sd">        - bank/ (empty directory to save bank statements)</span>
+<span class="sd">        - credit_card/ (empty directory to save credit card statements)</span>
+<span class="sd">      - categorise_statements.py (template script copied from package)</span>
+
+<span class="sd">    Directories are created if they do not exist, and files are overwritten</span>
+<span class="sd">    if they already exist. The sample data and template script are copied</span>
+<span class="sd">    directly from the package resources to preserve original formatting.</span>
+<span class="sd">    This is useful for setting up a new project with a standard template,</span>
+<span class="sd">    improving ease of access by allowing users to initialise a local</span>
+<span class="sd">    working directory with bundled examples. The rules.csv can be customised</span>
+<span class="sd">    to be more specific to your financial statements. The</span>
+<span class="sd">    categorise_statements.py is bundled in the package (e.g., at &#39;</span>
+<span class="sd">    scgFinance.data/categorise_statements.py&#39;) and copied to the root</span>
+<span class="sd">    directory. Users can customise it after the template is saved.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        root_dir (str): The path to the root directory where the structure</span>
+<span class="sd">                        will be saved.</span>
+<span class="sd">        rules_filename (str, optional): The filename for the rules CSV in</span>
+<span class="sd">                                        metadata/. Defaults to &quot;rules.csv&quot;</span>
+<span class="sd">                                        to match the requested structure.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        OSError: If there are issues creating directories or writing files.</span>
+<span class="sd">        ImportError or AttributeError: If issues occur accessing package</span>
+<span class="sd">                                       resources.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; download_template(&#39;/path/to/my_project&#39;)</span>
+<span class="sd">        # Creates the structure in /path/to/my_project</span>
+
+<span class="sd">        &gt;&gt;&gt; donwload_template(&#39;/path/to/my_project&#39;,</span>
+<span class="sd">        ... rules_filename=&#39;custom_rules.csv&#39;)</span>
+<span class="sd">        # Uses &#39;custom_rules.csv&#39; instead of &#39;rules.csv&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create directories</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dir</span><span class="p">,</span> <span class="s2">&quot;categorised&quot;</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">metadata_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dir</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">metadata_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">raw_data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dir</span><span class="p">,</span> <span class="s2">&quot;raw_data&quot;</span><span class="p">)</span>
+    <span class="n">bank_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">raw_data_dir</span><span class="p">,</span> <span class="s2">&quot;bank&quot;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">bank_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">credit_card_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">raw_data_dir</span><span class="p">,</span> <span class="s2">&quot;credit_card&quot;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">credit_card_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Copy data directly</span>
+    <span class="n">rules_file_path</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span><span class="s2">&quot;scgFinance.data.metadata&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;rules.csv&quot;</span><span class="p">)</span>
+    <span class="n">rules_target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">metadata_dir</span><span class="p">,</span> <span class="n">rules_filename</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">rules_file_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">rules_target</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dst</span><span class="p">:</span>
+        <span class="n">dst</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+    <span class="c1"># Copy categorise_statements.py template directly from package</span>
+    <span class="n">script_file_path</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span><span class="s2">&quot;scgFinance.data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span>
+        <span class="s2">&quot;categorise_statements.py&quot;</span>
+    <span class="p">)</span>
+    <span class="n">script_target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dir</span><span class="p">,</span> <span class="s2">&quot;categorise_statements.py&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">script_file_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">script_target</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dst</span><span class="p">:</span>
+        <span class="n">dst</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Project template saved to: </span><span class="si">{</span><span class="n">root_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 </pre></div>
 

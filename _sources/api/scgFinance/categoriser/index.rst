@@ -15,7 +15,7 @@ Functions
 Module Contents
 ---------------
 
-.. py:function:: auto_categorise(df, rules_file=None, overwrite=False, categorised_dir='categorised')
+.. py:function:: auto_categorise(df, rules_file=None, overwrite=False, categorised_dir='categorised/')
 
    Automatically categorises transactions in a DataFrame using rules,
    machine learning, or a hybrid approach based on available data.
@@ -36,7 +36,7 @@ Module Contents
                      existing categories. Defaults to False.
    :type overwrite: bool, optional
    :param categorised_dir: Directory for historical categorised
-                           CSVs. Defaults to 'categorised'.
+                           CSVs. Defaults to 'categorised/'.
    :type categorised_dir: str, optional
 
    :returns:

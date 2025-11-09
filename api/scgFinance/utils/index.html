@@ -438,7 +438,10 @@
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#scgFinance.utils.load_package_data" title="scgFinance.utils.load_package_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_package_data</span></code></a>(data_type)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#scgFinance.utils.download_template" title="scgFinance.utils.download_template"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_template</span></code></a>(root_dir[, rules_filename])</p></td>
+<td><p>Saves a predefined project structure to the specified root directory,</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#scgFinance.utils.load_package_data" title="scgFinance.utils.load_package_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_package_data</span></code></a>(data_type)</p></td>
 <td><p>Loads bundled package data from CSV files based on the specified data type.</p></td>
 </tr>
 </tbody>
@@ -447,6 +450,70 @@
 </section>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="scgFinance.utils.download_template">
+<span class="sig-prename descclassname"><span class="pre">scgFinance.utils.</span></span><span class="sig-name descname"><span class="pre">download_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rules.csv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/scgFinance/utils.html#download_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.utils.download_template" title="Link to this definition">#</a></dt>
+<dd><p>Saves a predefined project structure to the specified root directory,
+populating it with metadata and a template script from the package.</p>
+<p>This function creates the following directory structure:
+- root_dir/</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>categorised/ (empty directory)</p></li>
+<li><p>metadata/
+- rules.csv (or specified filename; default categorisation rules)</p></li>
+<li><p>raw_data/
+- bank/ (empty directory to save bank statements)
+- credit_card/ (empty directory to save credit card statements)</p></li>
+<li><p>categorise_statements.py (template script copied from package)</p></li>
+</ul>
+</div></blockquote>
+<p>Directories are created if they do not exist, and files are overwritten
+if they already exist. The sample data and template script are copied
+directly from the package resources to preserve original formatting.
+This is useful for setting up a new project with a standard template,
+improving ease of access by allowing users to initialise a local
+working directory with bundled examples. The rules.csv can be customised
+to be more specific to your financial statements. The
+categorise_statements.py is bundled in the package (e.g., at ‘
+scgFinance.data/categorise_statements.py’) and copied to the root
+directory. Users can customise it after the template is saved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_dir</strong> (<em>str</em>) – The path to the root directory where the structure
+will be saved.</p></li>
+<li><p><strong>rules_filename</strong> (<em>str</em><em>, </em><em>optional</em>) – The filename for the rules CSV in
+metadata/. Defaults to “rules.csv”
+to match the requested structure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>OSError</strong> – If there are issues creating directories or writing files.</p></li>
+<li><p><strong>ImportError</strong><strong> or </strong><strong>AttributeError</strong> – If issues occur accessing package
+resources.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">download_template</span><span class="p">(</span><span class="s1">&#39;/path/to/my_project&#39;</span><span class="p">)</span>
+<span class="go"># Creates the structure in /path/to/my_project</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">donwload_template</span><span class="p">(</span><span class="s1">&#39;/path/to/my_project&#39;</span><span class="p">,</span>
+<span class="gp">... </span><span class="n">rules_filename</span><span class="o">=</span><span class="s1">&#39;custom_rules.csv&#39;</span><span class="p">)</span>
+<span class="go"># Uses &#39;custom_rules.csv&#39; instead of &#39;rules.csv&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="scgFinance.utils.load_package_data">
 <span class="sig-prename descclassname"><span class="pre">scgFinance.utils.</span></span><span class="sig-name descname"><span class="pre">load_package_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/scgFinance/utils.html#load_package_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.utils.load_package_data" title="Link to this definition">#</a></dt>
@@ -569,6 +636,7 @@ not occur in a properly packaged module).</p></li>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scgFinance.utils.download_template"><code class="docutils literal notranslate"><span class="pre">download_template()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scgFinance.utils.load_package_data"><code class="docutils literal notranslate"><span class="pre">load_package_data()</span></code></a></li>
 </ul>
 </li>

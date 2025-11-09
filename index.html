@@ -441,65 +441,40 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </section>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
-<p>Get started quickly with sample data and the processing pipeline.</p>
-<section id="loading-sample-data">
-<h3>Loading Sample Data<a class="headerlink" href="#loading-sample-data" title="Link to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">scgFinance</span></code> comes with sample data for you to use, including access to the default rules file which is used to
-classify and categorise statement items when there are insufficient amounts of previously categorised data.</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">load_package_data</span></code> to access bundled sample datasets for testing or exploration:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scgFinance.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_package_data</span>
+<p>Get started quickly with a template and the processing pipeline.</p>
+<section id="downloading-project-structure">
+<h3>Downloading Project Structure<a class="headerlink" href="#downloading-project-structure" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">scgFinance</span></code> includes a utility function to set up a recommended project directory structure, complete with empty
+folders for your data, a default rules file for categorisation, and a template script to get started with processing.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">download_template</span></code> to initialise the structure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scgFinance.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_template</span>
 
-<span class="c1"># Load bank sample</span>
- <span class="n">bank_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;bank&#39;</span><span class="p">)</span>
- <span class="nb">print</span><span class="p">(</span><span class="n">bank_df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-
- <span class="c1"># Load credit card sample</span>
- <span class="n">cc_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;credit_card&#39;</span><span class="p">)</span>
-
- <span class="c1"># Load rules</span>
- <span class="n">rules_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;rules&#39;</span><span class="p">)</span>
+<span class="c1"># Create the project structure in the specified root directory</span>
+<span class="n">download_template</span><span class="p">(</span><span class="s1">&#39;path/to/your/project_root&#39;</span><span class="p">,</span> <span class="n">rules_filename</span><span class="o">=</span><span class="s1">&#39;rules.csv&#39;</span><span class="p">)</span>  <span class="c1"># Optional: customise rules filename</span>
 </pre></div>
 </div>
-</section>
-<section id="processing-pipeline">
-<h3>Processing Pipeline<a class="headerlink" href="#processing-pipeline" title="Link to this heading">#</a></h3>
-<p>Run the end-to-end workflow with <code class="docutils literal notranslate"><span class="pre">process_statements</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scgFinance.process</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_statements</span>
-
-<span class="c1"># Define sources as a list of configs</span>
-<span class="n">sources</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-        <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;path/to/bank_statements/&#39;</span><span class="p">,</span>  <span class="c1"># Directory or single file path</span>
-        <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;bank&#39;</span><span class="p">,</span>                    <span class="c1"># Identifier for tracking (e.g., &#39;bank&#39; or &#39;credit_card&#39;)</span>
-        <span class="s1">&#39;date_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Date&#39;</span><span class="p">,</span>                  <span class="c1"># Column name for date (default = &#39;Date&#39;)</span>
-        <span class="s1">&#39;date_format&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">,</span>           <span class="c1"># Date format in your CSVs (default = &#39;%d/%m/%Y&#39;)</span>
-        <span class="s1">&#39;time_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Time&#39;</span><span class="p">,</span>                  <span class="c1"># Optional: Time column (set to None if absent)</span>
-        <span class="s1">&#39;time_format&#39;</span><span class="p">:</span> <span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">,</span>           <span class="c1"># Optional: Time format (default = &#39;%H:%M:%S&#39;)</span>
-        <span class="s1">&#39;desc_col&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Description&#39;</span><span class="p">],</span> <span class="c1"># Single column or list to concatenate</span>
-        <span class="s1">&#39;amt_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Amount&#39;</span>                  <span class="c1"># Column name for amount (default = &#39;Amount&#39;)</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-        <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;path/to/credit_card_statements/&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;credit_card&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;date_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Date&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;date_format&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;desc_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Description&#39;</span><span class="p">,</span>           <span class="c1"># Single column (default = &#39;Description)</span>
-        <span class="s1">&#39;amt_col&#39;</span><span class="p">:</span> <span class="s1">&#39;Amount&#39;</span>
-    <span class="p">}</span>
-<span class="p">]</span>
-
-<span class="c1"># Run the full pipeline</span>
-<span class="n">categorised_df</span> <span class="o">=</span> <span class="n">process_statements</span><span class="p">(</span>
-    <span class="n">sources</span><span class="p">,</span>
-    <span class="n">metadata_file</span><span class="o">=</span><span class="s1">&#39;metadata/processed_files.csv&#39;</span><span class="p">,</span>  <span class="c1"># Location for saving which imports have been processed</span>
-    <span class="n">categorised_dir</span><span class="o">=</span><span class="s1">&#39;categorised/&#39;</span><span class="p">,</span>                <span class="c1"># Directory for previously categorised CSVs (used for ML training)</span>
-    <span class="n">rules_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>                               <span class="c1"># None uses bundled default rules; or &#39;metadata/custom_rules.csv&#39;</span>
-    <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span>                                <span class="c1"># Set True to re-categorise existing entries</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">categorised_df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<p>This will generate the following structure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">your_project_root</span><span class="o">/</span>
+<span class="err">│</span>
+<span class="err">├──</span> <span class="n">categorised</span><span class="o">/</span>             <span class="c1"># For saving categorised output files</span>
+<span class="err">│</span>
+<span class="err">├──</span> <span class="n">metadata</span><span class="o">/</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="n">rules</span><span class="o">.</span><span class="n">csv</span>            <span class="c1"># Default categorisation rules (customisable)</span>
+<span class="err">│</span>
+<span class="err">├──</span> <span class="n">raw_data</span><span class="o">/</span>
+<span class="err">│</span>   <span class="err">├──</span> <span class="n">bank</span><span class="o">/</span>                <span class="c1"># Place your bank statement CSVs here</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="n">credit_card</span><span class="o">/</span>         <span class="c1"># Place your credit card statement CSVs here</span>
+<span class="err">│</span>
+<span class="err">└──</span> <span class="n">categorise_statements</span><span class="o">.</span><span class="n">py</span> <span class="c1"># Template script for running the processing pipeline</span>
 </pre></div>
 </div>
+<p>After setup:</p>
+<ol class="arabic simple">
+<li><p>Download your statements from your financial institution (e.g., your bank) in a CSV format.</p></li>
+<li><p>Save your statements in the <code class="docutils literal notranslate"><span class="pre">raw_data/bank/</span></code> or <code class="docutils literal notranslate"><span class="pre">raw_data/credit_card</span></code> folders (rename, add, or delete folders depending on your needs e.g., to <code class="docutils literal notranslate"><span class="pre">raw_data/HSBC/</span></code>).</p></li>
+<li><p>Customise <code class="docutils literal notranslate"><span class="pre">metadata/rules.csv</span></code> if needed based on your financial statements and common transactions</p></li>
+<li><p>Modify/run <code class="docutils literal notranslate"><span class="pre">categorise_statements.py</span></code> to process your data.</p></li>
+</ol>
 <p>For more details, see the <a class="reference internal" href="user_guide/index.html"><span class="doc">User Guide</span></a>.</p>
 <div class="toctree-wrapper compound">
 </div>
@@ -552,8 +527,7 @@ classify and categorise statement items when there are insufficient amounts of p
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quickstart">Quickstart</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-sample-data">Loading Sample Data</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#processing-pipeline">Processing Pipeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#downloading-project-structure">Downloading Project Structure</a></li>
 </ul>
 </li>
 </ul>
