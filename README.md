@@ -74,7 +74,7 @@ or delete folders depending on your needs e.g., to `raw_data/HSBC/`).
 3. Customise `metadata/rules.csv` if needed based on your financial statements and common transactions
 4. Modify/run `categorise_statements.py` to process your data.
 
-### Loading Sample Data
+### Loading or Saving Sample Data
 `scgFinance` comes with sample data for you to use, including access to the default rules file which is used to 
 classify and categorise statement items when there are insufficient amounts of previously categorised data. 
 
@@ -87,11 +87,9 @@ from scgFinance.utils import load_package_data
 bank_df = load_package_data('bank')
 print(bank_df.head())
 
-# Load credit card sample
-cc_df = load_package_data('credit_card')
+# Save credit card sample
+load_package_data('credit_card', 'save/to/path)
 
-# Load rules
-rules_df = load_package_data('rules')
 ```
 
 ### Processing Pipeline

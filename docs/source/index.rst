@@ -50,33 +50,13 @@ Key Features
 Installation
 ------------
 
-``scgFinance`` requires Python 3.12 or later. You can install the stable version from PyPI (if available) or the development version directly from GitHub.
+``scgFinance`` requires Python 3.12 or later. You can install from PyPI.
 
-
-Stable Version (from PyPI)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
    pip install scgFinance
 
-
-Development Version (from GitHub)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To install the latest development version, use pip to install directly from the repository:
-
-.. code-block:: bash
-
-   pip install git+https://github.com/sarahcgallLtd/scgFinance.git@main
-
-Alternatively, clone the repository and install locally:
-
-.. code-block:: bash
-
-   git clone https://github.com/sarahcgallLtd/scgFinance.git
-   cd scgFinance
-   pip install -e .
 
 
 Quickstart
@@ -84,8 +64,6 @@ Quickstart
 
 Get started quickly with a template and the processing pipeline.
 
-Downloading Project Structure
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``scgFinance`` includes a utility function to set up a recommended project directory structure, complete with empty
 folders for your data, a default rules file for categorisation, and a template script to get started with processing.
@@ -99,6 +77,8 @@ Use ``download_template`` to initialise the structure:
     # Create the project structure in the specified root directory
     download_template('path/to/your/project_root', rules_filename='rules.csv')  # Optional: customise rules filename
 
+
+|
 
 This will generate the following structure:
 
@@ -117,6 +97,7 @@ This will generate the following structure:
     │
     └── categorise_statements.py # Template script for running the processing pipeline
 
+|
 
 After setup:
 
@@ -125,6 +106,7 @@ After setup:
 3. Customise ``metadata/rules.csv`` if needed based on your financial statements and common transactions
 4. Modify/run ``categorise_statements.py`` to process your data.
 
+|
 
 For more details, see the :doc:`User Guide <user_guide/index>`.
 

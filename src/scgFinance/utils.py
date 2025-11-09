@@ -8,7 +8,7 @@ import os
 # ================================================
 
 
-def load_package_data(data_type: str) -> pd.DataFrame:
+def load_package_data(data_type: str, save_path: str = None) -> pd.DataFrame:
     """
     Loads bundled package data from CSV files based on the specified data type.
 
@@ -20,6 +20,9 @@ def load_package_data(data_type: str) -> pd.DataFrame:
     demonstrations, or default configurations without requiring external
     file access.
 
+    Optionally, if a save_path is provided, the loaded DataFrame will be
+    saved as a CSV file to the specified local path on the user's computer.
+
     Args:
         data_type (str): The type of data to load. Valid options are:
             - 'bank': Loads the sample bank statement from
@@ -30,6 +33,10 @@ def load_package_data(data_type: str) -> pd.DataFrame:
                              Example Credit Card Statement.csv'.
             - 'rules': Loads the default categorisation rules from
                        'scgFinance.data.metadata/rules.csv'.
+        save_path (str, optional): The local file path where the loaded
+                                   DataFrame should be saved as a CSV.
+                                   If None (default), no save operation
+                                   is performed.
 
     Returns:
         pd.DataFrame: A DataFrame containing the loaded data from the specified
@@ -41,12 +48,15 @@ def load_package_data(data_type: str) -> pd.DataFrame:
         FileNotFoundError: If the bundled file is missing (though this should
                            not occur in a properly packaged module).
         pandas.errors: If there are issues parsing the CSV file.
+        OSError: If there are issues saving to the provided save_path (e.g.,
+                 invalid directory or permissions issues).
 
     Example:
-        >>> bank_df = load_package_data('bank')
+        >>> bank_df = load_package_data('bank',
+        ... save_path='~/Desktop/bank_data.csv')
         >>> print(bank_df.columns)
         Index(['Date', 'Description', 'Amount'], dtype='object')
-        # Example columns
+        # Example columns; data is also saved to '~/Desktop/bank_data.csv'
 
         >>> rules_df = load_package_data('rules')
         >>> print(rules_df.head())
@@ -75,7 +85,12 @@ def load_package_data(data_type: str) -> pd.DataFrame:
             f"Options: 'bank', 'credit_card', 'rules'."
         )
 
-    return pd.read_csv(str(file_path))
+    df = pd.read_csv(str(file_path))
+
+    if save_path:
+        df.to_csv(save_path, index=False)
+
+    return df
 
 
 # ================================================

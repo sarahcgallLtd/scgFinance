@@ -12,6 +12,11 @@ def expected_columns():
         'rules': ['category', 'subcategory', 'pattern']
     }
 
+
+# ================================================
+# Tests for load_package_data
+# ================================================
+
 def test_load_package_data_bank(expected_columns):
     df = load_package_data('bank')
     assert isinstance(df, pd.DataFrame)
@@ -33,6 +38,33 @@ def test_load_package_data_rules(expected_columns):
 def test_load_package_data_invalid_type():
     with pytest.raises(ValueError, match="Invalid data_type 'invalid'"):
         load_package_data('invalid')
+
+def test_load_package_data_with_save_path(expected_columns):
+    with TemporaryDirectory() as tmpdir:
+        save_path = os.path.join(tmpdir, "bank_data.csv")
+        df = load_package_data('bank', save_path=save_path)
+        assert isinstance(df, pd.DataFrame)
+        assert not df.empty
+        assert set(expected_columns['bank']).issubset(df.columns)
+        assert os.path.exists(save_path)
+        saved_df = pd.read_csv(save_path)
+        pd.testing.assert_frame_equal(df, saved_df)
+
+def test_load_package_data_with_save_path_rules(expected_columns):
+    with TemporaryDirectory() as tmpdir:
+        save_path = os.path.join(tmpdir, "rules.csv")
+        df = load_package_data('rules', save_path=save_path)
+        assert isinstance(df, pd.DataFrame)
+        assert not df.empty
+        assert set(expected_columns['rules']).issubset(df.columns)
+        assert os.path.exists(save_path)
+        saved_df = pd.read_csv(save_path)
+        pd.testing.assert_frame_equal(df, saved_df)
+
+def test_load_package_data_save_path_invalid_directory():
+    invalid_path = "/non_existent_directory/test.csv"
+    with pytest.raises(OSError):
+        load_package_data('bank', save_path=invalid_path)
 
 # ================================================
 # Tests for download_template
