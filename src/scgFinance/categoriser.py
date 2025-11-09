@@ -239,9 +239,17 @@ def _train_model(X, y, model_type="category"):
         # Skip training for very small data or single class
         return None  # Return None if insufficient data
 
-    # Split data into train and test sets: 80/20 split, stratified by labels
+    # Determine if stratification is possible
+    # (all classes have at least 2 samples)
+    if pd.Series(y).value_counts().min() < 2:
+        stratify = None
+    else:
+        stratify = y
+
+    # Split data into train and test sets: 80/20 split,
+    # with conditional stratification
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y
+        X, y, test_size=0.2, random_state=42, stratify=stratify
     )
 
     # Create a pipeline: TF-IDF vectorizer + Logistic Regression

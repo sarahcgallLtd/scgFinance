@@ -116,6 +116,21 @@ def full_ml_categorised_dir(tmp_path):
     repeated_df.to_csv(p, index=False)
     return str(d)
 
+@pytest.fixture
+def unbalanced_labeled():
+    balanced = pd.DataFrame({
+        'description': ['TESCO STORE', 'MCDONALDS', 'TRAINLINE.COM', 'UBER TRIP', 'BOLT'] * 10,
+        'category': ['Food/Dining', 'Food/Dining', 'Transportation', 'Transportation', 'Transportation'] * 10,
+        'subcategory': ['Groceries', 'Restaurants/Bars', 'Public Transport', 'Rideshare', 'Rideshare'] * 10
+    })
+    new_row = pd.DataFrame({
+        'description': ['NEW UNIQUE'],
+        'category': ['NewCat'],
+        'subcategory': ['NewSub']
+    })
+    unbalanced = pd.concat([balanced, new_row], ignore_index=True)
+    return unbalanced
+
 # TEST FOR LOAD_RULES_FILES() ==========================================================================================
 def test_load_rules_file(sample_rules_file):
     rules = _load_rules_file(sample_rules_file)
@@ -215,6 +230,11 @@ def test_get_ml_model(tmp_path):
         'subcategory': ['Groceries', 'Restaurants/Bars', 'Public Transport', 'Rideshare', 'Rideshare'] * 10
     })
     models = _get_ml_model(labeled)
+    assert models['category'] is not None
+    assert models['subcategory'] is not None
+
+def test_get_ml_model_with_unbalanced_classes(unbalanced_labeled):
+    models = _get_ml_model(unbalanced_labeled)
     assert models['category'] is not None
     assert models['subcategory'] is not None
 

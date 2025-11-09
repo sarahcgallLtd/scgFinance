@@ -2,7 +2,7 @@
 Income,Salary,SALARY
 Income,Salary,PAYROLL
 Income,Salary,EMPLOYER NAME
-Income,Salary,rBACS CREDIT
+Income,Salary,r\bBACS\b CREDIT
 Income,Salary,DIRECT CREDIT
 Income,Freelance,FREELANCE
 Income,Freelance,UPWORK
@@ -13,9 +13,7 @@ Income,Government Benefits,UNIVERSAL CREDIT
 Income,Government Benefits,PENSION CREDIT
 Income,Government Benefits,JOBSEEKERS ALLOWANCE
 Income,Government Benefits,BENEFIT PAYMENT
-Income,Government Benefits,DWP PAYMENT
-Income,Government Benefits,rESA
-Income,Government Benefits,rPIP
+Income,Government Benefits,r\bDWP\b PAYMENT
 Income,Government Benefits,CARERS ALLOWANCE
 Income,Investments,DIVIDEND
 Income,Investments,INTEREST
@@ -36,36 +34,30 @@ Taxes,Council Tax,CITY COUNCIL
 Taxes,TV License,TV LICENCE
 Taxes,TV License,BBC PAYMENT
 Taxes,TV License,TV LICENSING
-Taxes,TV License,rBBC
+Taxes,TV License,r\bBBC\b
 Taxes,Vehicle,ROAD TAX
 Taxes,Vehicle,VEHICLE EXCISE DUTY
-Taxes,Vehicle,rCAR TAX
-Taxes,Vehicle,rVED PAYMENT
+Taxes,Vehicle,r\bCAR\b TAX
+Taxes,Vehicle,r\bVED\b PAYMENT
 Taxes,Vehicle,VEHICLE TAX
-Taxes,Vehicle,rDVLA
+Taxes,Vehicle,r\bDVLA\b
 Home,Rent/Mortgage,LANDLORD
-Home,Rent/Mortgage,rRENT
+Home,Rent/Mortgage,r\bRENT\b
 Home,Rent/Mortgage,MORTGAGE PAYMENT
 Home,Rent/Mortgage,rMORTGAGE
-Home,Rent/Mortgage,rHALIFAX
+Home,Rent/Mortgage,r\bHALIFAX\b
 Home,Rent/Mortgage,NATWEST MORTGAGE
 Home,Energy,UTILITY BILL
-Home,Energy,rENERGY
-Home,Energy,rPOWER
-Home,Energy,rEDF ENERGY
-Home,Energy,rE.ON
+Home,Energy,r\bENERGY\b
+Home,Energy,r\bEDF\b ENERGY
+Home,Energy,r\bE.ON\b
 Home,Energy,OCTOPUS ENERGY
-Home,Energy,rGAS
 Home,Energy,NATURAL GAS
 Home,Energy,BRITISH GAS
-Home,Energy,rSSE
 Home,Water,WATER BILL
 Home,Water,SOUTHERN WATER
 Home,Water,THAMES WATER
-Home,Internet/Phone,rINTERNET
-Home,Internet/Phone,rBT
 Home,Internet/Phone,VIRGIN MEDIA
-Home,Internet/Phone,rSKY
 Home,Internet/Phone,TALKTALK
 Home,Internet/Phone,VODAFONE
 Home,Insurance,HOME INSURANCE
@@ -73,7 +65,7 @@ Home,Insurance,BUILDINGS INSURANCE
 Home,Insurance,CONTENTS INSURANCE
 Home,Insurance,MORE THAN
 Home,Maintenance,REPAIRS
-Home,Maintenance,B&Q
+Home,Maintenance,r\bB&Q\b
 Home,Maintenance,WICKES
 Home,Maintenance,PLUMBER
 Home,Maintenance,SCREWFIX
@@ -84,7 +76,7 @@ Domestic Services,House Cleaning,HOUSEKEEPING
 Domestic Services,House Cleaning,CLEANER
 Domestic Services,Dry Cleaning,DRY CLEAN
 Domestic Services,Dry Cleaning,I HATE IRONING
-Domestic Services,Dry Cleaning,rTIMPSON
+Domestic Services,Dry Cleaning,r\bTIMPSON\b
 Domestic Services,Dry Cleaning,JOHNSONS CLEANERS
 Domestic Services,Childcare,CHILDCARE
 Domestic Services,Childcare,BABYSITTER
@@ -103,29 +95,50 @@ Food/Dining,Groceries,LIDL
 Food/Dining,Groceries,LONDIS
 Food/Dining,Groceries,CO-OP
 Food/Dining,Groceries,M&S
-Food/Dining,Groceries,NESPRESSO
-Food/Dining,Restaurants/Bars,RESTAURANT
-Food/Dining,Restaurants/Bars,MCDONALDS
-Food/Dining,Restaurants/Bars,NANDOS
-Food/Dining,Restaurants/Bars,DINING OUT
-Food/Dining,Restaurants/Bars,DINNER
-Food/Dining,Restaurants/Bars,LUNCH
-Food/Dining,Restaurants/Bars,DRINKS
-Food/Dining,Cafes,CAFÉ
-Food/Dining,Cafes,COFFEE
-Food/Dining,Cafes,STARBUCKS
-Food/Dining,Cafes,PRET A MANGER
-Food/Dining,Cafes,COSTA
-Food/Dining,Cafes,BRUNCH
-Food/Dining,Cafes,BREAKFAST
+Food/Dining,Groceries,BAYLEY & SAGE
+Food/Dining,Groceries,WHOLE FOODS MARKET
+Food/Dining,Groceries,PLANET ORGANIC
+Food/Dining,Groceries,AS NATURE INTENDED
+Food/Dining,Groceries,KRYSTALS EXPRESS
+Food/Dining,Groceries,DUGARD AND DAUGHTERS
+Food/Dining,Restaurants/Bars/Pubs,RESTAURANT
+Food/Dining,Restaurants/Bars/Pubs,MCDONALDS
+Food/Dining,Restaurants/Bars/Pubs,NANDOS
+Food/Dining,Restaurants/Bars/Pubs,DINING OUT
+Food/Dining,Restaurants/Bars/Pubs,DINNER
+Food/Dining,Restaurants/Bars/Pubs,LUNCH
+Food/Dining,Restaurants/Bars/Pubs,DRINKS
+Food/Dining,Restaurants/Bars/Pubs,SUSHI
+Food/Dining,Restaurants/Bars/Pubs,WINE BAR
+Food/Dining,Restaurants/Bars/Pubs,DISHOOM
+Food/Dining,Restaurants/Bars/Pubs,r\bPUB\b
+Food/Dining,Restaurants/Bars/Pubs,TORTILLA
+Food/Dining,Restaurants/Bars/Pubs,NOODLES
+Food/Dining,Restaurants/Bars/Pubs,r\bLEON\b
+Food/Dining,Restaurants/Bars/Pubs,ALL BAR ONE
+Food/Dining,Restaurants/Bars/Pubs,r\bSALAD\b
+Food/Dining,Cafes/Bakeries,r\bCAFE\b
+Food/Dining,Cafes/Bakeries,COFFEE
+Food/Dining,Cafes/Bakeries,STARBUCKS
+Food/Dining,Cafes/Bakeries,PRET A MANGER
+Food/Dining,Cafes/Bakeries,COSTA
+Food/Dining,Cafes/Bakeries,BRUNCH
+Food/Dining,Cafes/Bakeries,BREAKFAST
+Food/Dining,Cafes/Bakeries,MEGAN?S
+Food/Dining,Cafes/Bakeries,BREW HOUSE
+Food/Dining,Cafes/Bakeries,LE PAIN QUOTIDIEN
+Food/Dining,Cafes/Bakeries,BAKERY
+Food/Dining,Cafes/Bakeries,r\bESPRESSO\b
 Food/Dining,Takeaway/Delivery,FOOD DELIVERY
 Food/Dining,Takeaway/Delivery,JUST EAT
 Food/Dining,Takeaway/Delivery,DELIVEROO
 Food/Dining,Takeaway/Delivery,UBER EATS
+Food/Dining,Alcohol,BERRY BROS
+Food/Dining,Alcohol,THE SCOTCH WHISKY EXPERIENCE
+Food/Dining,Other,NESPRESSO
+Food/Dining,Other,r\bT2\b
 Transportation,Fuel,PETROL STATION
-Transportation,Fuel,rSHELL
-Transportation,Fuel,rBP
-Transportation,Fuel,rESSO
+Transportation,Fuel,r\bESSO\b
 Transportation,Fuel,TESCO FUEL
 Transportation,Car Lease,CAR LEASE
 Transportation,Car Lease,LEASEPLAN
@@ -138,7 +151,7 @@ Transportation,Insurance,DIRECT LINE
 Transportation,Insurance,AVIVA
 Transportation,Public Transport,OYSTER CARD
 Transportation,Public Transport,TRAVELCARD
-Transportation,Public Transport,rTFL
+Transportation,Public Transport,r\bTFL\b
 Transportation,Public Transport,TRANSPORT FOR LONDON
 Transportation,Public Transport,NATIONAL RAIL
 Transportation,Public Transport,SOUTHERN RAIL
@@ -147,36 +160,39 @@ Transportation,Public Transport,TRAINLINE
 Transportation,Public Transport,SEATFROG
 Transportation,Public Transport,AVANTI WEST
 Transportation,Rideshare,RIDESHARE
-Transportation,Rideshare,rUBER
+Transportation,Rideshare,r\bUBER\b
 Transportation,Rideshare,BOLT
 Transportation,Rideshare,FREE NOW
 Transportation,Rideshare,LIME BIKE
 Transportation,Rideshare,ZIPCAR
+Transportation,Rideshare,TAXI
 Transportation,Vehicle Maintenance,HALFORDS
 Transportation,Vehicle Maintenance,KWIK FIT
 Transportation,Vehicle Maintenance,CAR REPAIR
-Transportation,Vehicle Maintenance,rMOT
+Transportation,Vehicle Maintenance,r\bMOT\b
 Transportation,Parking,PARKING
-Transportation,Parking,rNCP
+Transportation,Parking,r\bNCP\b
 Transportation,Parking,APCOA
 Transportation,Parking,Q-PARK
 Health,Medical,MEDICAL BILL
-Health,Medical,rNHS
+Health,Medical,r\bNHS\b
 Health,Medical,DOCTOR
 Health,Medical,HOSPITAL
 Health,Medical,IVF
 Health,Medical,PSYCHOLOGY
+Health,Medical,PHYSIO
 Health,Medical,rCLINIC
 Health,Dental,DENTIST
 Health,Dental,DENTAL
 Health,Pharmacy,PHARMACY
-Health,Pharmacy,rBOOTS
+Health,Pharmacy,r\bBOOTS\b
 Health,Pharmacy,SUPERDRUG
 Health,Pharmacy,LLOYDS PHARMACY
+Health,Pharmacy,HOLLAND & BARRETT
 Health,Insurance,HEALTH INSURANCE
 Health,Insurance,BUPA
-Health,Insurance,AXA
-Health,Veterinarian,rVET 
+Health,Insurance,r\bAXA\b
+Health,Veterinarian,r\bVET\b
 Health,Veterinarian,MEDIVET
 Health,Veterinarian,VETS4PETS
 Subscriptions,News,THE TIMES
@@ -198,50 +214,71 @@ Recreation,Gym/Fitness,FITNESS MEMBERSHIP
 Recreation,Gym/Fitness,PUREGYM
 Recreation,Gym/Fitness,THE GYM GROUP
 Recreation,Gym/Fitness,VIRGIN ACTIVE
+Recreation,Gym/Fitness,r\bF45\b
 Recreation,Sports Equipment,SPORTS DIRECT
 Recreation,Sports Equipment,JD SPORTS
 Recreation,Sports Equipment,DECATHLON
 Entertainment,Tours/Experiences,VIATOR
+Entertainment,Tours/Experiences,MUSEUM
 Entertainment,Movies/Theater,MOVIE TICKET
 Entertainment,Movies/Theater,ODEON
 Entertainment,Movies/Theater,CINEWORLD
-Entertainment,Movies/Theater,rVUE
+Entertainment,Movies/Theater,r\bVUE\b
 Entertainment,Events/Concerts,CONCERT
 Entertainment,Events/Concerts,TICKETMASTER
 Entertainment,Events/Concerts,SEETICKETS
+Entertainment,Events/Concerts,EVENTBRITE
 Personal,Retail/Clothing,CLOTHING STORE
-Personal,Retail/Clothing,RETAIL
 Personal,Retail/Clothing,JOHN LEWIS
 Personal,Retail/Clothing,TK MAXX
 Personal,Retail/Clothing,MARKS AND SPENCER
 Personal,Retail/Clothing,PRIMARK
 Personal,Retail/Clothing,ASOS
-Personal,Salon/Barber,SALON
-Personal,Salon/Barber,HAIRDRESSER
-Personal,Salon/Barber,BARBER
-Personal,Cosmetics,CHARLOTTE TILBURY
-Personal,Cosmetics,MAC COSMETICS
+Personal,Retail/Clothing,CATH KIDSTON
+Personal,Retail/Clothing,DEBENHAMS
+Personal,Retail/Clothing,r\bDUNE\b
+Personal,Retail/Clothing,REISS
+Personal,Retail/Clothing,INTIMISSIMI
+Personal,Retail/Clothing,CANADA GOOSE
+Personal,Retail/Clothing,FENWICK
+Personal,Retail/Clothing,HOBBS LTD
+Personal,Beauty/Wellness,r\bHAIR\b
+Personal,Beauty/Wellness,SALON
+Personal,Beauty/Wellness,HAIRDRESSER
+Personal,Beauty/Wellness,BARBER
+Personal,Beauty/Wellness,CHARLOTTE TILBURY
+Personal,Beauty/Wellness,MAC COSMETICS
+Personal,Beauty/Wellness,AESOP
+Personal,Beauty/Wellness,SHAVING
 Personal,Electronics,ELECTRONICS
 Personal,Electronics,CURRYS PC WORLD
 Personal,Homewares,IKEA
 Personal,Homewares,DUNELM
-Personal,Homewares,THE RANGE
 Personal,Homewares,HOMESENSE
-Travel/Holidays,Flights,AIRLINE
-Travel/Holidays,Flights,EASYJET
-Travel/Holidays,Flights,RYANAIR
-Travel/Holidays,Flights,BRITISH AIRWAYS
-Travel/Holidays,Flights,JET2
-Travel/Holidays,Flights,FLIGHT
+Personal,Homewares,ARGOS
+Personal,Miscellaneous,AMAZON
+Personal,Miscellaneous,FUJIFILM IMAGES
+Travel/Holidays,Transport,AIRLINE
+Travel/Holidays,Transport,EASYJET
+Travel/Holidays,Transport,RYANAIR
+Travel/Holidays,Transport,BRITISH AIRWAYS
+Travel/Holidays,Transport,JET2
+Travel/Holidays,Transport,FLIGHT
+Travel/Holidays,Transport,EUROSTAR
+Travel/Holidays,Transport,SBB RAIL SERVICE
+Travel/Holidays,Transport,r\bSNCF\b
+Travel/Holidays,Transport,Swiss Federal Railways
+Travel/Holidays,Car Hire,HERTZ
+Travel/Holidays,Car Hire,EUROPCAR
+Travel/Holidays,Car Hire,r\bSIXT\b
+Travel/Holidays,Car Hire,rBUDGET
 Travel/Holidays,Accommodation,HOTEL
 Travel/Holidays,Accommodation,AIRBNB
 Travel/Holidays,Accommodation,BOOKING.COM
 Travel/Holidays,Accommodation,PREMIER INN
 Travel/Holidays,Accommodation,TRAVELODGE
-Travel/Holidays,Car Hire,HERTZ
-Travel/Holidays,Car Hire,EUROPCAR
-Travel/Holidays,Car Hire,rSIXT
-Travel/Holidays,Car Hire,rBUDGET
+Travel/Holidays,Accommodation,FOUR SEASONS
+Travel/Holidays,Accommodation,MOTEL
 Travel/Holidays,Pet Boarding,rKENNEL
 Travel/Holidays,Pet Boarding,PET SITTER
 Travel/Holidays,Pet Boarding,DOG BOARDING
@@ -251,8 +288,10 @@ Education,Tuition,STUDENT FINANCE
 Education,Tuition,SCHOOL FEES
 Education,Books/Stationary,WATERSTONES
 Education,Books/Stationary,AMAZON BOOKS
+Education,Books/Stationary,AMAZON KINDLE
 Education,Books/Stationary,TEXTBOOK
 Education,Books/Stationary,WHSMITH
+Education,Books/Stationary,BOOK SHO
 Financial,Savings Transfers,TRANSFER TO SAVINGS
 Financial,Savings Transfers,BANK TRANSFER
 Financial,Savings Transfers,STANDING ORDER
@@ -273,14 +312,13 @@ Financial,Debt/Loans,NATWEST LOAN
 Financial,Debt/Loans,CREDIT REPAYMENT
 Financial,Debt/Loans,PAYDAY LOAN
 Financial,Pensions,PENSION CONTRIBUTION
-Financial,Pensions,rNEST
+Financial,Pensions,r\bNEST\b
 Financial,Pensions,AVIVA PENSION
 Financial,Pensions,WORKPLACE PENSION
-Financial,Pensions,rSIPP
-Miscellaneous,Gifts,rGIFT
-Miscellaneous,Gifts,rPRESENT
+Financial,Pensions,r\bSIPP\b
+Miscellaneous,Gifts,r\bGIFT\b
+Miscellaneous,Gifts,r\bPRESENT\b
 Miscellaneous,Gifts,MOONPIG
-Miscellaneous,Donations,CHURCH
 Miscellaneous,Donations,CHARITY
 Miscellaneous,Donations,DONATION
 Miscellaneous,Donations,JUSTGIVING
@@ -289,7 +327,7 @@ Miscellaneous,Bank Fees,OVERDRAFT
 Miscellaneous,Bank Fees,SERVICE CHARGE
 Miscellaneous,Other,rMISC\S*
 Miscellaneous,Other,CASH WITHDRAWAL
-Miscellaneous,Other,rATM
+Miscellaneous,Other,r\bATM\b
 Miscellaneous,Postage,ROYAL MAIL
 Miscellaneous,Postage,POST OFFICE
 Miscellaneous,Postage,PARCELFORCE
