@@ -185,7 +185,7 @@ Package Contents
    ['statement_2023.csv']
 
 
-.. py:function:: load_package_data(data_type)
+.. py:function:: load_package_data(data_type, save_path = None)
 
    Loads bundled package data from CSV files based on the specified data type.
 
@@ -197,6 +197,9 @@ Package Contents
    demonstrations, or default configurations without requiring external
    file access.
 
+   Optionally, if a save_path is provided, the loaded DataFrame will be
+   saved as a CSV file to the specified local path on the user's computer.
+
    :param data_type: The type of data to load. Valid options are:
                      - 'bank': Loads the sample bank statement from
                                'scgFinance.data.raw_data.bank/251031
@@ -207,6 +210,11 @@ Package Contents
                      - 'rules': Loads the default categorisation rules from
                                 'scgFinance.data.metadata/rules.csv'.
    :type data_type: str
+   :param save_path: The local file path where the loaded
+                     DataFrame should be saved as a CSV.
+                     If None (default), no save operation
+                     is performed.
+   :type save_path: str, optional
 
    :returns:
 
@@ -219,13 +227,16 @@ Package Contents
    :raises FileNotFoundError: If the bundled file is missing (though this should
        not occur in a properly packaged module).
    :raises pandas.errors: If there are issues parsing the CSV file.
+   :raises OSError: If there are issues saving to the provided save_path (e.g.,
+       invalid directory or permissions issues).
 
    .. rubric:: Example
 
-   >>> bank_df = load_package_data('bank')
+   >>> bank_df = load_package_data('bank',
+   ... save_path='~/Desktop/bank_data.csv')
    >>> print(bank_df.columns)
    Index(['Date', 'Description', 'Amount'], dtype='object')
-   # Example columns
+   # Example columns; data is also saved to '~/Desktop/bank_data.csv'
 
    >>> rules_df = load_package_data('rules')
    >>> print(rules_df.head())

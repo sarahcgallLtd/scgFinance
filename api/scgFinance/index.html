@@ -455,7 +455,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#scgFinance.import_statements" title="scgFinance.import_statements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_statements</span></code></a>(path[, source, date_col, ...])</p></td>
 <td><p>Orchestrates the import of financial statements from one or more CSV</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#scgFinance.load_package_data" title="scgFinance.load_package_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_package_data</span></code></a>(data_type)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#scgFinance.load_package_data" title="scgFinance.load_package_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_package_data</span></code></a>(data_type[, save_path])</p></td>
 <td><p>Loads bundled package data from CSV files based on the specified data type.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#scgFinance.process_statements" title="scgFinance.process_statements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_statements</span></code></a>(sources[, metadata_file, ...])</p></td>
@@ -649,7 +649,7 @@ are found/processed.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="scgFinance.load_package_data">
-<span class="sig-prename descclassname"><span class="pre">scgFinance.</span></span><span class="sig-name descname"><span class="pre">load_package_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scgFinance/utils.html#load_package_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.load_package_data" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">scgFinance.</span></span><span class="sig-name descname"><span class="pre">load_package_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scgFinance/utils.html#load_package_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.load_package_data" title="Link to this definition">#</a></dt>
 <dd><p>Loads bundled package data from CSV files based on the specified data type.</p>
 <p>This utility function accesses sample data or metadata files packaged
 within the ‘scgFinance’ module using importlib.resources. It supports
@@ -658,15 +658,18 @@ categorisation rules. The file paths are resolved dynamically, and the
 contents are read into a pandas DataFrame. This is useful for testing,
 demonstrations, or default configurations without requiring external
 file access.</p>
+<p>Optionally, if a save_path is provided, the loaded DataFrame will be
+saved as a CSV file to the specified local path on the user’s computer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data_type</strong> (<em>str</em>) – <p>The type of data to load. Valid options are:
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_type</strong> (<em>str</em>) – <p>The type of data to load. Valid options are:
 - ‘bank’: Loads the sample bank statement from</p>
 <blockquote>
 <div><p>’scgFinance.data.raw_data.bank/251031
 Example Bank Statement.csv’.</p>
 </div></blockquote>
-<ul class="simple">
+<ul>
 <li><dl class="simple">
 <dt>’credit_card’: Loads the sample credit card statement from</dt><dd><p>’scgFinance.data.raw_data.credit_card/251031
 Example Credit Card Statement.csv’.</p>
@@ -679,7 +682,12 @@ Example Credit Card Statement.csv’.</p>
 </dl>
 </li>
 </ul>
-</p>
+</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The local file path where the loaded
+DataFrame should be saved as a CSV.
+If None (default), no save operation
+is performed.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
@@ -698,14 +706,17 @@ Example Credit Card Statement.csv’.</p>
 <li><p><strong>FileNotFoundError</strong> – If the bundled file is missing (though this should
 not occur in a properly packaged module).</p></li>
 <li><p><strong>pandas.errors</strong> – If there are issues parsing the CSV file.</p></li>
+<li><p><strong>OSError</strong> – If there are issues saving to the provided save_path (e.g.,
+invalid directory or permissions issues).</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bank_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;bank&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bank_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;bank&#39;</span><span class="p">,</span>
+<span class="gp">... </span><span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;~/Desktop/bank_data.csv&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bank_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 <span class="go">Index([&#39;Date&#39;, &#39;Description&#39;, &#39;Amount&#39;], dtype=&#39;object&#39;)</span>
-<span class="go"># Example columns</span>
+<span class="go"># Example columns; data is also saved to &#39;~/Desktop/bank_data.csv&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rules_df</span> <span class="o">=</span> <span class="n">load_package_data</span><span class="p">(</span><span class="s1">&#39;rules&#39;</span><span class="p">)</span>

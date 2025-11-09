@@ -420,7 +420,7 @@
 
 <div class="viewcode-block" id="load_package_data">
 <a class="viewcode-back" href="../../api/scgFinance/utils/index.html#scgFinance.load_package_data">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load_package_data</span><span class="p">(</span><span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_package_data</span><span class="p">(</span><span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Loads bundled package data from CSV files based on the specified data type.</span>
 
@@ -432,6 +432,9 @@
 <span class="sd">    demonstrations, or default configurations without requiring external</span>
 <span class="sd">    file access.</span>
 
+<span class="sd">    Optionally, if a save_path is provided, the loaded DataFrame will be</span>
+<span class="sd">    saved as a CSV file to the specified local path on the user&#39;s computer.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        data_type (str): The type of data to load. Valid options are:</span>
 <span class="sd">            - &#39;bank&#39;: Loads the sample bank statement from</span>
@@ -442,6 +445,10 @@
 <span class="sd">                             Example Credit Card Statement.csv&#39;.</span>
 <span class="sd">            - &#39;rules&#39;: Loads the default categorisation rules from</span>
 <span class="sd">                       &#39;scgFinance.data.metadata/rules.csv&#39;.</span>
+<span class="sd">        save_path (str, optional): The local file path where the loaded</span>
+<span class="sd">                                   DataFrame should be saved as a CSV.</span>
+<span class="sd">                                   If None (default), no save operation</span>
+<span class="sd">                                   is performed.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        pd.DataFrame: A DataFrame containing the loaded data from the specified</span>
@@ -453,12 +460,15 @@
 <span class="sd">        FileNotFoundError: If the bundled file is missing (though this should</span>
 <span class="sd">                           not occur in a properly packaged module).</span>
 <span class="sd">        pandas.errors: If there are issues parsing the CSV file.</span>
+<span class="sd">        OSError: If there are issues saving to the provided save_path (e.g.,</span>
+<span class="sd">                 invalid directory or permissions issues).</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; bank_df = load_package_data(&#39;bank&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; bank_df = load_package_data(&#39;bank&#39;,</span>
+<span class="sd">        ... save_path=&#39;~/Desktop/bank_data.csv&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; print(bank_df.columns)</span>
 <span class="sd">        Index([&#39;Date&#39;, &#39;Description&#39;, &#39;Amount&#39;], dtype=&#39;object&#39;)</span>
-<span class="sd">        # Example columns</span>
+<span class="sd">        # Example columns; data is also saved to &#39;~/Desktop/bank_data.csv&#39;</span>
 
 <span class="sd">        &gt;&gt;&gt; rules_df = load_package_data(&#39;rules&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; print(rules_df.head())</span>
@@ -487,7 +497,12 @@
             <span class="sa">f</span><span class="s2">&quot;Options: &#39;bank&#39;, &#39;credit_card&#39;, &#39;rules&#39;.&quot;</span>
         <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span></div>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">save_path</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
 
 
 

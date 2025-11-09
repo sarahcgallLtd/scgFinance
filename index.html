@@ -418,32 +418,14 @@ it easier to monitor budgets and identify trends.</p>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">scgFinance</span></code> requires Python 3.12 or later. You can install the stable version from PyPI (if available) or the development version directly from GitHub.</p>
-<section id="stable-version-from-pypi">
-<h3>Stable Version (from PyPI)<a class="headerlink" href="#stable-version-from-pypi" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">scgFinance</span></code> requires Python 3.12 or later. You can install from PyPI.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>scgFinance
 </pre></div>
 </div>
 </section>
-<section id="development-version-from-github">
-<h3>Development Version (from GitHub)<a class="headerlink" href="#development-version-from-github" title="Link to this heading">#</a></h3>
-<p>To install the latest development version, use pip to install directly from the repository:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/sarahcgallLtd/scgFinance.git@main
-</pre></div>
-</div>
-<p>Alternatively, clone the repository and install locally:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/sarahcgallLtd/scgFinance.git
-<span class="nb">cd</span><span class="w"> </span>scgFinance
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</pre></div>
-</div>
-</section>
-</section>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
 <p>Get started quickly with a template and the processing pipeline.</p>
-<section id="downloading-project-structure">
-<h3>Downloading Project Structure<a class="headerlink" href="#downloading-project-structure" title="Link to this heading">#</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">scgFinance</span></code> includes a utility function to set up a recommended project directory structure, complete with empty
 folders for your data, a default rules file for categorisation, and a template script to get started with processing.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">download_template</span></code> to initialise the structure:</p>
@@ -452,6 +434,9 @@ folders for your data, a default rules file for categorisation, and a template s
 <span class="c1"># Create the project structure in the specified root directory</span>
 <span class="n">download_template</span><span class="p">(</span><span class="s1">&#39;path/to/your/project_root&#39;</span><span class="p">,</span> <span class="n">rules_filename</span><span class="o">=</span><span class="s1">&#39;rules.csv&#39;</span><span class="p">)</span>  <span class="c1"># Optional: customise rules filename</span>
 </pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
 </div>
 <p>This will generate the following structure:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">your_project_root</span><span class="o">/</span>
@@ -468,6 +453,9 @@ folders for your data, a default rules file for categorisation, and a template s
 <span class="err">└──</span> <span class="n">categorise_statements</span><span class="o">.</span><span class="n">py</span> <span class="c1"># Template script for running the processing pipeline</span>
 </pre></div>
 </div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>After setup:</p>
 <ol class="arabic simple">
 <li><p>Download your statements from your financial institution (e.g., your bank) in a CSV format.</p></li>
@@ -475,10 +463,12 @@ folders for your data, a default rules file for categorisation, and a template s
 <li><p>Customise <code class="docutils literal notranslate"><span class="pre">metadata/rules.csv</span></code> if needed based on your financial statements and common transactions</p></li>
 <li><p>Modify/run <code class="docutils literal notranslate"><span class="pre">categorise_statements.py</span></code> to process your data.</p></li>
 </ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>For more details, see the <a class="reference internal" href="user_guide/index.html"><span class="doc">User Guide</span></a>.</p>
 <div class="toctree-wrapper compound">
 </div>
-</section>
 </section>
 </section>
 
@@ -521,15 +511,8 @@ folders for your data, a default rules file for categorisation, and a template s
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-features">Key Features</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stable-version-from-pypi">Stable Version (from PyPI)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-version-from-github">Development Version (from GitHub)</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quickstart">Quickstart</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#downloading-project-structure">Downloading Project Structure</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quickstart">Quickstart</a></li>
 </ul>
   </nav></div>
 
