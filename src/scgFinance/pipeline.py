@@ -1,5 +1,5 @@
-from src.scgFinance.importers import import_statements
-from src.scgFinance.categoriser import auto_categorise
+from .importers import import_statements
+from .categoriser import auto_categorise
 import pandas as pd
 import os
 from datetime import datetime
