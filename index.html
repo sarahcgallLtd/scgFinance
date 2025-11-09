@@ -425,14 +425,13 @@ it easier to monitor budgets and identify trends.</p>
 </section>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
-<p>Get started quickly with a template and the processing pipeline.</p>
 <p><code class="docutils literal notranslate"><span class="pre">scgFinance</span></code> includes a utility function to set up a recommended project directory structure, complete with empty
-folders for your data, a default rules file for categorisation, and a template script to get started with processing.</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">download_template</span></code> to initialise the structure:</p>
+folders for your data, a default rules file for categorisation, and a template script to get started with processing.
+Use <code class="docutils literal notranslate"><span class="pre">download_template</span></code> to initialise the structure:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scgFinance.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_template</span>
 
 <span class="c1"># Create the project structure in the specified root directory</span>
-<span class="n">download_template</span><span class="p">(</span><span class="s1">&#39;path/to/your/project_root&#39;</span><span class="p">,</span> <span class="n">rules_filename</span><span class="o">=</span><span class="s1">&#39;rules.csv&#39;</span><span class="p">)</span>  <span class="c1"># Optional: customise rules filename</span>
+<span class="n">download_template</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="line-block">

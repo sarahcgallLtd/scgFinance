@@ -16,7 +16,7 @@ Functions
 Module Contents
 ---------------
 
-.. py:function:: download_template(root_dir, rules_filename = 'rules.csv')
+.. py:function:: download_template(root_dir = '.', rules_filename = 'rules.csv')
 
    Saves a predefined project structure to the specified root directory,
    populating it with metadata and a template script from the package.
@@ -43,7 +43,8 @@ Module Contents
    directory. Users can customise it after the template is saved.
 
    :param root_dir: The path to the root directory where the structure
-                    will be saved.
+                    will be saved. Defaults to '.' (current working
+                    directory).
    :type root_dir: str
    :param rules_filename: The filename for the rules CSV in
                           metadata/. Defaults to "rules.csv"

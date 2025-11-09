@@ -449,7 +449,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#scgFinance.auto_categorise" title="scgFinance.auto_categorise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">auto_categorise</span></code></a>(df[, rules_file, overwrite, ...])</p></td>
 <td><p>Automatically categorises transactions in a DataFrame using rules,</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#scgFinance.download_template" title="scgFinance.download_template"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_template</span></code></a>(root_dir[, rules_filename])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#scgFinance.download_template" title="scgFinance.download_template"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_template</span></code></a>([root_dir, rules_filename])</p></td>
 <td><p>Saves a predefined project structure to the specified root directory,</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#scgFinance.import_statements" title="scgFinance.import_statements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_statements</span></code></a>(path[, source, date_col, ...])</p></td>
@@ -522,7 +522,7 @@ operations.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="scgFinance.download_template">
-<span class="sig-prename descclassname"><span class="pre">scgFinance.</span></span><span class="sig-name descname"><span class="pre">download_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rules.csv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scgFinance/utils.html#download_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.download_template" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">scgFinance.</span></span><span class="sig-name descname"><span class="pre">download_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rules.csv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scgFinance/utils.html#download_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.download_template" title="Link to this definition">#</a></dt>
 <dd><p>Saves a predefined project structure to the specified root directory,
 populating it with metadata and a template script from the package.</p>
 <p>This function creates the following directory structure:
@@ -552,7 +552,8 @@ directory. Users can customise it after the template is saved.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>root_dir</strong> (<em>str</em>) – The path to the root directory where the structure
-will be saved.</p></li>
+will be saved. Defaults to ‘.’ (current working
+directory).</p></li>
 <li><p><strong>rules_filename</strong> (<em>str</em><em>, </em><em>optional</em>) – The filename for the rules CSV in
 metadata/. Defaults to “rules.csv”
 to match the requested structure.</p></li>
