@@ -62,12 +62,8 @@ Installation
 Quickstart
 ----------
 
-Get started quickly with a template and the processing pipeline.
-
-
 ``scgFinance`` includes a utility function to set up a recommended project directory structure, complete with empty
 folders for your data, a default rules file for categorisation, and a template script to get started with processing.
-
 Use ``download_template`` to initialise the structure:
 
 .. code-block:: python
@@ -75,7 +71,7 @@ Use ``download_template`` to initialise the structure:
     from scgFinance.utils import download_template
 
     # Create the project structure in the specified root directory
-    download_template('path/to/your/project_root', rules_filename='rules.csv')  # Optional: customise rules filename
+    download_template()
 
 
 |

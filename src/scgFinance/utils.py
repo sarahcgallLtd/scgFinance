@@ -99,7 +99,7 @@ def load_package_data(data_type: str, save_path: str = None) -> pd.DataFrame:
 
 
 def download_template(
-    root_dir: str,
+    root_dir: str = '.',
     rules_filename: str = "rules.csv",
 ) -> None:
     """
@@ -129,7 +129,8 @@ def download_template(
 
     Args:
         root_dir (str): The path to the root directory where the structure
-                        will be saved.
+                        will be saved. Defaults to '.' (current working
+                        directory).
         rules_filename (str, optional): The filename for the rules CSV in
                                         metadata/. Defaults to "rules.csv"
                                         to match the requested structure.
