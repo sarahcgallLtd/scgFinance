@@ -649,9 +649,17 @@
         <span class="c1"># Skip training for very small data or single class</span>
         <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Return None if insufficient data</span>
 
-    <span class="c1"># Split data into train and test sets: 80/20 split, stratified by labels</span>
+    <span class="c1"># Determine if stratification is possible</span>
+    <span class="c1"># (all classes have at least 2 samples)</span>
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">stratify</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">stratify</span> <span class="o">=</span> <span class="n">y</span>
+
+    <span class="c1"># Split data into train and test sets: 80/20 split,</span>
+    <span class="c1"># with conditional stratification</span>
     <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">stratify</span>
     <span class="p">)</span>
 
     <span class="c1"># Create a pipeline: TF-IDF vectorizer + Logistic Regression</span>
