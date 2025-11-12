@@ -23,7 +23,6 @@ Module Contents
 
    This function creates the following directory structure:
    - root_dir/
-     - categorised/ (empty directory)
      - metadata/
        - rules.csv (or specified filename; default categorisation rules)
      - raw_data/
