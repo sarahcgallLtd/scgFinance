@@ -1,12 +1,11 @@
 import re
 import os
-import glob
 import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
-from sklearn.model_selection import train_test_split, StratifiedShuffleSplit
+from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import accuracy_score
 from importlib.resources import files
 
@@ -164,7 +163,7 @@ def _load_categorised(categorised_file="categorised.csv"):
             "source",
             "category",
             "subcategory",
-            "added_at"
+            "added_at",
         ]
         all_categorised = pd.DataFrame(columns=expected_columns)
 
@@ -214,9 +213,11 @@ def _train_model(X, y, model_type="category"):
     # Check if data is sufficient for training
     unique_labels = np.unique(y)
     class_counts = pd.Series(y).value_counts()
+
+    # Skip training for very small data or single class
     if len(X) < 5 or len(unique_labels) < 2:
-        # Skip training for very small data or single class
-        return None # Return None if insufficient data
+        # Return None if insufficient data
+        return None
 
     # Exclude classes with insufficient samples
     min_samples = 5
@@ -245,7 +246,9 @@ def _train_model(X, y, model_type="category"):
 
     # Cross-validation
     try:
-        cv = StratifiedShuffleSplit(n_splits=10, test_size=0.2, random_state=42)
+        cv = StratifiedShuffleSplit(
+            n_splits=10, test_size=0.2, random_state=42
+        )
         accuracies = []
         for train_idx, test_idx in cv.split(X, y):
             # Split data into train and test sets: 80/20 split
@@ -323,7 +326,7 @@ def _get_ml_model(labeled):
     if "category" in labeled.columns:
         cat_labeled = labeled[
             labeled["category"].notna() & labeled["category"].ne("")
-            ]
+        ]
 
         # If enough data (more than 2 rows):
         if len(cat_labeled) > 2:
@@ -339,7 +342,7 @@ def _get_ml_model(labeled):
     if "subcategory" in labeled.columns:
         sub_labeled = labeled[
             labeled["subcategory"].notna() & labeled["subcategory"].ne("")
-            ]
+        ]
 
         # If enough data (at least 10 rows):
         if len(sub_labeled) >= 10:
@@ -516,7 +519,7 @@ def _apply_rules_to_row(row, compiled_rules):
             for pat in patterns:
                 # Check for match (regex search or substring)
                 if (isinstance(pat, re.Pattern) and pat.search(desc)) or (
-                        isinstance(pat, str) and pat in desc
+                    isinstance(pat, str) and pat in desc
                 ):
                     # Return first matching category and subcategory
                     return category, subcategory
@@ -558,7 +561,7 @@ def _detect_conflicts(df):
     # Conflict if category changed from original;
     # Set True if changed
     df["conflict"] = (df["original_category"].notna()) & (
-            df["original_category"] != df["category"]
+        df["original_category"] != df["category"]
     )
 
     # Check for similar transactions with different categories (group by
@@ -582,12 +585,13 @@ def _detect_conflicts(df):
 
 def _save_categorised(df, categorised_file):
     """
-    Appends the categorised DataFrame to an existing CSV file or creates a new one,
-    adding a 'added_at' column with the current timestamp for new data.
+    Appends the categorised DataFrame to an existing CSV file or creates a new
+    one, adding a 'added_at' column with the current timestamp for new data.
 
-    This function adds the 'added_at' column to the input DataFrame, loads the existing
-    file if it exists, concatenates the new data, and saves the combined DataFrame back
-    to the file. It prints the save path and a reminder to review flagged rows.
+    This function adds the 'added_at' column to the input DataFrame, loads the
+    existing file if it exists, concatenates the new data, and saves the
+    combined DataFrame back to the file. It prints the save path and a reminder
+    to review flagged rows.
 
     Args:
         df (pd.DataFrame): The DataFrame to append.
@@ -635,10 +639,7 @@ def _save_categorised(df, categorised_file):
 
 
 def auto_categorise(
-        df,
-        rules_file=None,
-        categorised_file="categorised.csv",
-        add_col=None
+    df, rules_file=None, categorised_file="categorised.csv", add_col=None
 ):
     """
     Automatically categorises transactions in a DataFrame using rules,
@@ -664,7 +665,8 @@ def auto_categorise(
 
     Returns:
         pd.DataFrame: The updated DataFrame with 'category', 'subcategory',
-                      'review', 'added_at', and any additional columns added/filled.
+                      'review', 'added_at', and any additional columns
+                      added/filled.
 
     Raises:
         ValueError: Propagated from load_rules_file() if rules CSV is invalid.
@@ -714,7 +716,7 @@ def auto_categorise(
             all_categorised[
                 all_categorised["category"].notna()
                 & all_categorised["category"].ne("")
-                ],
+            ],
             df[df["category"].notna() & df["category"].ne("")],
         ],
         ignore_index=True,
@@ -737,9 +739,7 @@ def auto_categorise(
 
         # Get, and apply, rules
         df[["category", "subcategory"]] = df.apply(
-            lambda row: pd.Series(
-                _apply_rules_to_row(row, compiled_rules)
-            ),
+            lambda row: pd.Series(_apply_rules_to_row(row, compiled_rules)),
             axis=1,
         )
 
@@ -751,9 +751,7 @@ def auto_categorise(
 
         # First apply rules
         df[["category", "subcategory"]] = df.apply(
-            lambda row: pd.Series(
-                _apply_rules_to_row(row, compiled_rules)
-            ),
+            lambda row: pd.Series(_apply_rules_to_row(row, compiled_rules)),
             axis=1,
         )
 

@@ -11,10 +11,10 @@ from datetime import datetime
 
 
 def _update_metadata(
-        imported_files,
-        source,
-        metadata_file="metadata/processed_files.csv",
-        status="processed",
+    imported_files,
+    source,
+    metadata_file="metadata/processed_files.csv",
+    status="processed",
 ):
     """
     Updates the metadata CSV file with the processing status and timestamp for
@@ -65,7 +65,7 @@ def _update_metadata(
     # Load existing metadata or create new if it doesn't exist
     for file_name in imported_files:
         mask = (meta_df["file_name"] == file_name) & (
-                meta_df["source"] == source
+            meta_df["source"] == source
         )
         if mask.any():
             meta_df.loc[mask, "status"] = status
@@ -95,11 +95,11 @@ def _update_metadata(
 
 
 def process_statements(
-        sources,
-        metadata_file="metadata/processed_files.csv",
-        categorised_file="categorised/",
-        add_col=None,
-        rules_file=None
+    sources,
+    metadata_file="metadata/processed_files.csv",
+    categorised_file="categorised/",
+    add_col=None,
+    rules_file=None,
 ):
     """
     Orchestrates the full financial statement processing pipeline: importing,
