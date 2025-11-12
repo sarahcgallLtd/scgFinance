@@ -1,12 +1,13 @@
 import pytest
 import pandas as pd
-import os
+from unittest.mock import patch
 import re
 from io import StringIO
 from datetime import datetime, timedelta
 from src.scgFinance.categoriser import (
     _load_rules_file,
     _load_categorised,
+    _train_model,
     _get_ml_model,
     _apply_ml,
     _compile_rules,
@@ -62,6 +63,18 @@ def empty_rules_file(tmp_path):
 def bad_rules_file(tmp_path):
     p = tmp_path / "bad_rules.csv"
     p.write_text("category,subcategory\n")
+    return str(p)
+
+@pytest.fixture
+def rules_file_with_empty_pattern(tmp_path):
+    p = tmp_path / "rules_with_empty.csv"
+    content = '''category,subcategory,pattern
+Food/Dining,Groceries,TESCO
+Food/Dining,Restaurants/Bars,
+Transportation,Public Transport,""
+Transportation,Rideshare,UBER TRIP
+'''
+    p.write_text(content)
     return str(p)
 
 @pytest.fixture
@@ -124,6 +137,23 @@ def unbalanced_labeled():
     unbalanced = pd.concat([dominant, rare], ignore_index=True)
     return unbalanced
 
+@pytest.fixture
+def full_ml_bad_data_file(tmp_path):
+    sample_csv = StringIO(SAMPLE_CATEGORISED_CSV)
+    hist_df = pd.read_csv(sample_csv)  # 10 unique rows
+    hist_df['description'] = 'IDENTICAL TRANSACTION'  # Set all to same for low acc
+    base_date = datetime(2025, 10, 1)
+    dfs = []
+    for i in range(7200):  # 7200 * 10 = 72000 rows
+        df_copy = hist_df.copy()
+        df_copy['date'] = [(base_date + timedelta(days=i * len(hist_df) + j)).strftime('%Y-%m-%d') for j in range(len(hist_df))]
+        dfs.append(df_copy)
+    repeated_df = pd.concat(dfs, ignore_index=True)
+    p = tmp_path / "full_ml_bad.csv"
+    repeated_df.to_csv(p, index=False)
+    return str(p)
+
+
 # TEST FOR LOAD_RULES_FILES() ==========================================================================================
 def test_load_rules_file(sample_rules_file):
     rules = _load_rules_file(sample_rules_file)
@@ -133,6 +163,15 @@ def test_load_rules_file(sample_rules_file):
     assert 'Transportation' in rules
     assert 'Public Transport' in rules['Transportation']
     assert 'TRAINLINE.COM' in rules['Transportation']['Public Transport']
+
+def test_load_rules_file_default_file():
+    rules = _load_rules_file(None)
+    assert 'Food/Dining' in rules
+    assert 'Groceries' in rules['Food/Dining']
+    assert 'TESCO' in rules['Food/Dining']['Groceries']
+    assert 'Transportation' in rules
+    assert 'Public Transport' in rules['Transportation']
+    assert 'TRAINLINE' in rules['Transportation']['Public Transport']
 
 def test_load_rules_file_empty(empty_rules_file):
     with pytest.raises(ValueError, match="Rules CSV is empty."):
@@ -147,14 +186,19 @@ def test_load_rules_file_no_file(tmp_path):
     with pytest.raises(FileNotFoundError):
         _load_rules_file(no_file)
 
-def test_load_rules_file_default_file():
-    rules = _load_rules_file(None)
+def test_load_rules_file_with_empty_patterns(rules_file_with_empty_pattern):
+    rules = _load_rules_file(rules_file_with_empty_pattern)
+    # Check non-empty patterns are loaded
     assert 'Food/Dining' in rules
     assert 'Groceries' in rules['Food/Dining']
     assert 'TESCO' in rules['Food/Dining']['Groceries']
+    assert 'Restaurants/Bars' in rules['Food/Dining']
+    assert rules['Food/Dining']['Restaurants/Bars'] == ['']
     assert 'Transportation' in rules
     assert 'Public Transport' in rules['Transportation']
-    assert 'TRAINLINE' in rules['Transportation']['Public Transport']
+    assert rules['Transportation']['Public Transport'] == ['']
+    assert 'Rideshare' in rules['Transportation']
+    assert 'UBER TRIP' in rules['Transportation']['Rideshare']
 
 
 # TEST FOR LOAD_CATEGORISED() ==========================================================================================
@@ -182,6 +226,34 @@ def test_load_categorised_non_existent(no_categorised_file):
 
 
 # TEST FOR COMPILE_RULES() =============================================================================================
+def test_train_model_returns_none_when_mean_acc_below_threshold():
+    # Data with identical descriptions but different labels: model can't distinguish, low acc
+    X = pd.Series(['identical transaction'] * 20)
+    y = pd.Series(['CategoryA'] * 10 + ['CategoryB'] * 10)
+    model = _train_model(X, y, model_type='category')
+    assert model is None  # Returns None due to mean_acc < 0.8
+
+
+@patch('sklearn.model_selection.StratifiedShuffleSplit.split')
+def test_train_model_returns_none_on_value_error(mock_split, capsys):
+    # Good data that would normally train successfully
+    X = pd.Series(['food purchase'] * 10 + ['transport fare'] * 10)
+    y = pd.Series(['Food'] * 10 + ['Transport'] * 10)
+
+    # Mock split to raise ValueError
+    mock_split.side_effect = ValueError("Simulated CV split error")
+
+    model = _train_model(X, y, model_type='category')
+
+    # Check printed error
+    captured = capsys.readouterr()
+    assert "Error in CV split for category: Simulated CV split error" in captured.out
+
+    assert model is None  # Returns None due to exception
+
+
+
+# TEST FOR COMPILE_RULES() =============================================================================================
 def test_compile_rules():
     rules = {
         'Category1': {'Sub1': ['keyword', 'rregex pattern']},
@@ -190,6 +262,7 @@ def test_compile_rules():
     assert compiled['Category1']['Sub1'][0] == 'keyword'
     assert isinstance(compiled['Category1']['Sub1'][1], re.Pattern)
     assert compiled['Category1']['Sub1'][1].search('Regex Pattern') is not None  # Case insensitive
+
 
 # TEST FOR APPLY_RULES_TO_ROW() ========================================================================================
 def test_apply_rules_to_row():
@@ -202,6 +275,40 @@ def test_apply_rules_to_row():
     cat, sub = _apply_rules_to_row(row, compiled)
     assert cat == 'Transportation'
     assert sub == 'Rideshare'
+
+def test_apply_rules_to_row_preserves_existing_category():
+    # Compiled rules that would match the description to a different category
+    compiled_rules = {
+        'Transportation': {
+            'Rideshare': ['uber']  # String pattern (lowercase)
+        }
+    }
+    # Row with existing category (non-NaN), and description that would match rules
+    row = pd.Series({
+        'description': 'UBER TRIP',
+        'category': 'Food/Dining',  # Existing, different from rule match
+        'subcategory': 'Takeaway'   # Existing subcategory
+    })
+    cat, sub = _apply_rules_to_row(row, compiled_rules)
+    assert cat == 'Food/Dining'  # Preserves existing category
+    assert sub == 'Takeaway'     # Preserves existing subcategory
+
+def test_apply_rules_to_row_preserves_existing_category_no_subcategory():
+    # Compiled rules that would match
+    compiled_rules = {
+        'Transportation': {
+            'Rideshare': ['uber']
+        }
+    }
+    # Row with existing category, but no subcategory
+    row = pd.Series({
+        'description': 'UBER TRIP',
+        'category': 'Food/Dining',
+        # No 'subcategory' key
+    })
+    cat, sub = _apply_rules_to_row(row, compiled_rules)
+    assert cat == 'Food/Dining'  # Preserves existing
+    assert sub is None           # Returns None if no subcategory
 
 
 # TEST FOR DETECT_CONFLICTS() ==========================================================================================
@@ -314,11 +421,12 @@ def test_save_categorised_append(sample_categorised_file):
 def test_auto_categorise_rules_method(sample_rules_file, tmp_path):
     cat_file = str(tmp_path / "auto_test.csv")
     df_test = SAMPLE_DF.copy()
-    df_out = auto_categorise(df_test, rules_file=sample_rules_file, categorised_file=cat_file)
+    df_out = auto_categorise(df_test, rules_file=sample_rules_file, categorised_file=cat_file, add_col='to_reimburse')
     assert 'category' in df_out.columns
     assert 'subcategory' in df_out.columns
     assert 'review' in df_out.columns
     assert 'added_at' in df_out.columns
+    assert 'to_reimburse' in df_out.columns
     # Check a few
     assert df_out[df_out['description'] == 'TRAINLINE.COM LONDON']['category'].values[0] == 'Transportation'
     assert df_out[df_out['description'] == 'TRAINLINE.COM LONDON']['subcategory'].values[0] == 'Public Transport'
@@ -337,7 +445,8 @@ def test_auto_categorise_hybrid_method(sample_rules_file, hybrid_categorised_fil
     df_out = auto_categorise(
         df_test,
         rules_file=sample_rules_file,
-        categorised_file=hybrid_categorised_file
+        categorised_file=hybrid_categorised_file,
+        add_col=['to_reimburse', 'reimbursement_date'],
     )
     captured = capsys.readouterr()
     assert "Limited labeled data; using ML + rules hybrid." in captured.out
@@ -346,9 +455,11 @@ def test_auto_categorise_hybrid_method(sample_rules_file, hybrid_categorised_fil
     assert 'subcategory' in df_out.columns
     assert 'review' in df_out.columns
     assert 'added_at' in df_out.columns
+    assert 'to_reimburse' in df_out.columns
+    assert 'reimbursement_date' in df_out.columns
     assert df_out['review'].isna().all()  # All should be categorised in hybrid with ML + rules
 
-    # Check specific categorizations
+    # Check specific categorisations
     # TRAINLINE: Rules match, overrides if different but consistent here
     assert df_out[df_out['description'] == 'TRAINLINE.COM LONDON']['category'].values[0] == 'Transportation'
     assert df_out[df_out['description'] == 'TRAINLINE.COM LONDON']['subcategory'].values[0] == 'Public Transport'
@@ -416,3 +527,34 @@ def test_auto_categorise_full_ml_method(sample_rules_file, full_ml_categorised_f
     # Check saved file appended
     saved_df = pd.read_csv(full_ml_categorised_file)
     assert len(saved_df) == 72000 + 5  # Original + new 5 (no dedup)
+
+
+def test_auto_categorise_full_ml_fallback_to_rules(sample_rules_file, full_ml_bad_data_file, capsys):
+    df_test = SAMPLE_DF.copy()
+    df_out = auto_categorise(
+        df_test,
+        rules_file=sample_rules_file,
+        categorised_file=full_ml_bad_data_file
+    )
+    captured = capsys.readouterr()
+    assert "Sufficient labeled data; using full ML." in captured.out
+    assert "ML model unavailable; falling back to rules." in captured.out
+    # Check categorizations from rules only (ML failed)
+    # TRAINLINE: rules match
+    assert df_out[df_out['description'] == 'TRAINLINE.COM LONDON']['category'].values[0] == 'Transportation'
+    assert df_out[df_out['description'] == 'TRAINLINE.COM LONDON']['subcategory'].values[0] == 'Public Transport'
+    # DELIVEROO: no rule, remains uncategorised
+    assert pd.isna(df_out[df_out['description'] == 'DELIVEROO LONDON']['category'].values[0])
+    assert df_out[df_out['description'] == 'DELIVEROO LONDON']['review'].values[0] == 'uncategorised'
+    # B&Q: rules match
+    assert df_out[df_out['description'] == 'B&Q CHELMSFORD']['category'].values[0] == 'Home'
+    assert df_out[df_out['description'] == 'B&Q CHELMSFORD']['subcategory'].values[0] == 'Maintenance'
+    # UBER: rules match
+    assert df_out[df_out['description'] == 'UBER TRIP HTTPS://HELP.UB']['category'].values[0] == 'Transportation'
+    assert df_out[df_out['description'] == 'UBER TRIP HTTPS://HELP.UB']['subcategory'].values[0] == 'Rideshare'
+    # BOLT: rules match
+    assert df_out[df_out['description'] == 'BOLT LONDON']['category'].values[0] == 'Transportation'
+    assert df_out[df_out['description'] == 'BOLT LONDON']['subcategory'].values[0] == 'Rideshare'
+    # Check saved file appended
+    saved_df = pd.read_csv(full_ml_bad_data_file)
+    assert len(saved_df) == 72000 + 5  # Original + new 5

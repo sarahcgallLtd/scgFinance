@@ -82,19 +82,18 @@ def _load_rules_file(rules_file):
     # Iterate over each row in the DataFrame
     # ======================================
     for _, row in rules_df.iterrows():
-        # Extract and strip whitespace from category
-        category = row["category"].strip()
+        # Skip rows with NaN in category or subcategory
+        if pd.isna(row["category"]) or pd.isna(row["subcategory"]):
+            continue
 
-        # Extract and strip whitespace from subcategory
+        # Extract and strip whitespace from sub&category
+        category = row["category"].strip()
         subcategory = row["subcategory"].strip()
 
-        # Extract pattern, strip whitespace and quotes
-        pattern_str = row["pattern"].strip().strip('"').strip("'")
-
-        # Skip if no valid pattern after parsing,
-        # then continue to next row if pattern is empty
-        if not pattern_str:
-            continue
+        # Handle pattern: default to empty if NaN, then strip
+        pattern_str = ""
+        if not pd.isna(row["pattern"]):
+            pattern_str = str(row["pattern"]).strip().strip('"').strip("'")
 
         # If category not yet in rules, add it, and
         # initialise subcategory dict for this category
@@ -227,12 +226,6 @@ def _train_model(X, y, model_type="category"):
         return None
     X = X[keep_mask]
     y = y[keep_mask]
-
-    # Update unique and counts
-    unique_labels = np.unique(y)
-    class_counts = pd.Series(y).value_counts()
-    if min(class_counts) < 2:
-        return None
 
     # Create a pipeline: TF-IDF vectorizer + Logistic Regression
     model = Pipeline(
