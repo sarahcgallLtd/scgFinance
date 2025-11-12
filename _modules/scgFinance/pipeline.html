@@ -421,10 +421,10 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_update_metadata</span><span class="p">(</span>
-        <span class="n">imported_files</span><span class="p">,</span>
-        <span class="n">source</span><span class="p">,</span>
-        <span class="n">metadata_file</span><span class="o">=</span><span class="s2">&quot;metadata/processed_files.csv&quot;</span><span class="p">,</span>
-        <span class="n">status</span><span class="o">=</span><span class="s2">&quot;processed&quot;</span><span class="p">,</span>
+    <span class="n">imported_files</span><span class="p">,</span>
+    <span class="n">source</span><span class="p">,</span>
+    <span class="n">metadata_file</span><span class="o">=</span><span class="s2">&quot;metadata/processed_files.csv&quot;</span><span class="p">,</span>
+    <span class="n">status</span><span class="o">=</span><span class="s2">&quot;processed&quot;</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Updates the metadata CSV file with the processing status and timestamp for</span>
@@ -475,7 +475,7 @@
     <span class="c1"># Load existing metadata or create new if it doesn&#39;t exist</span>
     <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">imported_files</span><span class="p">:</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">meta_df</span><span class="p">[</span><span class="s2">&quot;file_name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">file_name</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span>
-                <span class="n">meta_df</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">source</span>
+            <span class="n">meta_df</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">source</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
             <span class="n">meta_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">status</span>
@@ -507,11 +507,11 @@
 <div class="viewcode-block" id="process_statements">
 <a class="viewcode-back" href="../../api/scgFinance/pipeline/index.html#scgFinance.process_statements">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">process_statements</span><span class="p">(</span>
-        <span class="n">sources</span><span class="p">,</span>
-        <span class="n">metadata_file</span><span class="o">=</span><span class="s2">&quot;metadata/processed_files.csv&quot;</span><span class="p">,</span>
-        <span class="n">categorised_file</span><span class="o">=</span><span class="s2">&quot;categorised/&quot;</span><span class="p">,</span>
-        <span class="n">add_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">rules_file</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">sources</span><span class="p">,</span>
+    <span class="n">metadata_file</span><span class="o">=</span><span class="s2">&quot;metadata/processed_files.csv&quot;</span><span class="p">,</span>
+    <span class="n">categorised_file</span><span class="o">=</span><span class="s2">&quot;categorised/&quot;</span><span class="p">,</span>
+    <span class="n">add_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">rules_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Orchestrates the full financial statement processing pipeline: importing,</span>

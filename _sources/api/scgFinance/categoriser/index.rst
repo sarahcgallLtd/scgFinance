@@ -44,7 +44,8 @@ Module Contents
    :returns:
 
              The updated DataFrame with 'category', 'subcategory',
-                           'review', 'added_at', and any additional columns added/filled.
+                           'review', 'added_at', and any additional columns
+                           added/filled.
    :rtype: pd.DataFrame
 
    :raises ValueError: Propagated from load_rules_file() if rules CSV is invalid.
