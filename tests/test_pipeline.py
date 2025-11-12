@@ -81,10 +81,9 @@ Shopping,Online,AMAZON
 
 # Fixture for categorised directory (empty for tests)
 @pytest.fixture
-def sample_categorised_dir(temp_dir):
-    cat_dir = temp_dir / "categorised"
-    os.makedirs(cat_dir, exist_ok=True)
-    return str(cat_dir)
+def sample_categorised_file(temp_dir):
+    cat_file = temp_dir / "categorised.csv"
+    return str(cat_file)
 
 
 # TESTS FOR UPDATE_METADATA() =========================================================================================
@@ -140,7 +139,7 @@ def test_update_metadata_new_file(temp_dir):
 
 # TESTS FOR PROCESS_STATEMENTS() ======================================================================================
 def test_process_statements_multiple_sources(sample_bank_dir, sample_cc_dir, sample_metadata, sample_rules_file,
-                                             sample_categorised_dir):
+                                             sample_categorised_file):
     sources = [
         {'path': sample_bank_dir, 'source': 'bank', 'date_col': 'Date', 'date_format': '%d/%m/%Y',
          'desc_col': 'Description', 'amt_col': 'Amount'},
@@ -150,9 +149,8 @@ def test_process_statements_multiple_sources(sample_bank_dir, sample_cc_dir, sam
     categorised_df = process_statements(
         sources,
         metadata_file=sample_metadata,
-        categorised_dir=sample_categorised_dir,
-        rules_file=sample_rules_file,
-        overwrite=False
+        categorised_file=sample_categorised_file,
+        rules_file=sample_rules_file
     )
 
     assert not categorised_df.empty
@@ -160,6 +158,7 @@ def test_process_statements_multiple_sources(sample_bank_dir, sample_cc_dir, sam
     assert 'category' in categorised_df.columns
     assert 'subcategory' in categorised_df.columns
     assert 'review' in categorised_df.columns
+    assert 'added_at' in categorised_df.columns
 
     # Check categorisation (based on sample rules)
     tesco_row = categorised_df[categorised_df['description'] == 'TESCO']
@@ -172,13 +171,18 @@ def test_process_statements_multiple_sources(sample_bank_dir, sample_cc_dir, sam
     assert 'new_bank1.csv' in meta_df['file_name'].values
     assert meta_df[meta_df['file_name'] == 'new_bank1.csv']['status'].values[0] == 'processed'
 
-    # Check categorised saved (at least one file in categorised_dir)
-    cat_files = os.listdir(sample_categorised_dir)
-    assert len(cat_files) > 0
+    # Check categorised saved
+    assert os.path.exists(sample_categorised_file)
+    saved_df = pd.read_csv(sample_categorised_file)
+    assert len(saved_df) == 3
+    assert 'added_at' in saved_df.columns
+    assert saved_df['added_at'].nunique() == 1  # Same run
+    process_date = datetime.strptime(saved_df['added_at'].iloc[0], '%Y-%m-%d %H:%M:%S')
+    assert (datetime.now() - process_date).total_seconds() < 60
 
 
 def test_process_statements_no_new_transactions(sample_bank_dir, sample_metadata, sample_rules_file,
-                                                sample_categorised_dir):
+                                                sample_categorised_file):
     # Mark the files as processed in metadata
     meta_df = pd.read_csv(sample_metadata)
     new_rows = pd.DataFrame({
@@ -197,44 +201,13 @@ def test_process_statements_no_new_transactions(sample_bank_dir, sample_metadata
     categorised_df = process_statements(
         sources,
         metadata_file=sample_metadata,
-        categorised_dir=sample_categorised_dir,
+        categorised_file=sample_categorised_file,
         rules_file=sample_rules_file
     )
 
     assert categorised_df.empty
-
-
-def test_process_statements_overwrite(sample_bank_dir, sample_metadata, sample_rules_file, sample_categorised_dir):
-    sources = [
-        {'path': sample_bank_dir, 'source': 'bank', 'date_col': 'Date', 'date_format': '%d/%m/%Y',
-         'desc_col': 'Description', 'amt_col': 'Amount'}
-    ]
-    # First run without overwrite
-    process_statements(sources, metadata_file=sample_metadata, categorised_dir=sample_categorised_dir,
-                       rules_file=sample_rules_file, overwrite=False)
-
-    # Modify a categorised file to have pre-existing category (simulate overwrite need)
-    cat_files = os.listdir(sample_categorised_dir)
-    if cat_files:
-        cat_path = os.path.join(sample_categorised_dir, cat_files[0])
-        cat_df = pd.read_csv(cat_path)
-        cat_df['category'] = 'OldCategory'  # Set existing category
-        cat_df.to_csv(cat_path, index=False)
-
-    # Re-run with overwrite=True (but since files processed, need to reset metadata for re-import)
-    meta_df = pd.read_csv(sample_metadata)
-    meta_df = meta_df[~meta_df['file_name'].str.contains('new_bank')]  # Remove to allow re-import
-    meta_df.to_csv(sample_metadata, index=False)
-
-    categorised_df = process_statements(
-        sources,
-        metadata_file=sample_metadata,
-        categorised_dir=sample_categorised_dir,
-        rules_file=sample_rules_file,
-        overwrite=True
-    )
-    # Check if categories overwritten (based on rules, should be Food/Dining, not OldCategory)
-    assert 'OldCategory' not in categorised_df['category'].values
+    # No file created since no new transactions
+    assert not os.path.exists(sample_categorised_file)
 
 
 def test_process_statements_missing_source():

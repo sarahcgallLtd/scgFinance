@@ -26,17 +26,17 @@ Transportation,Rideshare,BOLT
 Home,Maintenance,B&Q
 '''
 
-SAMPLE_CATEGORISED_CSV = '''date,description,amount,category,subcategory
-2025-10-01,TRAINLINE.COM LONDON,22.89,Transportation,Public Transport
-2025-10-07,DELIVEROO LONDON,19.37,Food/Dining,Takeaway/Delivery
-2025-10-08,B&Q CHELMSFORD,5.0,Home,Maintenance
-2025-10-09,UBER TRIP HTTPS://HELP.UB,7.54,Transportation,Rideshare
-2025-10-10,BOLT LONDON,39.93,Transportation,Rideshare
-2025-10-11,TESCO,15.25,Food/Dining,Groceries
-2025-10-12,MCDONALDS,8.99,Food/Dining,Restaurants/Bars
-2025-10-13,MCDONALDS,8.99,Food/Dining,Restaurants/Bars
-2025-10-15,DELIVEROO LONDON,19.37,Food/Dining,Takeaway/Delivery
-2025-10-20,TRAINLINE.COM LONDON,22.89,Transportation,Public Transport
+SAMPLE_CATEGORISED_CSV = '''date,description,amount,category,subcategory,added_at
+2025-10-01,TRAINLINE.COM LONDON,22.89,Transportation,Public Transport,2025-01-01 00:00:00
+2025-10-07,DELIVEROO LONDON,19.37,Food/Dining,Takeaway/Delivery,2025-01-01 00:00:00
+2025-10-08,B&Q CHELMSFORD,5.0,Home,Maintenance,2025-01-01 00:00:00
+2025-10-09,UBER TRIP HTTPS://HELP.UB,7.54,Transportation,Rideshare,2025-01-01 00:00:00
+2025-10-10,BOLT LONDON,39.93,Transportation,Rideshare,2025-01-01 00:00:00
+2025-10-11,TESCO,15.25,Food/Dining,Groceries,2025-01-01 00:00:00
+2025-10-12,MCDONALDS,8.99,Food/Dining,Restaurants/Bars,2025-01-01 00:00:00
+2025-10-13,MCDONALDS,8.99,Food/Dining,Restaurants/Bars,2025-01-01 00:00:00
+2025-10-15,DELIVEROO LONDON,19.37,Food/Dining,Takeaway/Delivery,2025-01-01 00:00:00
+2025-10-20,TRAINLINE.COM LONDON,22.89,Transportation,Public Transport,2025-01-01 00:00:00
 '''
 
 SAMPLE_DF_DATA = {
@@ -65,27 +65,22 @@ def bad_rules_file(tmp_path):
     return str(p)
 
 @pytest.fixture
-def sample_categorised_dir(tmp_path):
-    d = tmp_path / "categorised"
-    d.mkdir()
-    p = d / "test.csv"
+def sample_categorised_file(tmp_path):
+    p = tmp_path / "categorised.csv"
     p.write_text(SAMPLE_CATEGORISED_CSV)
-    return str(d)
+    return str(p)
 
 @pytest.fixture
-def empty_categorised_dir(tmp_path):
-    d = tmp_path / "empty_categorised"
-    d.mkdir()
-    return str(d)
+def empty_categorised_file(tmp_path):
+    p = tmp_path / "empty_categorised.csv"
+    return str(p)
 
 @pytest.fixture
-def no_categorised_dir(tmp_path):
-    return str(tmp_path / "non_existent_dir")
+def no_categorised_file(tmp_path):
+    return str(tmp_path / "non_existent.csv")
 
 @pytest.fixture
-def hybrid_categorised_dir(tmp_path):
-    d = tmp_path / "hybrid_categorised"
-    d.mkdir()
+def hybrid_categorised_file(tmp_path):
     sample_csv = StringIO(SAMPLE_CATEGORISED_CSV)
     hist_df = pd.read_csv(sample_csv)  # Now 7 unique rows
     base_date = datetime(2025, 10, 1)
@@ -95,40 +90,38 @@ def hybrid_categorised_dir(tmp_path):
         df_copy['date'] = [(base_date + timedelta(days=i * len(hist_df) + j)).strftime('%Y-%m-%d') for j in range(len(hist_df))]
         dfs.append(df_copy)
     repeated_df = pd.concat(dfs, ignore_index=True)
-    p = d / "hybrid.csv"
+    p = tmp_path / "hybrid.csv"
     repeated_df.to_csv(p, index=False)
-    return str(d)
+    return str(p)
 
 @pytest.fixture
-def full_ml_categorised_dir(tmp_path):
-    d = tmp_path / "full_ml_categorised"
-    d.mkdir()
+def full_ml_categorised_file(tmp_path):
     sample_csv = StringIO(SAMPLE_CATEGORISED_CSV)
     hist_df = pd.read_csv(sample_csv)  # 10 unique rows
     base_date = datetime(2025, 10, 1)
     dfs = []
-    for i in range(72):  # 72 * 10 ≈ 720 rows, all unique dates
+    for i in range(7200):  # 7200 * 10 ≈ 72000 rows, all unique dates
         df_copy = hist_df.copy()
         df_copy['date'] = [(base_date + timedelta(days=i * len(hist_df) + j)).strftime('%Y-%m-%d') for j in range(len(hist_df))]
         dfs.append(df_copy)
     repeated_df = pd.concat(dfs, ignore_index=True)
-    p = d / "full_ml.csv"
+    p = tmp_path / "full_ml.csv"
     repeated_df.to_csv(p, index=False)
-    return str(d)
+    return str(p)
 
 @pytest.fixture
 def unbalanced_labeled():
-    balanced = pd.DataFrame({
-        'description': ['TESCO STORE', 'MCDONALDS', 'TRAINLINE.COM', 'UBER TRIP', 'BOLT'] * 10,
-        'category': ['Food/Dining', 'Food/Dining', 'Transportation', 'Transportation', 'Transportation'] * 10,
-        'subcategory': ['Groceries', 'Restaurants/Bars', 'Public Transport', 'Rideshare', 'Rideshare'] * 10
+    dominant = pd.DataFrame({
+        'description': ['TESCO STORE'] * 50,
+        'category': ['Food/Dining'] * 50,
+        'subcategory': ['Groceries'] * 50
     })
-    new_row = pd.DataFrame({
-        'description': ['NEW UNIQUE'],
-        'category': ['NewCat'],
-        'subcategory': ['NewSub']
+    rare = pd.DataFrame({
+        'description': ['UNIQUE1', 'UNIQUE2', 'UNIQUE3'],
+        'category': ['Transportation', 'Home', 'Utilities'],
+        'subcategory': ['Rideshare', 'Maintenance', 'Electricity']
     })
-    unbalanced = pd.concat([balanced, new_row], ignore_index=True)
+    unbalanced = pd.concat([dominant, rare], ignore_index=True)
     return unbalanced
 
 # TEST FOR LOAD_RULES_FILES() ==========================================================================================
@@ -165,21 +158,27 @@ def test_load_rules_file_default_file():
 
 
 # TEST FOR LOAD_CATEGORISED() ==========================================================================================
-def test_load_categorised(sample_categorised_dir):
-    categorised = _load_categorised(sample_categorised_dir)
+def test_load_categorised(sample_categorised_file):
+    categorised = _load_categorised(sample_categorised_file)
+    assert isinstance(categorised, pd.DataFrame)
+    assert not categorised.empty
     assert len(categorised) == 10
-    assert list(categorised.columns) == ['date', 'description', 'amount', 'category', 'subcategory']
+    assert list(categorised.columns) == ['date', 'description', 'amount', 'category', 'subcategory', "added_at"]
     assert categorised.iloc[0]['description'] == 'TRAINLINE.COM LONDON'
 
-def test_load_categorised_empty(empty_categorised_dir):
-    categorised = _load_categorised(empty_categorised_dir)
+def test_load_categorised_empty(empty_categorised_file):
+    categorised = _load_categorised(empty_categorised_file)
+    assert isinstance(categorised, pd.DataFrame)
     assert categorised.empty
-    assert 'category' in categorised.columns
+    expected_columns = ["date", "description", "amount", "source", "category", "subcategory", "added_at"]
+    assert list(categorised.columns) == expected_columns
 
-def test_load_categorised_no_dir(no_categorised_dir):
-    categorised = _load_categorised(no_categorised_dir)
+def test_load_categorised_non_existent(no_categorised_file):
+    categorised = _load_categorised(no_categorised_file)
+    assert isinstance(categorised, pd.DataFrame)
     assert categorised.empty
-    assert 'category' in categorised.columns
+    expected_columns = ["date", "description", "amount", "source", "category", "subcategory", "added_at"]
+    assert list(categorised.columns) == expected_columns
 
 
 # TEST FOR COMPILE_RULES() =============================================================================================
@@ -200,17 +199,10 @@ def test_apply_rules_to_row():
     }
     compiled = _compile_rules(rules)
     row = pd.Series({'description': 'UBER TRIP HELP', 'category': None, 'subcategory': None})
-    cat, sub = _apply_rules_to_row(row, compiled, False)
+    cat, sub = _apply_rules_to_row(row, compiled)
     assert cat == 'Transportation'
     assert sub == 'Rideshare'
 
-    # Test overwrite
-    row['category'] = 'Other'
-    cat, sub = _apply_rules_to_row(row, compiled, False)
-    assert cat == 'Other'  # Not overwritten
-
-    cat, sub = _apply_rules_to_row(row, compiled, True)
-    assert cat == 'Transportation'  # Overwritten
 
 # TEST FOR DETECT_CONFLICTS() ==========================================================================================
 def test_detect_conflicts():
@@ -223,23 +215,35 @@ def test_detect_conflicts():
     assert df['conflict'].tolist() == [True, True, False, False]  # True for inconsistent cats in Desc1 and change in second
 
 # TEST FOR GET_ML_MODEL() ==============================================================================================
-def test_get_ml_model(tmp_path):
+def test_get_ml_model_insufficient_data():
     labeled = pd.DataFrame({
-        'description': ['TESCO STORE', 'MCDONALDS', 'TRAINLINE.COM', 'UBER TRIP', 'BOLT'] * 10,
-        'category': ['Food/Dining', 'Food/Dining', 'Transportation', 'Transportation', 'Transportation'] * 10,
-        'subcategory': ['Groceries', 'Restaurants/Bars', 'Public Transport', 'Rideshare', 'Rideshare'] * 10
+        'description': ['TEST'] * 9,
+        'category': ['Cat1'] * 9,
+        'subcategory': ['Sub1'] * 9
     })
     models = _get_ml_model(labeled)
+    assert models['category'] is None
+    assert models['subcategory'] is None
+
+def test_get_ml_model_balanced():
+    labeled = pd.DataFrame({
+        'description': ['TESCO STORE', 'MCDONALDS', 'TRAINLINE.COM', 'UBER TRIP', 'BOLT'] * 5,
+        'category': ['Food/Dining', 'Food/Dining', 'Transportation', 'Transportation', 'Transportation'] * 5,
+        'subcategory': ['Groceries', 'Restaurants/Bars', 'Public Transport', 'Rideshare', 'Rideshare'] * 5
+    })
+    models = _get_ml_model(labeled)
+    assert 'category' in models
+    assert 'subcategory' in models
     assert models['category'] is not None
     assert models['subcategory'] is not None
 
-def test_get_ml_model_with_unbalanced_classes(unbalanced_labeled):
+def test_get_ml_model_unbalanced(unbalanced_labeled):
     models = _get_ml_model(unbalanced_labeled)
-    assert models['category'] is not None
-    assert models['subcategory'] is not None
+    assert models['category'] is None
+    assert models['subcategory'] is None
 
 # TEST FOR APPLY_ML() ==================================================================================================
-def test_apply_ml():
+def test_apply_ml_mock():
     # Simple mock model
     class MockModel:
         def predict(self, X):
@@ -251,26 +255,70 @@ def test_apply_ml():
         'category': [None, 'Existing']
     })
     df = _apply_ml(df, models)
+    # Spot check
     assert df.iloc[0]['category'] == 'Food/Dining'
-    assert df.iloc[1]['category'] == 'Existing'  # Not overwritten
+    assert df.iloc[1]['category'] == 'Existing'
+
+def test_apply_ml(sample_rules_file):
+    labeled = pd.DataFrame({
+        'description': ['TESCO STORE', 'MCDONALDS', 'TRAINLINE.COM', 'UBER TRIP', 'BOLT'] * 10,
+        'category': ['Food/Dining', 'Food/Dining', 'Transportation', 'Transportation', 'Transportation'] * 10,
+        'subcategory': ['Groceries', 'Restaurants/Bars', 'Public Transport', 'Rideshare', 'Rideshare'] * 10
+    })
+    models = _get_ml_model(labeled)
+    df = pd.DataFrame({
+        'description': ['TESCO', 'MCDONALDS', 'TRAINLINE', 'UBER', 'BOLT'],
+        'category': [None] * 5,
+        'subcategory': [None] * 5
+    })
+    df_out = _apply_ml(df, models)
+    assert not df_out['category'].isna().all()
+    assert not df_out['subcategory'].isna().all()
+    # Spot check
+    assert df_out.loc[0, 'category'] == 'Food/Dining'
+    assert df_out.loc[0, 'subcategory'] == 'Groceries'
 
 # TEST FOR SAVE_CATEGORISED() ==========================================================================================
-def test_save_categorised(tmp_path):
+def test_save_categorised_new_file(tmp_path):
+    cat_file = str(tmp_path / "new_categorised.csv")
     df = SAMPLE_DF.copy()
-    cat_dir = str(tmp_path / "save_test")
-    save_path = _save_categorised(df, cat_dir)
-    assert os.path.exists(save_path)
-    loaded = pd.read_csv(save_path)
-    assert loaded.shape == df.shape
+    df['category'] = ['Transportation', 'Food/Dining', 'Home', 'Transportation', 'Transportation']
+    df['subcategory'] = ['Public Transport', 'Takeaway/Delivery', 'Maintenance', 'Rideshare', 'Rideshare']
+    df['review'] = [None, None, None, None, None]
+    _save_categorised(df, cat_file)
+    saved_df = pd.read_csv(cat_file)
+    assert 'added_at' in saved_df.columns
+    assert not saved_df.empty
+    assert len(saved_df) == len(df)
+    # Check timestamp is recent
+    process_date = datetime.strptime(saved_df['added_at'].iloc[0], '%Y-%m-%d %H:%M:%S')
+    assert (datetime.now() - process_date).total_seconds() < 60
+
+def test_save_categorised_append(sample_categorised_file):
+    df = SAMPLE_DF.copy()
+    df['category'] = ['Transportation', 'Food/Dining', 'Home', 'Transportation', 'Transportation']
+    df['subcategory'] = ['Public Transport', 'Takeaway/Delivery', 'Maintenance', 'Rideshare', 'Rideshare']
+    df['review'] = [None, None, None, None, None]
+    _save_categorised(df, sample_categorised_file)
+    saved_df = pd.read_csv(sample_categorised_file)
+    assert len(saved_df) == 10 + 5  # Original 10 + new 5 (no dedup)
+    assert 'added_at' in saved_df.columns
+    assert saved_df['added_at'].notna().all()
+    # New rows have recent timestamp
+    new_dates = saved_df['added_at'].tail(5)
+    for date_str in new_dates:
+        process_date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+        assert (datetime.now() - process_date).total_seconds() < 60
 
 # TEST FOR AUTO_CATEGORISE() ===========================================================================================
 def test_auto_categorise_rules_method(sample_rules_file, tmp_path):
-    cat_dir = str(tmp_path / "auto_test")
+    cat_file = str(tmp_path / "auto_test.csv")
     df_test = SAMPLE_DF.copy()
-    df_out = auto_categorise(df_test, rules_file=sample_rules_file, categorised_dir=cat_dir, overwrite=True)
+    df_out = auto_categorise(df_test, rules_file=sample_rules_file, categorised_file=cat_file)
     assert 'category' in df_out.columns
     assert 'subcategory' in df_out.columns
     assert 'review' in df_out.columns
+    assert 'added_at' in df_out.columns
     # Check a few
     assert df_out[df_out['description'] == 'TRAINLINE.COM LONDON']['category'].values[0] == 'Transportation'
     assert df_out[df_out['description'] == 'TRAINLINE.COM LONDON']['subcategory'].values[0] == 'Public Transport'
@@ -278,15 +326,18 @@ def test_auto_categorise_rules_method(sample_rules_file, tmp_path):
     assert df_out[df_out['description'] == 'DELIVEROO LONDON']['review'].values[0] == 'uncategorised'
     # Check if any conflicts (likely not in this sample)
     assert 'category conflict - review and resolve' not in df_out['review'].values
+    # Check saved file
+    saved_df = pd.read_csv(cat_file)
+    assert len(saved_df) == 5
+    assert 'added_at' in saved_df.columns
 
 
-def test_auto_categorise_hybrid_method(sample_rules_file, hybrid_categorised_dir, tmp_path, capsys):
+def test_auto_categorise_hybrid_method(sample_rules_file, hybrid_categorised_file, capsys):
     df_test = SAMPLE_DF.copy()
     df_out = auto_categorise(
         df_test,
         rules_file=sample_rules_file,
-        overwrite=True,  # Enable overwrite to test hybrid behaviour (rules can override ML if matched)
-        categorised_dir=hybrid_categorised_dir
+        categorised_file=hybrid_categorised_file
     )
     captured = capsys.readouterr()
     assert "Limited labeled data; using ML + rules hybrid." in captured.out
@@ -294,6 +345,7 @@ def test_auto_categorise_hybrid_method(sample_rules_file, hybrid_categorised_dir
     assert 'category' in df_out.columns
     assert 'subcategory' in df_out.columns
     assert 'review' in df_out.columns
+    assert 'added_at' in df_out.columns
     assert df_out['review'].isna().all()  # All should be categorised in hybrid with ML + rules
 
     # Check specific categorizations
@@ -317,14 +369,17 @@ def test_auto_categorise_hybrid_method(sample_rules_file, hybrid_categorised_dir
     assert df_out[df_out['description'] == 'BOLT LONDON']['category'].values[0] == 'Transportation'
     assert df_out[df_out['description'] == 'BOLT LONDON']['subcategory'].values[0] == 'Rideshare'
 
+    # Check saved file appended
+    saved_df = pd.read_csv(hybrid_categorised_file)
+    assert len(saved_df) == 30 + 5  # Original 30 + new 5 (no dedup)
 
-def test_auto_categorise_full_ml_method(sample_rules_file, full_ml_categorised_dir, tmp_path, capsys):
+
+def test_auto_categorise_full_ml_method(sample_rules_file, full_ml_categorised_file, capsys):
     df_test = SAMPLE_DF.copy()
     df_out = auto_categorise(
         df_test,
         rules_file=sample_rules_file,
-        overwrite=True,  # Enable overwrite for consistency; allows rules fallback if ML fails (though unlikely here)
-        categorised_dir=full_ml_categorised_dir
+        categorised_file=full_ml_categorised_file
     )
     captured = capsys.readouterr()
     assert "Sufficient labeled data; using full ML." in captured.out
@@ -332,11 +387,12 @@ def test_auto_categorise_full_ml_method(sample_rules_file, full_ml_categorised_d
     assert 'category' in df_out.columns
     assert 'subcategory' in df_out.columns
     assert 'review' in df_out.columns
+    assert 'added_at' in df_out.columns
     assert df_out['review'].isna().all()  # All should be categorized with ML
 
     # Check specific categorisations (similar to hybrid, but no rules override unless ML fails)
     # Note: Since training data only has 'Food/Dining' and 'Transportation', new categories like 'Home' won't be predicted by ML.
-    # With overwrite=True, rules will override matches, so behavior similar to hybrid.
+    # With rules will override matches, so behavior similar to hybrid.
     # TRAINLINE: ML predicts Transportation/Public Transport
     assert df_out[df_out['description'] == 'TRAINLINE.COM LONDON']['category'].values[0] == 'Transportation'
     assert df_out[df_out['description'] == 'TRAINLINE.COM LONDON']['subcategory'].values[0] == 'Public Transport'
@@ -345,7 +401,7 @@ def test_auto_categorise_full_ml_method(sample_rules_file, full_ml_categorised_d
     assert df_out[df_out['description'] == 'DELIVEROO LONDON']['category'].values[0] == 'Food/Dining'
     assert df_out[df_out['description'] == 'DELIVEROO LONDON']['subcategory'].values[0] == 'Takeaway/Delivery'
 
-    # B&Q: Rules override to Home/Maintenance (since overwrite=True)
+    # B&Q: Rules override to Home/Maintenance
     assert df_out[df_out['description'] == 'B&Q CHELMSFORD']['category'].values[0] == 'Home'
     assert df_out[df_out['description'] == 'B&Q CHELMSFORD']['subcategory'].values[0] == 'Maintenance'
 
@@ -356,3 +412,7 @@ def test_auto_categorise_full_ml_method(sample_rules_file, full_ml_categorised_d
     # BOLT: Rules override to Transportation/Rideshare
     assert df_out[df_out['description'] == 'BOLT LONDON']['category'].values[0] == 'Transportation'
     assert df_out[df_out['description'] == 'BOLT LONDON']['subcategory'].values[0] == 'Rideshare'
+
+    # Check saved file appended
+    saved_df = pd.read_csv(full_ml_categorised_file)
+    assert len(saved_df) == 72000 + 5  # Original + new 5 (no dedup)
