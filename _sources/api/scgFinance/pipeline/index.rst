@@ -15,7 +15,7 @@ Functions
 Module Contents
 ---------------
 
-.. py:function:: process_statements(sources, metadata_file='metadata/processed_files.csv', categorised_file='categorised/', add_col=None, rules_file=None)
+.. py:function:: process_statements(sources, metadata_file='metadata/processed_files.csv', categorised_file='categorised.csv', add_col=None, rules_file=None)
 
    Orchestrates the full financial statement processing pipeline: importing,
    categorising, updating metadata, and appending results to a single file.
