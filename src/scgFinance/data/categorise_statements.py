@@ -31,8 +31,8 @@ categorised_df = process_statements(
     sources,
     # Location for saving which imports have been processed:
     metadata_file="metadata/processed_files.csv",
-    # Directory for previously categorised CSVs (used for ML training)
-    categorised_dir="categorised/",
+    # Path for previously categorised CSV (used for ML training)
+    categorised_file="categorised.csv",
     # None uses bundled default rules; or 'metadata/custom_rules.csv'
     rules_file="metadata/rules.csv",
     # Set True to re-categorise existing entries

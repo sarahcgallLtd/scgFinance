@@ -108,7 +108,6 @@ def download_template(
 
     This function creates the following directory structure:
     - root_dir/
-      - categorised/ (empty directory)
       - metadata/
         - rules.csv (or specified filename; default categorisation rules)
       - raw_data/
@@ -152,8 +151,6 @@ def download_template(
         # Uses 'custom_rules.csv' instead of 'rules.csv'
     """
     # Create directories
-    os.makedirs(os.path.join(root_dir, "categorised"), exist_ok=True)
-
     metadata_dir = os.path.join(root_dir, "metadata")
     os.makedirs(metadata_dir, exist_ok=True)
 

@@ -75,7 +75,6 @@ def test_download_template_structure_creation(expected_columns):
         download_template(tmpdir)
 
         # Check directories exist
-        assert os.path.isdir(os.path.join(tmpdir, "categorised"))
         assert os.path.isdir(os.path.join(tmpdir, "metadata"))
         assert os.path.isdir(os.path.join(tmpdir, "raw_data", "bank"))
         assert os.path.isdir(os.path.join(tmpdir, "raw_data", "credit_card"))

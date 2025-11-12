@@ -55,8 +55,6 @@ This will generate the following structure:
 ```
 your_project_root/
 │
-├── categorised/             # For saving categorised output files
-│
 ├── metadata/                
 │   └── rules.csv            # Default categorisation rules (customisable)
 │
