@@ -97,7 +97,7 @@ def _update_metadata(
 def process_statements(
     sources,
     metadata_file="metadata/processed_files.csv",
-    categorised_file="categorised/",
+    categorised_file="categorised.csv",
     add_col=None,
     rules_file=None,
 ):
