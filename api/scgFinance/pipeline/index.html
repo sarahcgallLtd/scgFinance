@@ -60,7 +60,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
-    <meta name="docbuild:last-update" content="Nov 09, 2025"/>
+    <meta name="docbuild:last-update" content="Nov 12, 2025"/>
   </head>
   
   
@@ -449,15 +449,15 @@
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="scgFinance.pipeline.process_statements">
-<span class="sig-prename descclassname"><span class="pre">scgFinance.pipeline.</span></span><span class="sig-name descname"><span class="pre">process_statements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sources</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'metadata/processed_files.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categorised_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'categorised/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/scgFinance/pipeline.html#process_statements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.pipeline.process_statements" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">scgFinance.pipeline.</span></span><span class="sig-name descname"><span class="pre">process_statements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sources</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'metadata/processed_files.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categorised_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'categorised/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/scgFinance/pipeline.html#process_statements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scgFinance.pipeline.process_statements" title="Link to this definition">#</a></dt>
 <dd><p>Orchestrates the full financial statement processing pipeline: importing,
-categorising, updating metadata, and saving results.</p>
+categorising, updating metadata, and appending results to a single file.</p>
 <p>This function processes statements from multiple sources by importing
 unprocessed files, combining them into a single DataFrame, applying
 automatic categorisation, updating the metadata to mark files as
 processed, and returning the categorised DataFrame. If no new transactions
-are found, an empty DataFrame is returned. Custom import parameters can
-be provided per source.</p>
+are found, an empty or original DataFrame is returned. Custom import
+parameters can be provided per source.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -483,14 +483,15 @@ custom import settings.</p>
 <li><p><strong>metadata_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the metadata CSV for tracking
 processed files. Defaults to
 ‘metadata/processed_files.csv’.</p></li>
-<li><p><strong>categorised_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory to save the categorised CSV
-files. Defaults to ‘categorised/’.</p></li>
+<li><p><strong>categorised_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the categorised CSV file for
+loading and appending. Defaults to
+‘categorised.csv’</p></li>
+<li><p><strong>add_col</strong> (<em>str</em><em>, </em><em>optional</em>) – Add personalised column(s) to dataset (e.g.,
+to manually flag reimbursement expenses).
+Defaults to ‘None’.</p></li>
 <li><p><strong>rules_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to a custom rules CSV for
 categorisation; None uses the default
 bundled rules.</p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, re-categorises even existing
-categories during auto_categorise. Defaults
-to False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

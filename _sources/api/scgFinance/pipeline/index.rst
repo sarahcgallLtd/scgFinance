@@ -15,17 +15,17 @@ Functions
 Module Contents
 ---------------
 
-.. py:function:: process_statements(sources, metadata_file='metadata/processed_files.csv', categorised_dir='categorised/', rules_file=None, overwrite=False)
+.. py:function:: process_statements(sources, metadata_file='metadata/processed_files.csv', categorised_file='categorised/', add_col=None, rules_file=None)
 
    Orchestrates the full financial statement processing pipeline: importing,
-   categorising, updating metadata, and saving results.
+   categorising, updating metadata, and appending results to a single file.
 
    This function processes statements from multiple sources by importing
    unprocessed files, combining them into a single DataFrame, applying
    automatic categorisation, updating the metadata to mark files as
    processed, and returning the categorised DataFrame. If no new transactions
-   are found, an empty DataFrame is returned. Custom import parameters can
-   be provided per source.
+   are found, an empty or original DataFrame is returned. Custom import
+   parameters can be provided per source.
 
    :param sources:
                    A list of dictionaries, each specifying a
@@ -41,17 +41,18 @@ Module Contents
                          processed files. Defaults to
                          'metadata/processed_files.csv'.
    :type metadata_file: str, optional
-   :param categorised_dir: Directory to save the categorised CSV
-                           files. Defaults to 'categorised/'.
-   :type categorised_dir: str, optional
+   :param categorised_file: Path to the categorised CSV file for
+                            loading and appending. Defaults to
+                            'categorised.csv'
+   :type categorised_file: str, optional
+   :param add_col: Add personalised column(s) to dataset (e.g.,
+                   to manually flag reimbursement expenses).
+                   Defaults to 'None'.
+   :type add_col: str, optional
    :param rules_file: Path to a custom rules CSV for
                       categorisation; None uses the default
                       bundled rules.
    :type rules_file: str, optional
-   :param overwrite: If True, re-categorises even existing
-                     categories during auto_categorise. Defaults
-                     to False.
-   :type overwrite: bool, optional
 
    :returns:
 

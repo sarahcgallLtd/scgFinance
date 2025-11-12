@@ -51,7 +51,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
-    <meta name="docbuild:last-update" content="Nov 09, 2025"/>
+    <meta name="docbuild:last-update" content="Nov 12, 2025"/>
   </head>
   
   
@@ -416,7 +416,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_extraction.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">TfidfVectorizer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">StratifiedShuffleSplit</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">files</span>
 
@@ -521,7 +521,6 @@
         <span class="n">rules</span><span class="p">[</span><span class="n">category</span><span class="p">][</span><span class="n">subcategory</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pattern_str</span><span class="p">)</span>
 
     <span class="c1"># Deduplicate pattern for each subcategory</span>
-    <span class="c1"># (optional, but helps avoid duplicates)</span>
     <span class="c1"># ==================================</span>
     <span class="c1"># Iterate over categories and subcategories to</span>
     <span class="c1"># remove duplicates by converting to set and back to list</span>
@@ -540,55 +539,32 @@
 <span class="c1"># ================================================</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_load_categorised</span><span class="p">(</span><span class="n">categorised_dir</span><span class="o">=</span><span class="s2">&quot;categorised/&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_categorised</span><span class="p">(</span><span class="n">categorised_file</span><span class="o">=</span><span class="s2">&quot;categorised.csv&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Loads and concatenates all previously categorised CSV files from a</span>
-<span class="sd">    specified directory, removing duplicates.</span>
+<span class="sd">    Loads previously categorised data from a specified directory.</span>
 
-<span class="sd">    This function scans the directory for CSV files, reads each one, and</span>
-<span class="sd">    combines them into a single DataFrame. Duplicates are removed based</span>
-<span class="sd">    on &#39;date&#39;, &#39;description&#39;, and &#39;amount&#39; columns to ensure data integrity.</span>
-<span class="sd">    If no files are found or the directory does not exist, an empty DataFrame</span>
-<span class="sd">    with expected columns is returned.</span>
+<span class="sd">    This function reads the specified CSV file if it exists. If the files</span>
+<span class="sd">    doesn not exist, an empty DataFrame with expected columns is returned.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        categorised_dir (str, optional): Path to the directory containing</span>
-<span class="sd">        previously categorised CSV files. Defaults to &#39;categorised/&#39;.</span>
+<span class="sd">        categorised_file (str, optional): Path to the categorised CSV file.</span>
+<span class="sd">                                          Defaults to &#39;categorised.csv&#39;.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        pd.DataFrame: A combined DataFrame of all categorised data,</span>
-<span class="sd">                      with duplicates removed.</span>
+<span class="sd">        pd.DataFrame: The loaded DataFrame of categorised data.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        None explicitly, but may raise pandas errors if CSV files</span>
 <span class="sd">        are malformed.</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; categorised = _load_categorised(&#39;categorised/&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; categorised = _load_categorised(&#39;categorised.csv&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; print(categorised.shape)</span>
 <span class="sd">        (50, 6)  # Example assuming 50 unique rows loaded</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Initialise list to hold DataFrames from categorised files</span>
-    <span class="n">categorised_dfs</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="c1"># Check if the categorised directory exists and find all CSV files in</span>
-    <span class="c1"># the directory</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">categorised_dir</span><span class="p">):</span>
-        <span class="n">cat_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">categorised_dir</span><span class="p">,</span> <span class="s2">&quot;*.csv&quot;</span><span class="p">))</span>
-
-        <span class="c1"># Iterate over each file, reading the CSV into the DataFrame and</span>
-        <span class="c1"># appending to the list</span>
-        <span class="k">for</span> <span class="n">cat_file</span> <span class="ow">in</span> <span class="n">cat_files</span><span class="p">:</span>
-            <span class="n">cat_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cat_file</span><span class="p">)</span>
-            <span class="n">categorised_dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cat_df</span><span class="p">)</span>
-
-    <span class="c1"># If there are previously categorised DataFrames, concatenate them, reset</span>
-    <span class="c1"># the index, and remove duplicates based on key columns</span>
-    <span class="k">if</span> <span class="n">categorised_dfs</span><span class="p">:</span>
-        <span class="n">all_categorised</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">categorised_dfs</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">all_categorised</span> <span class="o">=</span> <span class="n">all_categorised</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span>
-            <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">]</span>
-        <span class="p">)</span>
+    <span class="c1"># Check if the categorised file exists</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">categorised_file</span><span class="p">):</span>
+        <span class="n">all_categorised</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">categorised_file</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Define expected columns based on standardised schema</span>
         <span class="n">expected_columns</span> <span class="o">=</span> <span class="p">[</span>
@@ -598,6 +574,7 @@
             <span class="s2">&quot;source&quot;</span><span class="p">,</span>
             <span class="s2">&quot;category&quot;</span><span class="p">,</span>
             <span class="s2">&quot;subcategory&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;added_at&quot;</span>
         <span class="p">]</span>
         <span class="n">all_categorised</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">expected_columns</span><span class="p">)</span>
 
@@ -612,11 +589,11 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_train_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Trains a machine learning model using TF-IDF vectorization and logistic</span>
+<span class="sd">    Trains a machine learning model using TF-IDF vectorisation and logistic</span>
 <span class="sd">    regression for text classification.</span>
 
 <span class="sd">    This function splits the data into training and testing sets, builds a</span>
-<span class="sd">    pipeline with TF-IDF vectorization (limited to 500 features) and</span>
+<span class="sd">    pipeline with TF-IDF vectorisation (limited to 500 features) and</span>
 <span class="sd">    logistic regression, trains the model, evaluates its accuracy on the</span>
 <span class="sd">    test set, and prints the result. It skips training if there is</span>
 <span class="sd">    insufficient data or only one unique label.</span>
@@ -645,34 +622,62 @@
 <span class="sd">        Category model accuracy on test set: 1.00</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Check if data is sufficient for training</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="n">unique_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">class_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_labels</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
         <span class="c1"># Skip training for very small data or single class</span>
-        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Return None if insufficient data</span>
+        <span class="k">return</span> <span class="kc">None</span> <span class="c1"># Return None if insufficient data</span>
 
-    <span class="c1"># Determine if stratification is possible</span>
-    <span class="c1"># (all classes have at least 2 samples)</span>
-    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">stratify</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">stratify</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="c1"># Exclude classes with insufficient samples</span>
+    <span class="n">min_samples</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">sufficient_classes</span> <span class="o">=</span> <span class="n">class_counts</span><span class="p">[</span><span class="n">class_counts</span> <span class="o">&gt;=</span> <span class="n">min_samples</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">keep_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sufficient_classes</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">keep_mask</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">sufficient_classes</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">keep_mask</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">keep_mask</span><span class="p">]</span>
 
-    <span class="c1"># Split data into train and test sets: 80/20 split,</span>
-    <span class="c1"># with conditional stratification</span>
-    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">stratify</span>
-    <span class="p">)</span>
+    <span class="c1"># Update unique and counts</span>
+    <span class="n">unique_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">class_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">class_counts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="c1"># Create a pipeline: TF-IDF vectorizer + Logistic Regression</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
         <span class="p">[</span>
-            <span class="c1"># Vectorise text with max 500 features</span>
-            <span class="p">(</span><span class="s2">&quot;tfidf&quot;</span><span class="p">,</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">max_features</span><span class="o">=</span><span class="mi">500</span><span class="p">)),</span>
-            <span class="c1"># Classifier with max 200 iterations</span>
-            <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">200</span><span class="p">)),</span>
+            <span class="c1"># Vectorise text</span>
+            <span class="p">(</span><span class="s2">&quot;tfidf&quot;</span><span class="p">,</span> <span class="n">TfidfVectorizer</span><span class="p">()),</span>
+            <span class="c1"># Classifier with max 1000 iterations</span>
+            <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)),</span>
         <span class="p">]</span>
     <span class="p">)</span>
 
-    <span class="c1"># Train the model on training data</span>
+    <span class="c1"># Cross-validation</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedShuffleSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+        <span class="n">accuracies</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+            <span class="c1"># Split data into train and test sets: 80/20 split</span>
+            <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+            <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+
+            <span class="c1"># Train the model on training data</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+            <span class="c1"># Calculate accuracy by predicting on test data</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+            <span class="n">accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+
+        <span class="n">mean_acc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">accuracies</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mean_acc</span> <span class="o">&lt;</span> <span class="mf">0.8</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in CV split for </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Train on full data if CV passes</span>
     <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
     <span class="c1"># Predict on test data</span>
@@ -728,7 +733,7 @@
     <span class="k">if</span> <span class="s2">&quot;category&quot;</span> <span class="ow">in</span> <span class="n">labeled</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">cat_labeled</span> <span class="o">=</span> <span class="n">labeled</span><span class="p">[</span>
             <span class="n">labeled</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">labeled</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="p">]</span>
+            <span class="p">]</span>
 
         <span class="c1"># If enough data (more than 2 rows):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_labeled</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
@@ -744,7 +749,7 @@
     <span class="k">if</span> <span class="s2">&quot;subcategory&quot;</span> <span class="ow">in</span> <span class="n">labeled</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">sub_labeled</span> <span class="o">=</span> <span class="n">labeled</span><span class="p">[</span>
             <span class="n">labeled</span><span class="p">[</span><span class="s2">&quot;subcategory&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">labeled</span><span class="p">[</span><span class="s2">&quot;subcategory&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="p">]</span>
+            <span class="p">]</span>
 
         <span class="c1"># If enough data (at least 10 rows):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_labeled</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">:</span>
@@ -878,23 +883,20 @@
 <span class="c1"># ================================================</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_apply_rules_to_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">compiled_rules</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_apply_rules_to_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">compiled_rules</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Applies compiled rules to assign a category and subcategory to a single</span>
 <span class="sd">    DataFrame row based on its description.</span>
 
-<span class="sd">    This function checks if the row already has a category and respects the</span>
-<span class="sd">    overwrite flag. It lowers the description for matching and iterates</span>
-<span class="sd">    through the compiled rules, returning the first matching category and</span>
-<span class="sd">    subcategory. Regex patterns use search(), while string patterns check</span>
-<span class="sd">    for substring presence.</span>
+<span class="sd">    This function checks if the row already has a category. It lowers the</span>
+<span class="sd">    description for matching and iterates through the compiled rules,</span>
+<span class="sd">    returning the first matching category and subcategory. Regex patterns</span>
+<span class="sd">    use search(), while string patterns check for substring presence.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        row (pd.Series): A single row from the DataFrame, containing at</span>
 <span class="sd">        least &#39;description&#39; and &#39;category&#39;.</span>
 <span class="sd">        compiled_rules (dict): The compiled rules dictionary.</span>
-<span class="sd">        overwrite (bool): If True, applies rules even if a category already</span>
-<span class="sd">        exists.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        tuple: (category, subcategory) - The assigned or existing values.</span>
@@ -902,12 +904,12 @@
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; row = pd.Series({&#39;description&#39;: &#39;Buy at TESCO&#39;, &#39;category&#39;: None})</span>
 <span class="sd">        &gt;&gt;&gt; compiled_rules = {&#39;Food/Dining&#39;: {&#39;Groceries&#39;: [&#39;tesco&#39;]}}</span>
-<span class="sd">        &gt;&gt;&gt; cat, sub = _apply_rules_to_row(row, compiled_rules, True)</span>
+<span class="sd">        &gt;&gt;&gt; cat, sub = _apply_rules_to_row(row, compiled_rules)</span>
 <span class="sd">        &gt;&gt;&gt; print(cat, sub)</span>
 <span class="sd">        &#39;Food/Dining&#39; &#39;Groceries&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># If category exists and no overwrite, keep existing</span>
-    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">])</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
+    <span class="c1"># If category exists, keep existing</span>
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]):</span>
         <span class="c1"># Return existing category and subcategory (if any)</span>
         <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">],</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;subcategory&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
@@ -924,7 +926,7 @@
             <span class="k">for</span> <span class="n">pat</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
                 <span class="c1"># Check for match (regex search or substring)</span>
                 <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pat</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">desc</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span>
-                    <span class="nb">isinstance</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pat</span> <span class="ow">in</span> <span class="n">desc</span>
+                        <span class="nb">isinstance</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pat</span> <span class="ow">in</span> <span class="n">desc</span>
                 <span class="p">):</span>
                     <span class="c1"># Return first matching category and subcategory</span>
                     <span class="k">return</span> <span class="n">category</span><span class="p">,</span> <span class="n">subcategory</span>
@@ -963,10 +965,10 @@
     <span class="c1"># Initialise conflict column as False</span>
     <span class="n">df</span><span class="p">[</span><span class="s2">&quot;conflict&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="c1"># Conflict if category changed from original (without overwrite intent);</span>
+    <span class="c1"># Conflict if category changed from original;</span>
     <span class="c1"># Set True if changed</span>
     <span class="n">df</span><span class="p">[</span><span class="s2">&quot;conflict&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;original_category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">())</span> <span class="o">&amp;</span> <span class="p">(</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;original_category&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;original_category&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span>
     <span class="p">)</span>
 
     <span class="c1"># Check for similar transactions with different categories (group by</span>
@@ -988,52 +990,53 @@
 <span class="c1"># ================================================</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_save_categorised</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">categorised_dir</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_save_categorised</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">categorised_file</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Saves the categorised DataFrame to a timestamped CSV file in the specified</span>
-<span class="sd">    directory.</span>
+<span class="sd">    Appends the categorised DataFrame to an existing CSV file or creates a new one,</span>
+<span class="sd">    adding a &#39;added_at&#39; column with the current timestamp for new data.</span>
 
-<span class="sd">    This function creates the directory if it does not exist, generates a</span>
-<span class="sd">    unique filename based on the current timestamp, and saves the DataFrame</span>
-<span class="sd">    without the index. It prints the save path and a reminder to review flagged</span>
-<span class="sd">    rows.</span>
+<span class="sd">    This function adds the &#39;added_at&#39; column to the input DataFrame, loads the existing</span>
+<span class="sd">    file if it exists, concatenates the new data, and saves the combined DataFrame back</span>
+<span class="sd">    to the file. It prints the save path and a reminder to review flagged rows.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        df (pd.DataFrame): The DataFrame to save.</span>
-<span class="sd">        categorised_dir (str): The path to the directory where the file should</span>
-<span class="sd">        be saved.</span>
+<span class="sd">        df (pd.DataFrame): The DataFrame to append.</span>
+<span class="sd">        categorised_file (str): The path to the CSV file where the data should</span>
+<span class="sd">                                be saved/appended.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        str: The full path to the saved CSV file.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        OSError: If directory creation or file writing fails.</span>
+<span class="sd">        OSError: If file writing fails.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({&#39;date&#39;: [&#39;2025-01-01&#39;],</span>
 <span class="sd">        ... &#39;description&#39;: [&#39;TESCO&#39;], &#39;category&#39;: [&#39;Food/Dining&#39;]})</span>
-<span class="sd">        &gt;&gt;&gt; save_path = _save_categorised(df, &#39;output_dir&#39;)</span>
-<span class="sd">        Saved categorised data to output_dir/2025-11-07_12-00-00.csv.</span>
+<span class="sd">        &gt;&gt;&gt; save_path = _save_categorised(df, &#39;categorised_file.csv&#39;)</span>
+<span class="sd">        Appended categorised data to categorised.csv.</span>
 <span class="sd">        Review rows where &#39;review&#39; is not NaN manually.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Create directory if it doesn&#39;t exist</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">categorised_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Add the new column with current timestamp for this run</span>
+    <span class="n">current_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;added_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_time</span>
 
-    <span class="c1"># Create timestamped filename</span>
-    <span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">categorised_dir</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">_%H-%M-%S&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="c1"># If the file exists, load existing data and append</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">categorised_file</span><span class="p">):</span>
+        <span class="n">existing_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">categorised_file</span><span class="p">)</span>
+        <span class="n">combined_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">existing_df</span><span class="p">,</span> <span class="n">df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">combined_df</span> <span class="o">=</span> <span class="n">df</span>
 
     <span class="c1"># Save DataFrame to CSV without index</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">combined_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">categorised_file</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;Saved categorised data to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">. Review rows where &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Saved categorised data to </span><span class="si">{</span><span class="n">categorised_file</span><span class="si">}</span><span class="s2">. Review rows where &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;&#39;review&#39; is not NaN manually.&quot;</span>
     <span class="p">)</span>
 
     <span class="c1"># Return the save path</span>
-    <span class="k">return</span> <span class="n">save_path</span>
+    <span class="k">return</span> <span class="n">categorised_file</span>
 
 
 <span class="c1"># ================================================</span>
@@ -1044,31 +1047,36 @@
 <div class="viewcode-block" id="auto_categorise">
 <a class="viewcode-back" href="../../api/scgFinance/index.html#scgFinance.categoriser.auto_categorise">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">auto_categorise</span><span class="p">(</span>
-    <span class="n">df</span><span class="p">,</span> <span class="n">rules_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">categorised_dir</span><span class="o">=</span><span class="s2">&quot;categorised/&quot;</span>
+        <span class="n">df</span><span class="p">,</span>
+        <span class="n">rules_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">categorised_file</span><span class="o">=</span><span class="s2">&quot;categorised.csv&quot;</span><span class="p">,</span>
+        <span class="n">add_col</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Automatically categorises transactions in a DataFrame using rules,</span>
 <span class="sd">    machine learning, or a hybrid approach based on available data.</span>
 
 <span class="sd">    This function initialises category/subcategory columns if missing,</span>
-<span class="sd">    loads rules and historical categorised data, determines the categorisation</span>
+<span class="sd">    loads rules and previously categorised data, determines the categorisation</span>
 <span class="sd">    mode (rules-only, hybrid, or full ML) based on the amount of labeled data,</span>
 <span class="sd">    applies the appropriate method, detects conflicts, flags rows for review,</span>
-<span class="sd">    and saves the updated DataFrame to a timestamped file.</span>
+<span class="sd">    and appends updated categorised data to the specified file.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        df (pd.DataFrame): The input DataFrame with at least &#39;description&#39;;</span>
 <span class="sd">                           &#39;category&#39; may be partially filled.</span>
 <span class="sd">        rules_file (str, optional): Path to the rules CSV file. Defaults to</span>
 <span class="sd">                                    bundled &#39;metadata/rules.csv&#39;.</span>
-<span class="sd">        overwrite (bool, optional): If True, re-applies categorisation even to</span>
-<span class="sd">                                    existing categories. Defaults to False.</span>
-<span class="sd">        categorised_dir (str, optional): Directory for historical categorised</span>
-<span class="sd">                                         CSVs. Defaults to &#39;categorised/&#39;.</span>
+<span class="sd">        categorised_file (str, optional): Path to the categorised CSV file for</span>
+<span class="sd">                                          loading and appending. Defaults to</span>
+<span class="sd">                                          &#39;categorised.csv&#39;</span>
+<span class="sd">        add_col (str, optional): Add personalised column(s) to dataset (e.g.,</span>
+<span class="sd">                                 to manually flag reimbursement expenses).</span>
+<span class="sd">                                 Defaults to &#39;None&#39;.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        pd.DataFrame: The updated DataFrame with &#39;category&#39;, &#39;subcategory&#39;,</span>
-<span class="sd">                      and &#39;review&#39; columns added/filled.</span>
+<span class="sd">                      &#39;review&#39;, &#39;added_at&#39;, and any additional columns added/filled.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: Propagated from load_rules_file() if rules CSV is invalid.</span>
@@ -1080,7 +1088,7 @@
 <span class="sd">        &gt;&gt;&gt; categorised_df = auto_categorise(df)</span>
 <span class="sd">        No or insufficient previously categorised/labeled data; using rules</span>
 <span class="sd">        only.</span>
-<span class="sd">        Saved categorised data to categorised/2025-11-07_12-00-00.csv. ...</span>
+<span class="sd">        Appended categorised data to categorised.csv. ...</span>
 <span class="sd">        &gt;&gt;&gt; print(categorised_df[&#39;category&#39;].tolist())</span>
 <span class="sd">        [&#39;Food/Dining&#39;, &#39;Transportation&#39;]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1107,7 +1115,7 @@
     <span class="n">compiled_rules</span> <span class="o">=</span> <span class="n">_compile_rules</span><span class="p">(</span><span class="n">rules</span><span class="p">)</span>
 
     <span class="c1"># Load previously categorised</span>
-    <span class="n">all_categorised</span> <span class="o">=</span> <span class="n">_load_categorised</span><span class="p">(</span><span class="n">categorised_dir</span><span class="p">)</span>
+    <span class="n">all_categorised</span> <span class="o">=</span> <span class="n">_load_categorised</span><span class="p">(</span><span class="n">categorised_file</span><span class="p">)</span>
 
     <span class="c1"># 4. Prepare labeled/unlabeled (combine previously categorised +</span>
     <span class="c1"># df&#39;s pre-labeled)</span>
@@ -1118,7 +1126,7 @@
             <span class="n">all_categorised</span><span class="p">[</span>
                 <span class="n">all_categorised</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
                 <span class="o">&amp;</span> <span class="n">all_categorised</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="p">],</span>
+                <span class="p">],</span>
             <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)],</span>
         <span class="p">],</span>
         <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -1142,31 +1150,31 @@
         <span class="c1"># Get, and apply, rules</span>
         <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="s2">&quot;subcategory&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-                <span class="n">_apply_rules_to_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">compiled_rules</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
+                <span class="n">_apply_rules_to_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">compiled_rules</span><span class="p">)</span>
             <span class="p">),</span>
             <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="c1"># Mode 2: Hybrid (rules + ML) for limited data or potential conflicts;</span>
-    <span class="c1">#         If previously categorised data is &quot;limited&quot; (less than 500</span>
+    <span class="c1">#         If previously categorised data is &quot;limited&quot; (less than 10000</span>
     <span class="c1">#         labels), use hybrid</span>
-    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">labeled</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">500</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">labeled</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10000</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Limited labeled data; using ML + rules hybrid.&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Get, and apply, model</span>
-        <span class="n">models</span> <span class="o">=</span> <span class="n">_get_ml_model</span><span class="p">(</span><span class="n">labeled</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">models</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">_apply_ml</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
-
-        <span class="c1"># Then apply rules (as hybrid/fallback, sets both)</span>
+        <span class="c1"># First apply rules</span>
         <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="s2">&quot;subcategory&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-                <span class="n">_apply_rules_to_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">compiled_rules</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
+                <span class="n">_apply_rules_to_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">compiled_rules</span><span class="p">)</span>
             <span class="p">),</span>
             <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="c1"># Mode 3: Full ML when enough data for over 500 labelled historical data</span>
+        <span class="c1"># Then, get, and apply, model to remaining un</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="n">_get_ml_model</span><span class="p">(</span><span class="n">labeled</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">models</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">_apply_ml</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+
+    <span class="c1"># Mode 3: Full ML when enough data for over 10000 labelled data</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sufficient labeled data; using full ML.&quot;</span><span class="p">)</span>
 
@@ -1182,7 +1190,7 @@
             <span class="c1"># Apply rules</span>
             <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="s2">&quot;subcategory&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
                 <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-                    <span class="n">_apply_rules_to_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">compiled_rules</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
+                    <span class="n">_apply_rules_to_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">compiled_rules</span><span class="p">)</span>
                 <span class="p">),</span>
                 <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
             <span class="p">)</span>
@@ -1212,8 +1220,15 @@
         <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="c1"># Save updated df (categorised DataFrame)</span>
-    <span class="n">_save_categorised</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">categorised_dir</span><span class="p">)</span>
+    <span class="c1"># Add personalised columns (if any):</span>
+    <span class="k">if</span> <span class="n">add_col</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">add_col</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">add_col</span> <span class="o">=</span> <span class="p">[</span><span class="n">add_col</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">add_col</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Save updated df (append to the categorised file)</span>
+    <span class="n">_save_categorised</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">categorised_file</span><span class="p">)</span>
 
     <span class="c1"># Return the updated DataFrame</span>
     <span class="k">return</span> <span class="n">df</span></div>
