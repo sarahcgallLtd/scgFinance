@@ -731,8 +731,8 @@
             <span class="n">labeled</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">labeled</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="p">]</span>
 
-        <span class="c1"># If enough data (more than 2 rows):</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_labeled</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># If enough data (more than 10 rows):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_labeled</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
             <span class="n">models</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_train_model</span><span class="p">(</span>
                 <span class="n">X</span><span class="o">=</span><span class="n">cat_labeled</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">],</span>
                 <span class="n">y</span><span class="o">=</span><span class="n">cat_labeled</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">],</span>
@@ -1191,17 +1191,31 @@
 
     <span class="c1"># Create single &#39;review&#39; column</span>
     <span class="n">df</span><span class="p">[</span><span class="s2">&quot;review&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Flag fully uncategorised (category missing)</span>
     <span class="n">uncat_mask</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">|</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">uncat_mask</span><span class="p">,</span> <span class="s2">&quot;review&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;uncategorised&quot;</span>
+
+    <span class="c1"># Flag partially uncategorised (category ok, but subcategory missing)</span>
+    <span class="n">partial_uncat_mask</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+        <span class="o">&amp;</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;subcategory&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">|</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;subcategory&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">partial_uncat_mask</span><span class="p">,</span> <span class="s2">&quot;review&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;partially uncategorised&quot;</span>
+
+    <span class="c1"># Flag conflicts (overrides previous flags if conflicting)</span>
     <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;conflict&quot;</span><span class="p">],</span> <span class="s2">&quot;review&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;category conflict - review and resolve&quot;</span>
 
     <span class="c1"># Print review summary</span>
     <span class="n">review_count</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;review&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
     <span class="n">conflict_count</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;review&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;conflict&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">partial_count</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;review&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;partially&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">review_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">review_count</span><span class="si">}</span><span class="s2"> rows need manual review (including &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">conflict_count</span><span class="si">}</span><span class="s2"> conflicts).&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">conflict_count</span><span class="si">}</span><span class="s2"> conflicts and </span><span class="si">{</span><span class="n">partial_count</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;partial uncategorised).&quot;</span>
         <span class="p">)</span>
 
     <span class="c1"># Drop temp columns (Remove temporary columns)</span>
