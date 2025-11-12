@@ -321,8 +321,8 @@ def _get_ml_model(labeled):
             labeled["category"].notna() & labeled["category"].ne("")
         ]
 
-        # If enough data (more than 2 rows):
-        if len(cat_labeled) > 2:
+        # If enough data (more than 10 rows):
+        if len(cat_labeled) > 10:
             models["category"] = _train_model(
                 X=cat_labeled["description"],
                 y=cat_labeled["category"],
@@ -779,17 +779,31 @@ def auto_categorise(
 
     # Create single 'review' column
     df["review"] = None
+
+    # Flag fully uncategorised (category missing)
     uncat_mask = df["category"].isna() | df["category"].eq("")
     df.loc[uncat_mask, "review"] = "uncategorised"
+
+    # Flag partially uncategorised (category ok, but subcategory missing)
+    partial_uncat_mask = (
+        df["category"].notna()
+        & df["category"].ne("")
+        & (df["subcategory"].isna() | df["subcategory"].eq(""))
+    )
+    df.loc[partial_uncat_mask, "review"] = "partially uncategorised"
+
+    # Flag conflicts (overrides previous flags if conflicting)
     df.loc[df["conflict"], "review"] = "category conflict - review and resolve"
 
     # Print review summary
     review_count = df["review"].notna().sum()
     conflict_count = df["review"].str.contains("conflict", na=False).sum()
+    partial_count = df["review"].str.contains("partially", na=False).sum()
     if review_count > 0:
         print(
             f"{review_count} rows need manual review (including "
-            f"{conflict_count} conflicts)."
+            f"{conflict_count} conflicts and {partial_count} "
+            f"partial uncategorised)."
         )
 
     # Drop temp columns (Remove temporary columns)

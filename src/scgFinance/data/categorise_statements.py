@@ -34,5 +34,5 @@ categorised_df = process_statements(
     # Path for previously categorised CSV (used for ML training)
     categorised_file="categorised.csv",
     # None uses bundled default rules; or 'metadata/custom_rules.csv'
-    rules_file="metadata/rules.csv"
+    rules_file="metadata/rules.csv",
 )
