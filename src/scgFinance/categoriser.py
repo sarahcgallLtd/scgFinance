@@ -2,6 +2,8 @@ import re
 import os
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.compose import ColumnTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
@@ -227,11 +229,21 @@ def _train_model(X, y, model_type="category"):
     X = X[keep_mask]
     y = y[keep_mask]
 
-    # Create a pipeline: TF-IDF vectorizer + Logistic Regression
+    # Create preprocessor
+    preprocessor = ColumnTransformer(
+        transformers=[
+            # Text processing:
+            ("text", TfidfVectorizer(max_features=500), "description"),
+            # Scale amounts:
+            ("num", StandardScaler(), ["amount"]),
+        ]
+    )
+
+    # Create a pipeline: preprocessor + Logistic Regression
     model = Pipeline(
         [
-            # Vectorise text
-            ("tfidf", TfidfVectorizer()),
+            # Vectorise text + scale
+            ("preprocessor", preprocessor),
             # Classifier with max 1000 iterations
             ("clf", LogisticRegression(max_iter=1000)),
         ]
@@ -324,7 +336,7 @@ def _get_ml_model(labeled):
         # If enough data (more than 10 rows):
         if len(cat_labeled) > 10:
             models["category"] = _train_model(
-                X=cat_labeled["description"],
+                X=cat_labeled[["description", "amount"]],
                 y=cat_labeled["category"],
                 model_type="category",
             )
@@ -340,7 +352,7 @@ def _get_ml_model(labeled):
         # If enough data (at least 10 rows):
         if len(sub_labeled) >= 10:
             models["subcategory"] = _train_model(
-                X=sub_labeled["description"],
+                X=sub_labeled[["description", "amount"]],
                 y=sub_labeled["subcategory"],
                 model_type="subcategory",
             )
@@ -393,13 +405,13 @@ def _apply_ml(df, models):
     # If there are unlabeled rows and category model exists, predict categories
     if not unlabeled.empty and models["category"]:
         unlabeled["category"] = models["category"].predict(
-            unlabeled["description"]
+            unlabeled[["description", "amount"]]
         )
 
         # If subcategory model exists, predict subcategories
         if models["subcategory"]:
             unlabeled["subcategory"] = models["subcategory"].predict(
-                unlabeled["description"]
+                unlabeled[["description", "amount"]]
             )
 
         # Concatenate labeled and newly predicted unlabeled, sort by

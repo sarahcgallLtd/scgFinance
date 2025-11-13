@@ -1,5 +1,6 @@
 import pytest
 import pandas as pd
+import numpy as np
 from unittest.mock import patch
 import re
 from io import StringIO
@@ -126,11 +127,13 @@ def full_ml_categorised_file(tmp_path):
 def unbalanced_labeled():
     dominant = pd.DataFrame({
         'description': ['TESCO STORE'] * 50,
+        'amount': np.random.uniform(1, 100, 50),
         'category': ['Food/Dining'] * 50,
         'subcategory': ['Groceries'] * 50
     })
     rare = pd.DataFrame({
         'description': ['UNIQUE1', 'UNIQUE2', 'UNIQUE3'],
+        'amount': np.random.uniform(1, 100, 3),
         'category': ['Transportation', 'Home', 'Utilities'],
         'subcategory': ['Rideshare', 'Maintenance', 'Electricity']
     })
@@ -142,6 +145,7 @@ def full_ml_bad_data_file(tmp_path):
     sample_csv = StringIO(SAMPLE_CATEGORISED_CSV)
     hist_df = pd.read_csv(sample_csv)  # 10 unique rows
     hist_df['description'] = 'IDENTICAL TRANSACTION'  # Set all to same for low acc
+    hist_df['amount'] = 50.0  # Set all amounts identical to force low accuracy
     base_date = datetime(2025, 10, 1)
     dfs = []
     for i in range(7200):  # 7200 * 10 = 72000 rows
@@ -226,34 +230,6 @@ def test_load_categorised_non_existent(no_categorised_file):
 
 
 # TEST FOR COMPILE_RULES() =============================================================================================
-def test_train_model_returns_none_when_mean_acc_below_threshold():
-    # Data with identical descriptions but different labels: model can't distinguish, low acc
-    X = pd.Series(['identical transaction'] * 20)
-    y = pd.Series(['CategoryA'] * 10 + ['CategoryB'] * 10)
-    model = _train_model(X, y, model_type='category')
-    assert model is None  # Returns None due to mean_acc < 0.8
-
-
-@patch('sklearn.model_selection.StratifiedShuffleSplit.split')
-def test_train_model_returns_none_on_value_error(mock_split, capsys):
-    # Good data that would normally train successfully
-    X = pd.Series(['food purchase'] * 10 + ['transport fare'] * 10)
-    y = pd.Series(['Food'] * 10 + ['Transport'] * 10)
-
-    # Mock split to raise ValueError
-    mock_split.side_effect = ValueError("Simulated CV split error")
-
-    model = _train_model(X, y, model_type='category')
-
-    # Check printed error
-    captured = capsys.readouterr()
-    assert "Error in CV split for category: Simulated CV split error" in captured.out
-
-    assert model is None  # Returns None due to exception
-
-
-
-# TEST FOR COMPILE_RULES() =============================================================================================
 def test_compile_rules():
     rules = {
         'Category1': {'Sub1': ['keyword', 'rregex pattern']},
@@ -321,10 +297,84 @@ def test_detect_conflicts():
     df = _detect_conflicts(df)
     assert df['conflict'].tolist() == [True, True, False, False]  # True for inconsistent cats in Desc1 and change in second
 
+
+
+# TEST FOR TRAIN_MODEL() ===============================================================================================
+def test_train_model_returns_none_when_insufficient_data():
+    X = pd.DataFrame({
+        'description': ['A', 'B', 'C'],
+        'amount': [-10, 20, -30]
+    })
+    y = pd.Series(['Cat1', 'Cat1', 'Cat1'])
+    model = _train_model(X, y, model_type='category')
+    assert model is None
+
+def test_train_model_returns_none_when_single_class():
+    X = pd.DataFrame({
+        'description': ['A'] * 20,
+        'amount': np.random.uniform(1, 100, 20)
+    })
+    y = pd.Series(['CategoryA'] * 20)
+    model = _train_model(X, y, model_type='category')
+    assert model is None
+
+def test_train_model_returns_none_when_mean_acc_below_threshold():
+    # Data with identical descriptions but different labels: model can't distinguish, low acc
+    X = pd.DataFrame({
+        'description': ['identical transaction'] * 20,
+        'amount': [50.0] * 20  # Identical to prevent distinction
+    })
+    y = pd.Series(['CategoryA'] * 10 + ['CategoryB'] * 10)
+    model = _train_model(X, y, model_type='category')
+    assert model is None  # Returns None due to mean_acc < 0.8
+
+
+@patch('sklearn.model_selection.StratifiedShuffleSplit.split')
+def test_train_model_returns_none_on_value_error(mock_split, capsys):
+    # Good data that would normally train successfully
+    X = pd.Series(['food purchase'] * 10 + ['transport fare'] * 10)
+    y = pd.Series(['Food'] * 10 + ['Transport'] * 10)
+
+    # Mock split to raise ValueError
+    mock_split.side_effect = ValueError("Simulated CV split error")
+
+    model = _train_model(X, y, model_type='category')
+
+    # Check printed error
+    captured = capsys.readouterr()
+    assert "Error in CV split for category: Simulated CV split error" in captured.out
+
+    assert model is None  # Returns None due to exception
+
+def test_train_model_trains_successfully(capsys):
+    # Balanced data with distinguishable descriptions
+    descriptions = ['TESCO groceries'] * 10 + ['UBER ride'] * 10
+    amounts = np.random.uniform(1, 50, 10).tolist() + np.random.uniform(51, 100, 10).tolist()  # Correlate with categories
+    X = pd.DataFrame({
+        'description': descriptions,
+        'amount': amounts
+    })
+    y = pd.Series(['Food/Dining'] * 10 + ['Transportation'] * 10)
+    model = _train_model(X, y, model_type='category')
+    assert model is not None
+    captured = capsys.readouterr()
+    assert 'Category model accuracy on test set:' in captured.out
+
+def test_train_model_skips_unbalanced_classes(unbalanced_labeled):
+    # Rare classes have <5 samples, should be skipped
+    model = _train_model(
+        X=unbalanced_labeled[['description', 'amount']],
+        y=unbalanced_labeled['category'],
+        model_type='category'
+    )
+    assert model is None  # Only one sufficient class after filtering
+
+
 # TEST FOR GET_ML_MODEL() ==============================================================================================
 def test_get_ml_model_insufficient_data():
     labeled = pd.DataFrame({
         'description': ['TEST'] * 9,
+        'amount': [10] * 9,
         'category': ['Cat1'] * 9,
         'subcategory': ['Sub1'] * 9
     })
@@ -335,6 +385,7 @@ def test_get_ml_model_insufficient_data():
 def test_get_ml_model_balanced():
     labeled = pd.DataFrame({
         'description': ['TESCO STORE', 'MCDONALDS', 'TRAINLINE.COM', 'UBER TRIP', 'BOLT'] * 5,
+        'amount': np.random.uniform(1, 100, 25),
         'category': ['Food/Dining', 'Food/Dining', 'Transportation', 'Transportation', 'Transportation'] * 5,
         'subcategory': ['Groceries', 'Restaurants/Bars', 'Public Transport', 'Rideshare', 'Rideshare'] * 5
     })
@@ -349,6 +400,7 @@ def test_get_ml_model_unbalanced(unbalanced_labeled):
     assert models['category'] is None
     assert models['subcategory'] is None
 
+
 # TEST FOR APPLY_ML() ==================================================================================================
 def test_apply_ml_mock():
     # Simple mock model
@@ -359,6 +411,7 @@ def test_apply_ml_mock():
     models = {'category': MockModel(), 'subcategory': MockModel()}
     df = pd.DataFrame({
         'description': ['TESCO', None],
+        'amount': [2,-5],
         'category': [None, 'Existing']
     })
     df = _apply_ml(df, models)
@@ -369,12 +422,14 @@ def test_apply_ml_mock():
 def test_apply_ml(sample_rules_file):
     labeled = pd.DataFrame({
         'description': ['TESCO STORE', 'MCDONALDS', 'TRAINLINE.COM', 'UBER TRIP', 'BOLT'] * 10,
+        'amount': np.random.uniform(1, 100, 50),
         'category': ['Food/Dining', 'Food/Dining', 'Transportation', 'Transportation', 'Transportation'] * 10,
         'subcategory': ['Groceries', 'Restaurants/Bars', 'Public Transport', 'Rideshare', 'Rideshare'] * 10
     })
     models = _get_ml_model(labeled)
     df = pd.DataFrame({
         'description': ['TESCO', 'MCDONALDS', 'TRAINLINE', 'UBER', 'BOLT'],
+        'amount': np.random.uniform(1, 100, 5),
         'category': [None] * 5,
         'subcategory': [None] * 5
     })
@@ -384,6 +439,30 @@ def test_apply_ml(sample_rules_file):
     # Spot check
     assert df_out.loc[0, 'category'] == 'Food/Dining'
     assert df_out.loc[0, 'subcategory'] == 'Groceries'
+
+def test_apply_ml_skips_when_no_model():
+    models = {'category': None, 'subcategory': None}
+    df = pd.DataFrame({
+        'description': ['A', 'B'],
+        'amount': [10, 20],
+        'category': [np.nan, np.nan],
+        'subcategory': [np.nan, np.nan]
+    })
+    df_out = _apply_ml(df, models)
+    assert df_out['category'].isna().all()
+    assert df_out['subcategory'].isna().all()
+
+def test_apply_ml_no_change_when_all_categorised():
+    models = {'category': 'mock', 'subcategory': 'mock'}
+    df = pd.DataFrame({
+        'description': ['A'],
+        'amount': [10],
+        'category': ['Cat1'],
+        'subcategory': ['Sub1']
+    })
+    df_out = _apply_ml(df, models)
+    assert df_out.equals(df)
+
 
 # TEST FOR SAVE_CATEGORISED() ==========================================================================================
 def test_save_categorised_new_file(tmp_path):
@@ -439,6 +518,50 @@ def test_auto_categorise_rules_method(sample_rules_file, tmp_path):
     assert len(saved_df) == 5
     assert 'added_at' in saved_df.columns
 
+def test_auto_categorise_handles_partial_labels(sample_rules_file, sample_categorised_file):
+    df_test = pd.DataFrame({
+        'description': ['PRE-LABELED', 'UNCATEGORISED'],
+        'amount': [10.0, 20.0],
+        'category': ['Food/Dining', np.nan],
+        'subcategory': [np.nan, np.nan]  # Partial
+    })
+    df_out = auto_categorise(
+        df_test,
+        rules_file=sample_rules_file,
+        categorised_file=sample_categorised_file
+    )
+    # PRE-LABELED: Keeps category, flags partial if sub missing
+    assert df_out[df_out['description'] == 'PRE-LABELED']['category'].values[0] == 'Food/Dining'
+    assert df_out[df_out['description'] == 'PRE-LABELED']['review'].values[0] == 'partially uncategorised'
+
+    # UNCATEGORISED: Applies rules/ML, but no match -> uncategorised
+    assert pd.isna(df_out[df_out['description'] == 'UNCATEGORISED']['category'].values[0])
+    assert df_out[df_out['description'] == 'UNCATEGORISED']['review'].values[0] == 'uncategorised'
+
+def test_auto_categorise_detects_conflicts(sample_rules_file, sample_categorised_file):
+    df_test = pd.DataFrame({
+        'description': ['TRAINLINE.COM LONDON', 'TRAINLINE.COM LONDON'],
+        'amount': [22.89, 22.89],
+        'category': ['Transportation', 'Travel']  # Pre-label conflict
+    })
+    df_out = auto_categorise(
+        df_test,
+        rules_file=sample_rules_file,
+        categorised_file=sample_categorised_file
+    )
+    # Rules apply Transportation/Public Transport, but pre-labels differ -> conflict
+    assert df_out['review'].str.contains('conflict').all()
+
+def test_auto_categorise_adds_custom_columns(sample_rules_file, empty_categorised_file):
+    df_test = SAMPLE_DF.copy()
+    df_out = auto_categorise(
+        df_test,
+        rules_file=sample_rules_file,
+        categorised_file=empty_categorised_file,
+        add_col='reimbursable'
+    )
+    assert 'reimbursable' in df_out.columns
+    assert df_out['reimbursable'].isna().all()  # Initialised to None
 
 def test_auto_categorise_hybrid_method(sample_rules_file, hybrid_categorised_file, capsys):
     df_test = SAMPLE_DF.copy()
@@ -539,7 +662,7 @@ def test_auto_categorise_full_ml_fallback_to_rules(sample_rules_file, full_ml_ba
     captured = capsys.readouterr()
     assert "Sufficient labeled data; using full ML." in captured.out
     assert "ML model unavailable; falling back to rules." in captured.out
-    # Check categorizations from rules only (ML failed)
+    # Check categorisations from rules only (ML failed)
     # TRAINLINE: rules match
     assert df_out[df_out['description'] == 'TRAINLINE.COM LONDON']['category'].values[0] == 'Transportation'
     assert df_out[df_out['description'] == 'TRAINLINE.COM LONDON']['subcategory'].values[0] == 'Public Transport'
