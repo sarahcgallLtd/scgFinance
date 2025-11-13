@@ -187,6 +187,7 @@ def process_statements(
         all_df,
         rules_file=rules_file,
         categorised_file=categorised_file,
+        add_col=add_col,
     )
 
     # Step 4: Update metadata to mark imported files as processed
